@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 #pragma once
 
 #include <Arduino.h>
@@ -7,10 +9,11 @@
 // Macro for defining the keymap. This should be used in the sketch
 // file (*.ino) to define the keymap[] array that holds the user's
 // layers. It also computes the number of layers in that keymap.
-#define KEYMAPS(layers...)				\
-  const Key keymaps[][ROWS][COLS] PROGMEM = { layers };		\
+#define KEYMAPS(layers...)                                      \
+  const Key keymaps[][TOTAL_KEYS] PROGMEM = { layers };		\
   uint8_t layer_count = sizeof(keymaps) / sizeof(*keymaps);
 
+namespace kaleidoscope {
 
 class Layer_ {
  public:
@@ -45,15 +48,15 @@ class Layer_ {
    * are curious what the active layer state describes the key as, use
    * `lookupOnActiveLayer`.
    */
-  static Key lookup(byte row, byte col) {
-    return liveCompositeKeymap[row][col];
+  static Key lookup(KeyAddr k) {
+    return liveCompositeKeymap[k.addr];
   }
-  static Key lookupOnActiveLayer(byte row, byte col) {
-    uint8_t layer = activeLayers[row][col];
-    return (*getKey)(layer, row, col);
+  static Key lookupOnActiveLayer(KeyAddr k) {
+    uint8_t layer = activeLayers[k.addr];
+    return (*getKey)(layer, k);
   }
-  static uint8_t lookupActiveLayer(byte row, byte col) {
-    return activeLayers[row][col];
+  static uint8_t lookupActiveLayer(KeyAddr k) {
+    return activeLayers[k.addr];
   }
   static void on(uint8_t layer);
   static void off(uint8_t layer);
@@ -72,21 +75,23 @@ class Layer_ {
 
   static uint32_t getLayerState(void);
 
-  static Key eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState);
+  static Key eventHandler(Key mappedKey, KeyAddr k, uint8_t keyState);
 
-  static Key(*getKey)(uint8_t layer, byte row, byte col);
+  static Key(*getKey)(uint8_t layer, KeyAddr k);
 
-  static Key getKeyFromPROGMEM(uint8_t layer, byte row, byte col);
+  static Key getKeyFromPROGMEM(uint8_t layer, KeyAddr k);
 
-  static void updateLiveCompositeKeymap(byte row, byte col);
+  static void updateLiveCompositeKeymap(KeyAddr k);
   static void updateActiveLayers(void);
 
  private:
   static void updateHighestLayer(void);
 
   static uint8_t highestLayer;
-  static Key liveCompositeKeymap[ROWS][COLS];
-  static uint8_t activeLayers[ROWS][COLS];
+  static Key liveCompositeKeymap[TOTAL_KEYS];
+  static uint8_t activeLayers[TOTAL_KEYS];
 };
 
-extern Layer_ Layer;
+} // namespace kaleidoscope {
+
+extern kaleidoscope::Layer_ Layer;

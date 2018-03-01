@@ -1,5 +1,6 @@
 #include "Kaleidoscope.h"
 
+namespace kaleidoscope {
 
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   if (mappedKey.flags & RESERVED)
@@ -26,7 +27,7 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
   return true;
 }
 
-static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8_t keyState) {
+static bool handleKeyswitchEventDefault(Key mappedKey, KeyAddr k, uint8_t keyState) {
   //for every newly pressed button, figure out what logical key it is and send a key down event
   // for every newly released button, figure out what logical key it is and send a key up event
 
@@ -40,7 +41,7 @@ static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8
   return true;
 }
 
-void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
+void handleKeyswitchEvent(Key mappedKey, KeyAddr k, uint8_t keyState) {
   /* These first steps are only done for keypresses that have a real (row,col).
    * In particular, doing them for keypresses with out-of-bounds (row,col)
    *   would cause out-of-bounds array accesses in Layer.lookup(),
@@ -58,12 +59,12 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
    *   still receive out-of-bounds (row, col), and handling that properly is on
    *   them.
    */
-  if (row < ROWS && col < COLS) {
+  if (k.addr < TOTAL_KEYS) {
 
     /* If a key had an on event, we update the live composite keymap. See
      * layers.h for an explanation about the different caches we have. */
     if (keyToggledOn(keyState))
-      Layer.updateLiveCompositeKeymap(row, col);
+      Layer.updateLiveCompositeKeymap(k);
 
     /* If the key we are dealing with is masked, ignore it until it is released.
      * When releasing it, clear the mask, so future key events can be handled
@@ -72,9 +73,9 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
      * See layers.cpp for an example that masks keys, and the reason why it does
      * so.
      */
-    if (KeyboardHardware.isKeyMasked(row, col)) {
+    if (KeyboardHardware.isKeyMasked(k)) {
       if (keyToggledOff(keyState)) {
-        KeyboardHardware.unMaskKey(row, col);
+        KeyboardHardware.unMaskKey(k);
       } else {
         return;
       }
@@ -85,21 +86,23 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
      *   the mappedKey wins - we don't re-look-up the mappedKey
      */
     if (mappedKey.raw == Key_NoKey.raw) {
-      mappedKey = Layer.lookup(row, col);
+      mappedKey = Layer.lookup(k);
     }
 
-  }  // row < ROWS && col < COLS
+  }  // if (k.add < TOTAL_KEYS) {
 
   // Keypresses with out-of-bounds (row,col) start here in the processing chain
 
   for (byte i = 0; Kaleidoscope.eventHandlers[i] != NULL && i < HOOK_MAX; i++) {
     Kaleidoscope_::eventHandlerHook handler = Kaleidoscope.eventHandlers[i];
-    mappedKey = (*handler)(mappedKey, row, col, keyState);
+    mappedKey = (*handler)(mappedKey, k, keyState);
     if (mappedKey.raw == Key_NoKey.raw)
       return;
   }
-  mappedKey = Layer.eventHandler(mappedKey, row, col, keyState);
+  mappedKey = Layer.eventHandler(mappedKey, k, keyState);
   if (mappedKey.raw == Key_NoKey.raw)
     return;
-  handleKeyswitchEventDefault(mappedKey, row, col, keyState);
+  handleKeyswitchEventDefault(mappedKey, k, keyState);
 }
+
+} // namespace kaleidoscope {

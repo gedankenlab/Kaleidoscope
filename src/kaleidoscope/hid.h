@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 #pragma once
 #include <Arduino.h>
 #include "key_defs.h"
@@ -50,4 +52,4 @@ extern void pressAbsoluteMouseButtons(uint8_t buttons);
 extern void releaseAbsoluteMouseButtons(uint8_t buttons);
 
 }
-};
+}

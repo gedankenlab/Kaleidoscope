@@ -1,5 +1,7 @@
 #include "Kaleidoscope.h"
 
+namespace kaleidoscope {
+
 static uint8_t DefaultLayer;
 static uint32_t LayerState;
 
@@ -9,9 +11,9 @@ static uint32_t LayerState;
 #define MAX_LAYERS sizeof(LayerState) * 8;
 
 uint8_t Layer_::highestLayer;
-Key Layer_::liveCompositeKeymap[ROWS][COLS];
-uint8_t Layer_::activeLayers[ROWS][COLS];
-Key(*Layer_::getKey)(uint8_t layer, byte row, byte col) = Layer.getKeyFromPROGMEM;
+Key Layer_::liveCompositeKeymap[TOTAL_KEYS];
+uint8_t Layer_::activeLayers[TOTAL_KEYS];
+Key(*Layer_::getKey)(uint8_t layer, KeyAddr k) = Layer.getKeyFromPROGMEM;
 
 // The total number of defined layers in the firmware sketch keymaps[]
 // array. If the keymap wasn't defined using KEYMAPS(), set it to the
@@ -70,7 +72,7 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
 }
 
 Key
-Layer_::eventHandler(Key mappedKey, byte row, byte col, uint8_t keyState) {
+Layer_::eventHandler(Key mappedKey, KeyAddr k, uint8_t keyState) {
   if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
     return mappedKey;
 
@@ -83,38 +85,36 @@ Layer_::Layer_(void) {
 }
 
 Key
-Layer_::getKeyFromPROGMEM(uint8_t layer, byte row, byte col) {
+Layer_::getKeyFromPROGMEM(uint8_t layer, KeyAddr k) {
   Key key;
 
-  key.raw = pgm_read_word(&(keymaps[layer][row][col]));
+  key.raw = pgm_read_word(&(keymaps[layer][k.addr]));
 
   return key;
 }
 
 void
-Layer_::updateLiveCompositeKeymap(byte row, byte col) {
-  int8_t layer = activeLayers[row][col];
-  liveCompositeKeymap[row][col] = (*getKey)(layer, row, col);
+Layer_::updateLiveCompositeKeymap(KeyAddr k) {
+  int8_t layer = activeLayers[k.addr];
+  liveCompositeKeymap[k.addr] = (*getKey)(layer, k);
 }
 
 void
 Layer_::updateActiveLayers(void) {
-  memset(activeLayers, DefaultLayer, ROWS * COLS);
-  for (byte row = 0; row < ROWS; row++) {
-    for (byte col = 0; col < COLS; col++) {
-      int8_t layer = highestLayer;
+  memset(activeLayers, DefaultLayer, TOTAL_KEYS);
+  for (KeyAddr k{0}; k.addr < TOTAL_KEYS; ++k) {
+    int8_t layer = highestLayer;
 
-      while (layer > DefaultLayer) {
-        if (Layer.isOn(layer)) {
-          Key mappedKey = (*getKey)(layer, row, col);
+    while (layer > DefaultLayer) {
+      if (Layer.isOn(layer)) {
+        Key mappedKey = (*getKey)(layer, k);
 
-          if (mappedKey != Key_Transparent) {
-            activeLayers[row][col] = layer;
-            break;
-          }
+        if (mappedKey != Key_Transparent) {
+          activeLayers[k.addr] = layer;
+          break;
         }
-        layer--;
       }
+      layer--;
     }
   }
 }
@@ -206,4 +206,6 @@ uint32_t Layer_::getLayerState(void) {
   return LayerState;
 }
 
-Layer_ Layer;
+} // namespace kaleidoscope {
+
+kaleidoscope::Layer_ Layer;

@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 #pragma once
 #include <Arduino.h>
 
@@ -5,8 +7,9 @@
 #include "key_defs.h"
 #include "keyswitch_state.h"
 
-extern const Key keymaps[][ROWS][COLS];
+extern const Key keymaps[][TOTAL_KEYS];
 
+namespace kaleidoscope {
 
 // Code can use this macro on injected key events to signal that
 // the event isn't tied to a specific physical keyswitch
@@ -44,5 +47,6 @@ extern const Key keymaps[][ROWS][COLS];
  * currentState may be flagged INJECTED, which signals that the event was
  * injected, and is not a direct result of a keypress, coming from the scanner.
  */
-void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState);
+void handleKeyswitchEvent(Key mappedKey, KeyAddr k, uint8_t keyState);
 
+} // namespace kaleidoscope {

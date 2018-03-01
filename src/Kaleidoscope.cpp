@@ -1,6 +1,8 @@
 #include "Kaleidoscope.h"
 #include <stdarg.h>
 
+namespace kaleidoscope {
+
 Kaleidoscope_::eventHandlerHook Kaleidoscope_::eventHandlers[HOOK_MAX];
 Kaleidoscope_::loopHook Kaleidoscope_::loopHooks[HOOK_MAX];
 
@@ -18,14 +20,12 @@ Kaleidoscope_::setup(void) {
   // A workaround, so that the compiler does not optimize handleKeyswitchEvent out...
   // This is a no-op, but tricks the compiler into not being too helpful
   // TODO(anyone): figure out how to hint the compiler in a more reasonable way
-  handleKeyswitchEvent(Key_NoKey, 255, 255, 0);
+  handleKeyswitchEvent(Key_NoKey, KeyAddr{TOTAL_KEYS}, 0);
 
   // Update the keymap cache, so we start with a non-empty state.
   Layer.updateActiveLayers();
-  for (byte row = 0; row < ROWS; row++) {
-    for (byte col = 0; col < COLS; col++) {
-      Layer.updateLiveCompositeKeymap(row, col);
-    }
+  for (KeyAddr k{0}; k.addr < TOTAL_KEYS; ++k) {
+    Layer.updateLiveCompositeKeymap(k);
   }
 }
 
@@ -136,25 +136,6 @@ Kaleidoscope_::focusHook(const char *command) {
   return true;
 }
 
-Kaleidoscope_ Kaleidoscope;
+} // namespace kaleidoscope {
 
-/* Deprecated functions */
-
-void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook) {
-  Kaleidoscope.useEventHandlerHook(hook);
-}
-
-void loop_hook_use(Kaleidoscope_::loopHook hook) {
-  Kaleidoscope.useLoopHook(hook);
-}
-
-void __USE_PLUGINS(KaleidoscopePlugin *plugin, ...) {
-  va_list ap;
-
-  Kaleidoscope.use(plugin);
-
-  va_start(ap, plugin);
-  while ((plugin = (KaleidoscopePlugin *)va_arg(ap, KaleidoscopePlugin *)) != NULL)
-    Kaleidoscope.use(plugin);
-  va_end(ap);
-}
+kaleidoscope::Kaleidoscope_ Kaleidoscope;

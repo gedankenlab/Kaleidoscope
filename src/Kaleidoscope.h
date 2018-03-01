@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 #pragma once
 
 #include <Arduino.h>
@@ -67,6 +69,10 @@ static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
 
 const uint8_t KEYMAP_SIZE
 __attribute__((deprecated("Kaleidoscope.setup() does not require KEYMAP_SIZE anymore."))) = 0;
+
+
+
+namespace kaleidoscope {
 
 class Kaleidoscope_;
 
@@ -146,7 +152,7 @@ class Kaleidoscope_ {
    * functions will, on the other hand, just append the hooks, and not care about
    * protection.
    */
-  typedef Key(*eventHandlerHook)(Key mappedKey, byte row, byte col, uint8_t keyState);
+  typedef Key(*eventHandlerHook)(Key mappedKey, KeyAddr k, uint8_t keyState);
   static eventHandlerHook eventHandlers[HOOK_MAX];
 
   static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook);
@@ -163,21 +169,12 @@ class Kaleidoscope_ {
   static bool focusHook(const char *command);
 };
 
-extern Kaleidoscope_ Kaleidoscope;
+} // namespace kaleidoscope {
+
+
+extern kaleidoscope::Kaleidoscope_ Kaleidoscope;
 
 #define FOCUS_HOOK_KALEIDOSCOPE FOCUS_HOOK(Kaleidoscope.focusHook,  \
                                            "layer.on\n"             \
                                            "layer.off\n"            \
                                            "layer.getState")
-
-/* -- DEPRECATED aliases; remove them when there are no more users. -- */
-
-void event_handler_hook_use(Kaleidoscope_::eventHandlerHook hook)
-__attribute__((deprecated("Use Kaleidoscope.useEventHandlerHook instead")));
-void loop_hook_use(Kaleidoscope_::loopHook hook)
-__attribute__((deprecated("Use Kaleidoscope.useLoopHook instead")));
-
-void __USE_PLUGINS(KaleidoscopePlugin *plugin, ...)
-__attribute__((deprecated("Use Kaleidoscope.use(...) instead")));
-
-#define USE_PLUGINS(...) __USE_PLUGINS(__VA_ARGS__, NULL)
