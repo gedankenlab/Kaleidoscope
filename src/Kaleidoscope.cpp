@@ -33,6 +33,13 @@ void
 Kaleidoscope_::loop(void) {
   KeyboardHardware.scanMatrix();
 
+  for (KeyAddr k{0}; k.addr < TOTAL_KEYS; ++k) {
+    byte key_state = KeyboardHardware.nextKeyswitchEvent(k);
+    if (key_state == 0)
+      break;
+    handleKeyswitchEvent(Key_NoKey, k, key_state);
+  }
+
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];
     (*hook)(false);
