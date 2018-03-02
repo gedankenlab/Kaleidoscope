@@ -167,6 +167,11 @@ class Kaleidoscope_ {
   static void useLoopHook(loopHook hook);
 
   static bool focusHook(const char *command);
+
+  // These three need to be added for the next phase
+  Key active_keys[TOTAL_KEYS];
+  bool handleKeyswitchEvent(KeyAddr k, Key& key, byte keyswitch_state);
+  void sendKeyboardHidReport();
 };
 
 } // namespace kaleidoscope {
