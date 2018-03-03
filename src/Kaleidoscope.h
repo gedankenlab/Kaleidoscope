@@ -4,27 +4,10 @@
 
 #include <Arduino.h>
 
+#include KALEIDOSCOPE_HARDWARE_H
+
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
-//end of add your includes here
-#ifdef __cplusplus
-extern "C" {
-#endif
-void loop();
-void setup();
-#ifdef __cplusplus
-} // extern "C"
-#endif
-
-//add your function definitions for the project KeyboardIO here
-
-#define TS(X) //Serial.print(micros() );Serial.print("\t");Serial.println(X);
-
-#include <stdio.h>
-#include <math.h>
-
-
-#include KALEIDOSCOPE_HARDWARE_H
 #include "key_events.h"
 #include "kaleidoscope/hid.h"
 #include "layers.h"

@@ -18,7 +18,7 @@ union KeyswitchState {
 
   // Constructor sets all reserved bits to zero.
   explicit constexpr
-  KeyswitchState(byte state = 0)
+  KeyswitchState(byte state)
     : raw(state & 0x03) {}
 
   constexpr
