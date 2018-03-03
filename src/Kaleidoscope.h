@@ -50,10 +50,6 @@ static_assert(KALEIDOSCOPE_REQUIRED_API_VERSION == KALEIDOSCOPE_API_VERSION,
               " available, but version " xstr(KALEIDOSCOPE_REQUIRED_API_VERSION) " is required.");
 #endif
 
-const uint8_t KEYMAP_SIZE
-__attribute__((deprecated("Kaleidoscope.setup() does not require KEYMAP_SIZE anymore."))) = 0;
-
-
 
 namespace kaleidoscope {
 
@@ -85,10 +81,6 @@ class Kaleidoscope_ {
  public:
   Kaleidoscope_(void);
 
-  void setup(const byte keymap_count)
-  __attribute__((deprecated("The keymap_count argument (and the KEYMAP_SIZE macro) are unused, and can be safely removed."))) {
-    setup();
-  }
   void setup(void);
   void loop(void);
 
@@ -161,8 +153,3 @@ class Kaleidoscope_ {
 
 
 extern kaleidoscope::Kaleidoscope_ Kaleidoscope;
-
-#define FOCUS_HOOK_KALEIDOSCOPE FOCUS_HOOK(Kaleidoscope.focusHook,  \
-                                           "layer.on\n"             \
-                                           "layer.off\n"            \
-                                           "layer.getState")
