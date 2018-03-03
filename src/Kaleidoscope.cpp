@@ -1,5 +1,4 @@
 #include "Kaleidoscope.h"
-#include <stdarg.h>
 
 namespace kaleidoscope {
 
@@ -16,11 +15,6 @@ Kaleidoscope_::setup(void) {
   kaleidoscope::hid::initializeKeyboard();
   kaleidoscope::hid::initializeConsumerControl();
   kaleidoscope::hid::initializeSystemControl();
-
-  // A workaround, so that the compiler does not optimize handleKeyswitchEvent out...
-  // This is a no-op, but tricks the compiler into not being too helpful
-  // TODO(anyone): figure out how to hint the compiler in a more reasonable way
-  //handleKeyswitchEvent(key, KeyAddr{TOTAL_KEYS}, 0);
 
   // Update the keymap cache, so we start with a non-empty state.
   Layer.updateActiveLayers();
