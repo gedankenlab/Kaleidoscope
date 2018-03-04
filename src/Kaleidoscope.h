@@ -11,6 +11,7 @@
 #include "key_events.h"
 #include "kaleidoscope/hid.h"
 #include "layers.h"
+#include "kaleidoscope/KeyswitchState.h"
 
 #define HOOK_MAX 64
 
@@ -127,7 +128,7 @@ class Kaleidoscope_ {
    * functions will, on the other hand, just append the hooks, and not care about
    * protection.
    */
-  typedef Key(*eventHandlerHook)(Key mappedKey, KeyAddr k, uint8_t keyState);
+  typedef Key(*eventHandlerHook)(Key& mappedKey, KeyAddr k, KeyswitchState state);
   static eventHandlerHook eventHandlers[HOOK_MAX];
 
   static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook);
@@ -145,7 +146,7 @@ class Kaleidoscope_ {
 
   // These three need to be added for the next phase
   Key active_keys[TOTAL_KEYS];
-  bool handleKeyswitchEvent(KeyAddr k, Key& key, byte keyswitch_state);
+  bool handleKeyswitchEvent(Key& key, KeyAddr k, KeyswitchState state);
   void sendKeyboardHidReport();
 };
 

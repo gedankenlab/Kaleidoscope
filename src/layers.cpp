@@ -1,4 +1,5 @@
 #include "Kaleidoscope.h"
+#include "kaleidoscope/KeyswitchState.h"
 
 namespace kaleidoscope {
 
@@ -20,22 +21,22 @@ Key(*Layer_::getKey)(uint8_t layer, KeyAddr k) = Layer.getKeyFromPROGMEM;
 // highest possible number of layers.
 uint8_t layer_count __attribute__((weak)) = MAX_LAYERS;
 
-static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
+static void handleKeymapKeyswitchEvent(Key keymapEntry, KeyswitchState state) {
   if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
     uint8_t target = keymapEntry.keyCode - LAYER_SHIFT_OFFSET;
 
     switch (target) {
     case KEYMAP_NEXT:
-      if (keyToggledOn(keyState))
+      if (state.isPressed())
         Layer.next();
-      else if (keyToggledOff(keyState))
+      else if (state.isReleased())
         Layer.previous();
       break;
 
     case KEYMAP_PREVIOUS:
-      if (keyToggledOn(keyState))
+      if (state.isPressed())
         Layer.previous();
-      else if (keyToggledOff(keyState))
+      else if (state.isReleased())
         Layer.next();
       break;
 
@@ -54,15 +55,15 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
        * that does turn the layer off, but with the other still being held, the
        * layer will toggle back on in the same cycle.
        */
-      if (keyIsPressed(keyState)) {
+      if (state.current) {
         if (!Layer.isOn(target))
           Layer.on(target);
-      } else if (keyToggledOff(keyState)) {
+      } else if (state.isReleased()) {
         Layer.off(target);
       }
       break;
     }
-  } else if (keyToggledOn(keyState)) {
+  } else if (state.isPressed()) {
     // switch keymap and stay there
     if (Layer.isOn(keymapEntry.keyCode) && keymapEntry.keyCode)
       Layer.off(keymapEntry.keyCode);
@@ -72,11 +73,11 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, uint8_t keyState) {
 }
 
 Key
-Layer_::eventHandler(Key mappedKey, KeyAddr k, uint8_t keyState) {
+Layer_::eventHandler(Key& mappedKey, KeyAddr k, KeyswitchState state) {
   if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
     return mappedKey;
 
-  handleKeymapKeyswitchEvent(mappedKey, keyState);
+  handleKeymapKeyswitchEvent(mappedKey, state);
   return Key_NoKey;
 }
 

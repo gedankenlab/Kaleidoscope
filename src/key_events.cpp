@@ -1,3 +1,4 @@
+#if 0
 #include "Kaleidoscope.h"
 
 namespace kaleidoscope {
@@ -106,3 +107,4 @@ void handleKeyswitchEvent(Key mappedKey, KeyAddr k, uint8_t keyState) {
 }
 
 } // namespace kaleidoscope {
+#endif
