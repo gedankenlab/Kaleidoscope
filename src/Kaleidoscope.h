@@ -20,7 +20,7 @@
 
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
 
-extern const Key keymaps[][TOTAL_KEYS];
+extern const Key keymaps[][kaleidoscope::hardware::total_keys];
 
 #ifndef VERSION
 #define VERSION "locally-built"
@@ -150,7 +150,7 @@ class Kaleidoscope_ {
   static bool focusHook(const char *command);
 
   // These three need to be added for the next phase
-  Key active_keys[TOTAL_KEYS];
+  Key active_keys[hardware::total_keys];
   bool handleKeyswitchEvent(KeyswitchEvent& event);
   void sendKeyboardHidReport();
 };

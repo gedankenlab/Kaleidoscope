@@ -18,7 +18,7 @@ Kaleidoscope_::setup(void) {
 
   // Update the keymap cache, so we start with a non-empty state.
   Layer.updateActiveLayers();
-  for (KeyAddr k{0}; k.addr < TOTAL_KEYS; ++k) {
+  for (KeyAddr k{0}; k.addr < hardware::total_keys; ++k) {
     Layer.updateLiveCompositeKeymap(k);
   }
 
@@ -31,7 +31,7 @@ void
 Kaleidoscope_::loop(void) {
   KeyboardHardware.scanMatrix();
 
-  for (KeyAddr k{0}; k.addr < TOTAL_KEYS; ++k) {
+  for (KeyAddr k{0}; k.addr < hardware::total_keys; ++k) {
 
     KeyswitchEvent event = KeyboardHardware.nextKeyswitchEvent(k);
 

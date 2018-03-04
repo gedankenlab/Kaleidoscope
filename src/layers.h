@@ -13,8 +13,8 @@
 // Macro for defining the keymap. This should be used in the sketch
 // file (*.ino) to define the keymap[] array that holds the user's
 // layers. It also computes the number of layers in that keymap.
-#define KEYMAPS(layers...)                                      \
-  const Key keymaps[][TOTAL_KEYS] PROGMEM = { layers };		\
+#define KEYMAPS(layers...)                                              \
+  const Key keymaps[][kaleidoscope::hardware::total_keys] PROGMEM = { layers }; \
   uint8_t layer_count = sizeof(keymaps) / sizeof(*keymaps);
 
 namespace kaleidoscope {
@@ -92,8 +92,8 @@ class Layer_ {
   static void updateHighestLayer(void);
 
   static uint8_t highestLayer;
-  static Key liveCompositeKeymap[TOTAL_KEYS];
-  static uint8_t activeLayers[TOTAL_KEYS];
+  static Key liveCompositeKeymap[hardware::total_keys];
+  static uint8_t activeLayers[hardware::total_keys];
 };
 
 } // namespace kaleidoscope {
