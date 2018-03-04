@@ -1,5 +1,6 @@
 #include "Kaleidoscope.h"
 #include "kaleidoscope/KeyswitchState.h"
+#include "kaleidoscope/KeyswitchEvent.h"
 
 namespace kaleidoscope {
 
@@ -73,11 +74,11 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, KeyswitchState state) {
 }
 
 Key
-Layer_::eventHandler(Key& mappedKey, KeyAddr k, KeyswitchState state) {
-  if (mappedKey.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
-    return mappedKey;
+Layer_::eventHandler(const KeyswitchEvent& event) {
+  if (event.key.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
+    return event.key;
 
-  handleKeymapKeyswitchEvent(mappedKey, state);
+  handleKeymapKeyswitchEvent(event.key, event.state);
   return Key_NoKey;
 }
 

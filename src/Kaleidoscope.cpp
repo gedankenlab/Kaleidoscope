@@ -33,13 +33,12 @@ Kaleidoscope_::loop(void) {
 
   for (KeyAddr k{0}; k.addr < TOTAL_KEYS; ++k) {
 
-    KeyswitchState state = KeyboardHardware.nextKeyswitchEvent(k);
+    KeyswitchEvent event = KeyboardHardware.nextKeyswitchEvent(k);
 
-    if (! state)
+    if (! event.state)
       break;
 
-    Key key = Key_NoKey;
-    if (handleKeyswitchEvent(key, k, state)) {
+    if (handleKeyswitchEvent(event)) {
 
       for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
         loopHook hook = loopHooks[i];
@@ -56,19 +55,22 @@ Kaleidoscope_::loop(void) {
   }
 }
 
-bool Kaleidoscope_::handleKeyswitchEvent(Key& key, KeyAddr k, KeyswitchState state) {
+bool Kaleidoscope_::handleKeyswitchEvent(KeyswitchEvent& event) {
+  Key& key = event.key;
+  KeyAddr k = event.addr;
+  KeyswitchState state = event.state;
 
   if (active_keys[k.addr] == Key_NoKey) {
-    if (state.isReleased())
+    if (state.toggledOff())
       active_keys[k.addr] = Key_Transparent;
     return false;
   }
 
   // TODO: deal with invalid KeyAddrs & injected keys
-  if (state.isReleased()) {
+  if (state.toggledOff()) {
     key = active_keys[k.addr];
     active_keys[k.addr] = Key_Transparent;
-  } else if (state.isPressed()){
+  } else if (state.toggledOn()){
     Layer.updateLiveCompositeKeymap(k);
     key = Layer.lookup(k);
     active_keys[k.addr] = key;
@@ -78,11 +80,11 @@ bool Kaleidoscope_::handleKeyswitchEvent(Key& key, KeyAddr k, KeyswitchState sta
   }
   for (byte i{0}; eventHandlers[i] != NULL && i < HOOK_MAX; ++i) {
     eventHandlerHook handler = eventHandlers[i];
-    key = (*handler)(key, k, state);
+    key = (*handler)(event);
     if (key == Key_NoKey)
       return false;
   }
-  key = Layer.eventHandler(key, k, state);
+  key = Layer.eventHandler(event);
   if (key == Key_NoKey)
     return false;
   return true;

@@ -4,8 +4,11 @@
 
 #include <Arduino.h>
 #include "key_defs.h"
+
 #include KALEIDOSCOPE_HARDWARE_H
-#include "kaleidoscope/KeyswitchState.h"
+#include KALEIDOSCOPE_KEYADDR_H
+
+#include "kaleidoscope/KeyswitchEvent.h"
 
 // Macro for defining the keymap. This should be used in the sketch
 // file (*.ino) to define the keymap[] array that holds the user's
@@ -76,7 +79,7 @@ class Layer_ {
 
   static uint32_t getLayerState(void);
 
-  static Key eventHandler(Key& mappedKey, KeyAddr k, KeyswitchState state);
+  static Key eventHandler(const KeyswitchEvent& event);
 
   static Key(*getKey)(uint8_t layer, KeyAddr k);
 

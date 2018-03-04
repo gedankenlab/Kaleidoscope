@@ -4,12 +4,16 @@
 
 #include <Arduino.h>
 
-#include KALEIDOSCOPE_HARDWARE_H
-
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
+
+// #include "Kaleidoscope-Hardware-Model01.h"
+// #include "model01/KeyAddr.h"
+#include KALEIDOSCOPE_HARDWARE_H
+#include KALEIDOSCOPE_KEYADDR_H
 
 #include "kaleidoscope/hid.h"
 #include "layers.h"
+#include "kaleidoscope/KeyswitchEvent.h"
 #include "kaleidoscope/KeyswitchState.h"
 
 #define HOOK_MAX 64
@@ -129,7 +133,7 @@ class Kaleidoscope_ {
    * functions will, on the other hand, just append the hooks, and not care about
    * protection.
    */
-  typedef Key(*eventHandlerHook)(Key& mappedKey, KeyAddr k, KeyswitchState state);
+  typedef Key(*eventHandlerHook)(KeyswitchEvent& event);
   static eventHandlerHook eventHandlers[HOOK_MAX];
 
   static void replaceEventHandlerHook(eventHandlerHook oldHook, eventHandlerHook newHook);
@@ -147,7 +151,7 @@ class Kaleidoscope_ {
 
   // These three need to be added for the next phase
   Key active_keys[TOTAL_KEYS];
-  bool handleKeyswitchEvent(Key& key, KeyAddr k, KeyswitchState state);
+  bool handleKeyswitchEvent(KeyswitchEvent& event);
   void sendKeyboardHidReport();
 };
 
