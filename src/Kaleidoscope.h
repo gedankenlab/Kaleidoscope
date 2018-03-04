@@ -8,7 +8,6 @@
 
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 
-#include "key_events.h"
 #include "kaleidoscope/hid.h"
 #include "layers.h"
 #include "kaleidoscope/KeyswitchState.h"
@@ -16,6 +15,8 @@
 #define HOOK_MAX 64
 
 extern HARDWARE_IMPLEMENTATION KeyboardHardware;
+
+extern const Key keymaps[][TOTAL_KEYS];
 
 #ifndef VERSION
 #define VERSION "locally-built"
