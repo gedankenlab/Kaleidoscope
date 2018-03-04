@@ -42,6 +42,14 @@ union KeyswitchState {
     return raw == 3; // 0b11 (previous = 1; current = 1;)
   }
 
+  bool toggledOn() const {
+    return isPressed();
+  }
+
+  bool toggledOff() const {
+    return isReleased();
+  }
+
   // This operator is probably unnecessary; the above functions should get us everything we need
   bool operator!() const {
     // return (! current && ! previous);
