@@ -7,6 +7,7 @@
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include KALEIDOSCOPE_KEYADDR_H
+#include KALEIDOSCOPE_HARDWARE_KEYBOARD_H
 
 #include "kaleidoscope/KeyswitchEvent.h"
 
