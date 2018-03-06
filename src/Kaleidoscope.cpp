@@ -34,7 +34,7 @@ Kaleidoscope_::loop(void) {
   for (KeyswitchEvent event : KeyboardHardware) {
 
     // Serial.println(event.addr.addr, HEX);
-    
+
     if (handleKeyswitchEvent(event)) {
 
       for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
@@ -50,7 +50,7 @@ Kaleidoscope_::loop(void) {
       }
     }
   }
-  
+
 }
 
 bool Kaleidoscope_::handleKeyswitchEvent(KeyswitchEvent& event) {
