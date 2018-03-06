@@ -31,13 +31,10 @@ void
 Kaleidoscope_::loop(void) {
   KeyboardHardware.scanMatrix();
 
-  for (KeyAddr k{0}; k.addr < hardware::total_keys; ++k) {
+  for (KeyswitchEvent event : KeyboardHardware) {
 
-    KeyswitchEvent event = KeyboardHardware.nextKeyswitchEvent(k);
-
-    if (! event.state)
-      break;
-
+    // Serial.println(event.addr.addr, HEX);
+    
     if (handleKeyswitchEvent(event)) {
 
       for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
@@ -53,6 +50,7 @@ Kaleidoscope_::loop(void) {
       }
     }
   }
+  
 }
 
 bool Kaleidoscope_::handleKeyswitchEvent(KeyswitchEvent& event) {
