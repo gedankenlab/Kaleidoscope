@@ -17,12 +17,14 @@
 #include "layers.h"
 #include "kaleidoscope/KeyswitchEvent.h"
 #include "kaleidoscope/KeyswitchState.h"
+#include "kaleidoscope/Key.h"
+
 
 #define HOOK_MAX 64
 
 extern kaleidoscope::hardware::Keyboard KeyboardHardware;
 
-extern const Key keymaps[][kaleidoscope::hardware::total_keys];
+extern const kaleidoscope::Key keymaps[][kaleidoscope::hardware::total_keys];
 
 #ifndef VERSION
 #define VERSION "locally-built"

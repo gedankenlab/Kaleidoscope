@@ -3,12 +3,12 @@
 #pragma once
 
 #include <Arduino.h>
-#include "key_defs.h"
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include KALEIDOSCOPE_KEYADDR_H
 #include KALEIDOSCOPE_HARDWARE_KEYBOARD_H
 
+#include "kaleidoscope/Key.h"
 #include "kaleidoscope/KeyswitchEvent.h"
 
 // Macro for defining the keymap. This should be used in the sketch

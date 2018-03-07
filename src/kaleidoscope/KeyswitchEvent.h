@@ -5,8 +5,7 @@
 #include KALEIDOSCOPE_HARDWARE_H
 #include KALEIDOSCOPE_KEYADDR_H
 
-//#include "model01/KeyAddr.h"
-#include "key_defs.h"
+#include "kaleidoscope/Key.h"
 #include "kaleidoscope/KeyswitchState.h"
 
 

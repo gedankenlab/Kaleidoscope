@@ -22,8 +22,15 @@ constexpr Key blank       { 0x0000 };
 
 } // namespace kaleidoscope {
 
-#define ___ cKey::transparent
-#define XXX cKey::blank
+#define ___ ::kaleidoscope::cKey::transparent
+#define XXX ::kaleidoscope::cKey::blank
 
-#define Key_Transparent cKey::transparent
-#define Key_NoKey       cKey::blank
+#define Key_Transparent ::kaleidoscope::cKey::transparent
+#define Key_NoKey       ::kaleidoscope::cKey::blank
+
+#include "kaleidoscope/cKey/backcompat/key_defs_keyboard.h"
+#include "kaleidoscope/cKey/backcompat/key_defs_consumer.h"
+
+#define LAYER_SHIFT_OFFSET 42
+#define KEYMAP_PREVIOUS    33
+#define KEYMAP_NEXT        34

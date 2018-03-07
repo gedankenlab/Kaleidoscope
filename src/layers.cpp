@@ -1,4 +1,6 @@
+#include "layers.h"
 #include "Kaleidoscope.h"
+#include "kaleidoscope/KeyFlavor.h"
 #include "kaleidoscope/KeyswitchState.h"
 #include "kaleidoscope/KeyswitchEvent.h"
 
@@ -22,9 +24,9 @@ Key(*Layer_::getKey)(uint8_t layer, KeyAddr k) = Layer.getKeyFromPROGMEM;
 // highest possible number of layers.
 uint8_t layer_count __attribute__((weak)) = MAX_LAYERS;
 
-static void handleKeymapKeyswitchEvent(Key keymapEntry, KeyswitchState state) {
-  if (keymapEntry.keyCode >= LAYER_SHIFT_OFFSET) {
-    uint8_t target = keymapEntry.keyCode - LAYER_SHIFT_OFFSET;
+static void handleKeymapKeyswitchEvent(Key key, KeyswitchState state) {
+  if (key.layer.keycode >= LAYER_SHIFT_OFFSET) {
+    byte target = key.layer.keycode - LAYER_SHIFT_OFFSET;
 
     switch (target) {
     case KEYMAP_NEXT:
@@ -66,16 +68,16 @@ static void handleKeymapKeyswitchEvent(Key keymapEntry, KeyswitchState state) {
     }
   } else if (state.isPressed()) {
     // switch keymap and stay there
-    if (Layer.isOn(keymapEntry.keyCode) && keymapEntry.keyCode)
-      Layer.off(keymapEntry.keyCode);
+    if (Layer.isOn(key.layer.keycode) && key.layer.keycode)
+      Layer.off(key.layer.keycode);
     else
-      Layer.on(keymapEntry.keyCode);
+      Layer.on(key.layer.keycode);
   }
 }
 
 Key
 Layer_::eventHandler(const KeyswitchEvent& event) {
-  if (event.key.flags != (SYNTHETIC | SWITCH_TO_KEYMAP))
+  if (event.key.flavor() != KeyFlavor::layer)
     return event.key;
 
   handleKeymapKeyswitchEvent(event.key, event.state);
