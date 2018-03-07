@@ -10,6 +10,7 @@
 // #include "model01/KeyAddr.h"
 #include KALEIDOSCOPE_HARDWARE_H
 #include KALEIDOSCOPE_KEYADDR_H
+#include KALEIDOSCOPE_HARDWARE_KEYBOARD_H
 
 #include "kaleidoscope/hid.h"
 #include "layers.h"
@@ -18,7 +19,7 @@
 
 #define HOOK_MAX 64
 
-extern HARDWARE_IMPLEMENTATION KeyboardHardware;
+extern kaleidoscope::hardware::Keyboard KeyboardHardware;
 
 extern const Key keymaps[][kaleidoscope::hardware::total_keys];
 
