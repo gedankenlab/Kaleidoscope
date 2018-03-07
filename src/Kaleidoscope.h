@@ -4,11 +4,12 @@
 
 #include <Arduino.h>
 
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
-
-// #include "Kaleidoscope-Hardware-Model01.h"
-// #include "model01/KeyAddr.h"
 #include KALEIDOSCOPE_HARDWARE_H
+
+// Changing the order of these headers can trigger linker failures; possibly the famed
+// "static initialization order fiasco"
+#include KALEIDOSCOPE_HID_H
+
 #include KALEIDOSCOPE_KEYADDR_H
 #include KALEIDOSCOPE_HARDWARE_KEYBOARD_H
 
@@ -157,6 +158,5 @@ class Kaleidoscope_ {
 };
 
 } // namespace kaleidoscope {
-
 
 extern kaleidoscope::Kaleidoscope_ Kaleidoscope;
