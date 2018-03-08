@@ -15,8 +15,8 @@ static uint32_t LayerState;
 #define MAX_LAYERS sizeof(LayerState) * 8;
 
 uint8_t Layer_::highestLayer;
-Key Layer_::liveCompositeKeymap[hardware::total_keys];
-uint8_t Layer_::activeLayers[hardware::total_keys];
+Key Layer_::liveCompositeKeymap[total_keys];
+uint8_t Layer_::activeLayers[total_keys];
 Key(*Layer_::getKey)(uint8_t layer, KeyAddr k) = Layer.getKeyFromPROGMEM;
 
 // The total number of defined layers in the firmware sketch keymaps[]
@@ -105,8 +105,8 @@ Layer_::updateLiveCompositeKeymap(KeyAddr k) {
 
 void
 Layer_::updateActiveLayers(void) {
-  memset(activeLayers, DefaultLayer, hardware::total_keys);
-  for (KeyAddr k{0}; k.addr < hardware::total_keys; ++k) {
+  memset(activeLayers, DefaultLayer, total_keys);
+  for (KeyAddr k{0}; k.addr < total_keys; ++k) {
     int8_t layer = highestLayer;
 
     while (layer > DefaultLayer) {

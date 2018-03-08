@@ -93,8 +93,8 @@ class Layer_ {
   static void updateHighestLayer(void);
 
   static uint8_t highestLayer;
-  static Key liveCompositeKeymap[hardware::total_keys];
-  static uint8_t activeLayers[hardware::total_keys];
+  static Key liveCompositeKeymap[total_keys];
+  static uint8_t activeLayers[total_keys];
 };
 
 } // namespace kaleidoscope {
