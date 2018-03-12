@@ -3,6 +3,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <EEPROM.h>
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include KALEIDOSCOPE_KEYADDR_H
@@ -87,8 +88,7 @@ union Key {
   //   : low_byte{static_cast<byte>(keycode)},
   //     high_byte{static_cast<byte>(meta)} {}
 
-#if 0
-  void readFromProgmem(Key const & progmem_key) {
+  void readFromProgmem(const Key& progmem_key) {
     raw = pgm_read_word(&progmem_key);
   }
   void readFromEeprom(uint16_t eeprom_addr) {
@@ -99,7 +99,7 @@ union Key {
   // (I'm pretty sure), and this function is inherently a run-time-only
   // function. Furthermore, they don't need to be here at all; they should be non-member,
   // non-friend functions instead.
-  static Key createFromProgmem(Key const & progmem_key) {
+  static Key createFromProgmem(const Key& progmem_key) {
     Key new_key;
     new_key.readFromProgmem(progmem_key);
     return new_key;
@@ -109,7 +109,6 @@ union Key {
     EEPROM.get(eeprom_addr, new_key);
     return new_key;
   }
-#endif
 
   // Very commonly-used test functions. I've decided to use `Blank` instead of `NoKey`
   // because I think it's much clearer, especially in the light of my intention to

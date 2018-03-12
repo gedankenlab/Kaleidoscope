@@ -20,8 +20,8 @@ class Layer {
   constexpr Layer(const Key* const keys, const byte count)
     : keys_{keys}, key_count_{count} {}
 
-  const Key& operator[](KeyAddr k) const {
-    return keys_[k.addr];
+  Key operator[](KeyAddr k) const {
+    return Key::createFromProgmem(keys_[k.addr]);
   }
 
 
