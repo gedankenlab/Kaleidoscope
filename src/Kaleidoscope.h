@@ -6,6 +6,24 @@
 
 #include KALEIDOSCOPE_HARDWARE_H
 
+#include KALEIDOSCOPE_HID_H
+
+#include KALEIDOSCOPE_HARDWARE_KEYBOARD_H
+#include KALEIDOSCOPE_KEYADDR_H
+
+#include "kaleidoscope/hid/Report.h"
+#include "kaleidoscope/Key.h"
+#include "kaleidoscope/Layer.h"
+#include "kaleidoscope/Keymap.h"
+#include "kaleidoscope/cKey.h"
+#include "kaleidoscope/Controller.h"
+
+
+
+
+#if 0
+#include KALEIDOSCOPE_HARDWARE_H
+
 // Changing the order of these headers can trigger linker failures; possibly the famed
 // "static initialization order fiasco"
 #include KALEIDOSCOPE_HID_H
@@ -162,3 +180,4 @@ class Kaleidoscope_ {
 } // namespace kaleidoscope {
 
 extern kaleidoscope::Kaleidoscope_ Kaleidoscope;
+#endif

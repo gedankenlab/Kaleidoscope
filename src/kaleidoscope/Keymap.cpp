@@ -86,6 +86,26 @@ void Keymap::deactivateLayer(byte layer_index) {
 }
 
 
+void Keymap::handleLayerChange(Key key) {
+  byte layer_index{byte(key.layer.keycode)};
+  if (layer_index < layer_count_) {
+    // toggle layer
+    if (getLayerState_(layer_index)) {
+      deactivateLayer(layer_index);
+    } else {
+      activateLayer(layer_index);
+    }
+  } else {
+    layer_index -= layer_count_;
+    // shift layer
+    if (layer_index < layer_count_) {
+      top_active_layer_index_ = layer_index;
+      // TODO: finish this
+    }
+  }
+}
+
+
 // This could be a private function
 void Keymap::updateTopActiveLayer_() {
   for (byte i = (layer_count_ - 1); i > default_layer_index_; --i) {

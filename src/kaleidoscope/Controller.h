@@ -25,6 +25,7 @@
 #include "kaleidoscope/cKey.h"
 //#include "kaleidoscope/Plugin.h"
 #include "kaleidoscope/hid/Report.h"
+#include "kaleidoscope/KeyArray.h"
 
 
 namespace kaleidoscope {
@@ -37,7 +38,7 @@ class Controller {
              hid::keyboard::Report& keyboard_report)
       : keymap_(keymap),
         keyboard_(keyboard),
-        keyboard_report_(keyboard_report),
+        report_(keyboard_report),
         plugin_count_(0) {}
   
   void init(); // setup();
@@ -48,7 +49,7 @@ class Controller {
   //   p.init(plugin_count_++);
   // }
 
-  void handleKeyswitchEvent(KeyswitchEvent& event, byte caller);
+  bool handleKeyswitchEvent(KeyswitchEvent event, byte caller = 0);
   void sendKeyboardReport();
 
   void mask(KeyAddr key_addr);
@@ -60,13 +61,14 @@ class Controller {
  private:
 
   // active_keys_ can't really be a Layer because that would reference PROGMEM
-  Key active_keys_[total_keys];
+  //Key active_keys_[total_keys];
+  KeyArray active_keys_;
 
   Keymap& keymap_;
   hardware::Keyboard& keyboard_;
-  // I want to make keyboard_report_ a full member, not a pointer, but maybe not until I
+  // I want to make report_ a full member, not a pointer, but maybe not until I
   // replace KeyboardioHID entirely
-  hid::keyboard::Report& keyboard_report_;
+  hid::keyboard::Report& report_;
 
   byte plugin_count_;
   // actually, the plugins_[] array is probably useless, because we can't meaningfully
@@ -77,15 +79,15 @@ class Controller {
 
 
 inline void Controller::mask(KeyAddr k) {
-  active_keys_[k.addr] = cKey::blank;
+  active_keys_[k] = cKey::blank;
 }
 
 inline void Controller::unmask(KeyAddr k) {
-  active_keys_[k.addr] = cKey::transparent;
+  active_keys_[k] = cKey::transparent;
 }
 
 inline bool Controller::isMasked(KeyAddr k) const {
-  return (active_keys_[k.addr].isBlank());
+  return (active_keys_[k].isBlank());
 }
 
 inline Key Controller::lookup(KeyAddr k) const {

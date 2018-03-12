@@ -37,7 +37,7 @@ class Keymap {
   LayerKey lookupActiveLayerKey(KeyAddr key_addr) const;
   byte lookupActiveLayer(KeyAddr key_addr) const;
   byte lookupLayer(KeyAddr key_addr) const; // alternative to lookupActiveLayer()
-  Layer const & layer(byte index) const;
+  const Layer& layer(byte index) const;
 
   bool isLayerActive(byte layer) const {
     return getLayerState_(layer);
@@ -47,6 +47,8 @@ class Keymap {
   void deactivateLayer(byte layer);
   void shiftToLayer(byte layer);
   void moveToLayer(byte layer);
+
+  void handleLayerChange(Key key);
 
   Key operator[](KeyAddr k) const;
 

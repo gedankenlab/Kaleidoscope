@@ -1,3 +1,5 @@
+// -*- c++ -*-
+
 #include "kaleidoscope/Controller.h"
 
 #include <Arduino.h>
@@ -15,16 +17,65 @@ namespace kaleidoscope {
 
 
 void Controller::init() {
-  //KeyboardHardware.setup();
+  keyboard_.setup();
 
-  // Where is `Keymap keymap` defined? In the sketch?
+  report_.init();
 
-  // memset() would probably do this faster
   for (Key& key : active_keys_) {
     key = cKey::transparent;
   }
 }
 
+void Controller::run() {
+  keyboard_.scanMatrix();
+
+  for (KeyswitchEvent event : keyboard_) {
+    if (handleKeyswitchEvent(event)) {
+      sendKeyboardReport();
+    }
+  }
+}
+
+bool Controller::handleKeyswitchEvent(KeyswitchEvent event, byte caller) {
+  Key& key = event.key;
+  KeyAddr k = event.addr;
+  KeyswitchState state = event.state;
+
+  if (active_keys_[k] == cKey::blank) {
+    if (state.toggledOff())
+      active_keys_[k] = cKey::transparent;
+    return false;
+  }
+
+  // TODO: deal with invalid KeyAddrs & injected keys
+  if (state.toggledOff()) {
+    key = active_keys_[k];
+    active_keys_[k] = cKey::transparent;
+  } else if (state.toggledOn()){
+    key = keymap_[k];
+    active_keys_[k] = key;
+  } else {
+    active_keys_[k] = cKey::transparent;
+    return false;
+  }
+  // TODO: more than one hook point here. First early hooks, where plugins might intercept
+  // & delay events (and maybe promise to always eventually let them through --
+  // e.g. Qukeys), then ones that will stop processing if they handle the event
+  // (e.g. Keymap), then maybe ones that need a "final" version of the report ready
+  // (though that probably moves to the pre-report hook)
+  if (! hooks::keyswitchEventHooks(event, active_keys_, caller)) {
+    return false;
+  }
+  if (key.flavor() == KeyFlavor::layer) {
+    keymap_.handleLayerChange(key);
+    return false;
+  }
+  if (key.isEmpty())
+    return false;
+  return true;
+}
+
+#if 0
 void Controller::run() {
   hooks::preScanHooks();
   keyboard_.scanMatrix();
@@ -54,19 +105,23 @@ void Controller::run() {
 // (caller) is there to prevent repeat processing of the same event by any plugin (and
 // therefore possible infinite loops)
 void Controller::handleKeyswitchEvent(KeyswitchEvent& event, byte caller) {
-  if (hooks::keyswitchEventHooks(event, caller)) {
+  if (hooks::keyswitchEventHooks(event, active_keys_, caller)) {
     sendKeyboardReport();
   }
 }
+#endif
 
 // Hooks need to be added here to make it fully-functional
 void Controller::sendKeyboardReport() {
-  keyboard_report_.clear();
+  report_.clear();
+  //kaleidoscope::hid::releaseAllKeys();
   // Add all active keycodes to the report
   for (Key key : active_keys_) {
-    keyboard_report_.add(key);
+    report_.add(key);
+    //kaleidoscope::hid::pressKey(key);
   }
-  keyboard_report_.send();
+  report_.send();
+  //kaleidoscope::hid::sendKeyboardReport();
 }
 
 /*

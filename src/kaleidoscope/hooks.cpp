@@ -8,6 +8,7 @@
 
 #include "kaleidoscope/hooks.h"
 #include "kaleidoscope/KeyswitchEvent.h"
+#include "kaleidoscope/KeyArray.h"
 #include "kaleidoscope/hid/Report.h"
 
 
@@ -15,19 +16,26 @@ namespace kaleidoscope {
 namespace hooks {
 
 /// Call pre-keyswitch-scan hooks (run every cycle, before keyswitches are scanned)
+__attribute__((weak))
 void preScanHooks() {}
 
 /// Call keyswitch event handler hooks (run when a key press or release is detected)
-bool keyswitchEventHooks(KeyswitchEvent& event, byte& caller) {
+///
+/// Return true if processing should continue, false if the event has been completely
+/// handled, and no further action should take place in response to the event.
+__attribute__((weak))
+bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, byte& caller) {
   return true;
 }
 
 /// Call keyboard HID pre-report hooks (run when a keyboard HID report is about to be sent)
+__attribute__((weak))
 bool preKeyboardReportHooks(kaleidoscope::hid::keyboard::Report& keyboard_report) {
   return true;
 }
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
+__attribute__((weak))
 void postKeyboardReportHooks() {}
 
 } // namespace hooks {
