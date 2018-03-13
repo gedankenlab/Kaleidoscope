@@ -11,17 +11,17 @@ namespace kaleidoscope {
 // more common than most of the core types, so I moved it up higher. These should be
 // sorted in descending order of frequency of use; I'm just guessing here.
 KeyFlavor Key::flavor() const {
-  if (keyboard.meta == keyboard_flavor_id)
+  if (keyboard.flavor == keyboard_flavor_id)
     return KeyFlavor::keyboard;
-  if (plugin.meta == plugin_flavor_id)
+  if (plugin.flavor == plugin_flavor_id)
     return KeyFlavor::plugin;
-  if (layer.meta == layer_flavor_id)
+  if (layer.flavor == layer_flavor_id)
     return KeyFlavor::layer;
-  if (mouse.meta == mouse_flavor_id)
+  if (mouse.flavor == mouse_flavor_id)
     return KeyFlavor::mouse;
-  if (consumer.meta == consumer_flavor_id)
+  if (consumer.flavor == consumer_flavor_id)
     return KeyFlavor::consumer;
-  if (system.meta == system_flavor_id)
+  if (system.flavor == system_flavor_id)
     return KeyFlavor::system;
   return KeyFlavor::unknown;
 }
@@ -32,7 +32,7 @@ byte Key::mods() const {
   // If it's not a keyboard key, no mods are applied, so bail out. This test is probably
   // inefficient, because we should always be doing it before calling this function, but
   // it's safer this way.
-  if (keyboard.meta != keyboard_flavor_id)
+  if (keyboard.flavor != keyboard_flavor_id)
     return 0;
 
   byte modifiers = byte(keyboard.mods);

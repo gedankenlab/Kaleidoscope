@@ -19,7 +19,7 @@ constexpr byte keyboard_flavor_id { 0b000      };
 constexpr byte consumer_flavor_id { 0b001000   };
 constexpr byte   system_flavor_id { 0b00100100 };
 constexpr byte    mouse_flavor_id { 0b00100101 };
-constexpr byte    layer_flavor_id { 0b00100110 };
+constexpr byte    layer_flavor_id { 0b00101    };
 constexpr byte   plugin_flavor_id { 0b01       };
 
 // These mod bits are in the same order as the mod bits in the HID keyboard report for
@@ -36,36 +36,43 @@ union Key {
 
   // Keyboard key type: 8 bits for keycode, 4 modifier flags, one flag to indicate if the
   // modifiers should apply to the right hand keys instead of the left ones, and three
-  // bits for type identification (meta is all zeros).
+  // bits for type identification (flavor is all zeros).
   struct {
-    uint16_t keycode : 8, mods : 4, mods_right : 1, meta : 3;
+    uint16_t keycode : 8, mods : 4, mods_right : 1, flavor : 3;
   } keyboard;
 
   // Consumer Control key type: 10 bits for keycode, 6 for type
   struct {
-    uint16_t keycode : 10, meta : 6;
+    uint16_t keycode : 10, flavor : 6;
   } consumer;
 
   // System Control key type: 8 bits for keycode, 8 for type
   struct {
-    uint16_t keycode : 8, meta : 8;
+    uint16_t keycode : 8, flavor : 8;
   } system;
 
   // Mouse key type: 8 bits for keycode, 8 for type
   struct {
-    uint16_t keycode : 8, meta : 8;
+    uint16_t keycode : 8, flavor : 8;
   } mouse;
 
   // Layer key type: 8 bits for keycode, 8 for type. "keycode" is probably not the best
   // name for the low byte.
   struct {
-    uint16_t keycode : 8, meta : 8;
+    uint16_t keycode : 8, meta : 3, flavor : 5;
+    // 3 meta bits: 1 for shift/lock, 1 for eeprom/progmem?, 1 for ?
+    byte index() { // does this work? If so, does it belong here?
+      return byte(keycode);
+    }
+    byte type() {
+      return byte(meta);
+    }
   } layer;
 
   // Plugin key type: only two bits for identifying the type (could be just one), and the
   // rest can be used for identifying plugins, and storing values
   struct {
-    uint16_t keycode : 14, meta : 2;
+    uint16_t keycode : 14, flavor : 2;
   } plugin;
 
   // Constructors
@@ -81,12 +88,12 @@ union Key {
   // constexpr Key(int val)
   //   : raw{static_cast<uint16_t>(val)} {}
 
-  // constexpr Key(byte keycode, byte meta)
-  //   : low_byte{keycode}, high_byte{meta} {}
+  // constexpr Key(byte keycode, byte flavor)
+  //   : low_byte{keycode}, high_byte{flavor} {}
 
-  // constexpr Key(int keycode, int meta)
+  // constexpr Key(int keycode, int flavor)
   //   : low_byte{static_cast<byte>(keycode)},
-  //     high_byte{static_cast<byte>(meta)} {}
+  //     high_byte{static_cast<byte>(flavor)} {}
 
   void readFromProgmem(const Key& progmem_key) {
     raw = pgm_read_word(&progmem_key);
@@ -105,7 +112,7 @@ union Key {
     return new_key;
   }
   static Key createFromEeprom(uint16_t eeprom_addr) {
-    Key new_key {};
+    Key new_key;
     EEPROM.get(eeprom_addr, new_key);
     return new_key;
   }
@@ -115,9 +122,11 @@ union Key {
   // implement sparse layers. Of course, the hard-coded values must be replaced.
   constexpr bool isTransparent() const {
     return (raw == 0xFFFF);
+    //return *this == cKey::transparent;
   }
   constexpr bool isBlank() const {
     return (raw == 0x0000);
+    //return *this == cKey::blank;
   }
   constexpr bool isEmpty() const {
     return (this->isTransparent() || this->isBlank());
@@ -129,7 +138,7 @@ union Key {
                                    byte mods = 0,
                                    bool mods_right = false) {
     // Key key;
-    // key.keyboard.meta       = keyboard_flavor_id;
+    // key.keyboard.flavor     = keyboard_flavor_id;
     // key.keyboard.keycode    = keycode;
     // key.keyboard.mods       = mods;
     // key.keyboard.mods_right = mods_right;
@@ -138,35 +147,36 @@ union Key {
   }
   static constexpr Key consumerKey(uint16_t keycode) {
     // Key key;
-    // key.consumer.meta    = consumer_flavor_id;
+    // key.consumer.flavor  = consumer_flavor_id;
     // key.consumer.keycode = keycode;
     // return key;
     return Key((consumer_flavor_id << 10) | (0x03FF & keycode));
   }
   static constexpr Key systemKey(byte keycode) {
     // Key key;
-    // key.system.meta    = system_flaver_id;
+    // key.system.flavor  = system_flaver_id;
     // key.system.keycode = keycode;
     // return key;
     return Key((uint16_t(system_flavor_id) << 8) + keycode);
   }
   static constexpr Key mouseKey(byte keycode) {
     // Key key;
-    // key.mouse.meta    = mouse_flaver_id;
+    // key.mouse.flavor  = mouse_flaver_id;
     // key.mouse.keycode = keycode;
     // return key;
     return Key((uint16_t(mouse_flavor_id) << 8) + keycode);
   }
-  static constexpr Key layerKey(byte keycode) {
+  static constexpr Key layerKey(byte keycode, byte meta) {
     // Key key;
-    // key.layer.meta    = layer_flaver_id;
+    // key.layer.flavor  = layer_flaver_id;
+    // key.layer.meta    = meta;
     // key.layer.keycode = keycode;
     // return key;
-    return Key((uint16_t(layer_flavor_id) << 8) + keycode);
+    return Key((uint16_t(layer_flavor_id) << 11) + (uint16_t(meta) << 8) + keycode);
   }
   static Key pluginKey(uint16_t keycode) {
     // Key key;
-    // key.plugin.meta    = plugin_flaver_id;
+    // key.plugin.flavor  = plugin_flaver_id;
     // key.plugin.keycode = keycode;
     // return key;
     return Key((plugin_flavor_id << 14) | (Key{}.plugin.keycode & keycode));
