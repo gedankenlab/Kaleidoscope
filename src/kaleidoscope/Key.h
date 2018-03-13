@@ -111,21 +111,6 @@ union Key {
     raw = uint16_t(keycode);
   }
 
-  // Actually, I see no point to these being constexpr; that only matters at compile time
-  // (I'm pretty sure), and this function is inherently a run-time-only
-  // function. Furthermore, they don't need to be here at all; they should be non-member,
-  // non-friend functions instead.
-  static Key createFromProgmem(const Key& progmem_key) {
-    Key new_key;
-    new_key.readFromProgmem(progmem_key);
-    return new_key;
-  }
-  static Key createFromEeprom(uint16_t eeprom_addr) {
-    Key new_key;
-    EEPROM.get(eeprom_addr, new_key);
-    return new_key;
-  }
-
   // Very commonly-used test functions. I've decided to use `Blank` instead of `NoKey`
   // because I think it's much clearer, especially in the light of my intention to
   // implement sparse layers. Of course, the hard-coded values must be replaced.
@@ -259,21 +244,6 @@ union Key {
   Key & operator-=(Key other) {
     this->raw -= other.raw;
     return *this;
-  }
-
-  // Other arithmetic operators for use with offsets
-  constexpr Key operator+(uint16_t val) const {
-    return Key(this->raw + val);
-  }
-  constexpr Key operator-(uint16_t val) const {
-    return Key(this->raw + val);
-  }
-  // Key object versions
-  constexpr Key operator+(Key other) const {
-    return Key(this->raw + other.raw);
-  }
-  constexpr Key operator-(Key other) const {
-    return Key(this->raw - other.raw);
   }
 
 };
