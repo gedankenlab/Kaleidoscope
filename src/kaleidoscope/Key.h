@@ -255,13 +255,13 @@ constexpr Key mouseKey(byte keycode) {
   // return key;
   return Key((uint16_t(mouse_flavor_id) << 8) + keycode);
 }
-constexpr Key layerKey(byte keycode, byte meta) {
+constexpr Key layerKey(byte layer_index, byte meta = 0) {
   // Key key;
   // key.layer.flavor  = layer_flaver_id;
   // key.layer.meta    = meta;
   // key.layer.keycode = keycode;
   // return key;
-  return Key((uint16_t(layer_flavor_id) << 11) + (uint16_t(meta) << 8) + keycode);
+  return Key((uint16_t(layer_flavor_id) << 11) + (uint16_t(meta) << 8) + layer_index);
 }
 constexpr Key pluginKey(uint16_t keycode) {
   // Key key;

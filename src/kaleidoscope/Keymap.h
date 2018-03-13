@@ -12,6 +12,7 @@
 #include "kaleidoscope/Layer.h"
 #include "kaleidoscope/LayerKey.h"
 #include "kaleidoscope/cKeyAddr.h"
+#include "kaleidoscope/KeyswitchEvent.h"
 
 
 namespace kaleidoscope {
@@ -49,9 +50,9 @@ class Keymap {
   void shiftToLayer(byte layer_index);
   void moveToLayer(byte layer_index);
 
-  void handleLayerChange(Key key);
+  void handleLayerChange(KeyswitchEvent event);
 
-  Key operator[](KeyAddr k) const;
+  Key operator[](KeyAddr key_addr) const;
 
  private:
   // An array of pointers to the Layer objects that make up the keymap

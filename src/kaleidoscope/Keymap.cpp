@@ -95,25 +95,38 @@ void Keymap::toggleLayer(byte layer_index) {
 }
 
 
-void Keymap::handleLayerChange(Key key) {
-  byte layer_index    = key.layer.index();
-  byte layer_key_type = key.layer.type();
+void Keymap::handleLayerChange(KeyswitchEvent event) {
+  byte layer_index    = event.key.layer.index();
+  byte layer_key_type = event.key.layer.type();
 
   assert(layer_index < layer_count_);
 
   // TODO: replace hardcoded constants
-  switch (key.layer.type() & 1) {
+  switch (layer_key_type & 1) {
+
     case 0: // toggle layer
-      return toggleLayer(layer_index);
+      if (event.state.toggledOn())
+        toggleLayer(layer_index);
+      break;
+
     case 1: // shift layer
-      top_active_layer_index_ = layer_index;
-      // TODO: figure out what else should happen here
+      if (event.state.toggledOn()) {
+        top_active_layer_index_ = layer_index;
+      } else {
+        updateTopActiveLayer_();
+      }
+      break;
+
+    default:
+      break;
   }
+  // Maybe we want to use a bit to signal switches between PROGMEM & EEPROM keymaps, but
+  // I'm inclined to think that should be a separate function entirely
 }
 
 
 void Keymap::updateTopActiveLayer_() {
-  for (byte i = (layer_count_ - 1); i > default_layer_index_; --i) {
+  for (byte i(layer_count_ - 1); i > default_layer_index_; --i) {
     if (getLayerState_(i)) {
       top_active_layer_index_ = i;
       return;
@@ -134,7 +147,7 @@ inline void Keymap::setLayerState_(byte layer_index, bool state) {
 
 
 inline void Keymap::clearLayerStates_() {
-  for (byte i = 0; i < sizeof(layer_states_); ++i) {
+  for (byte i(0); i < sizeof(layer_states_); ++i) {
     layer_states_[i] = 0;
   }
   setLayerState_(default_layer_index_, true);
