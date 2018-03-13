@@ -10,6 +10,7 @@
 #include "kaleidoscope/Layer.h"
 #include "kaleidoscope/Key.h"
 #include "kaleidoscope/cKey.h"
+#include "kaleidoscope/cKeyAddr.h"
 #include "kaleidoscope/KeyArray.h"
 #include "kaleidoscope/KeyFlavor.h"
 
@@ -115,7 +116,7 @@ void Keymap::handleLayerChange(KeyswitchEvent event, KeyArray& active_keys) {
     case 1: // shift layer
       if (event.state.toggledOn()) {
         top_active_layer_index_ = layer_index;
-        for (KeyAddr k(0); k < KeyAddr(total_keys); ++k) {
+        for (KeyAddr k = cKeyAddr::start; k < cKeyAddr::end; ++k) {
           if (k == event.addr)
             continue;
           Key& key = active_keys[k];
