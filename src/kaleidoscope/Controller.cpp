@@ -67,7 +67,7 @@ bool Controller::handleKeyswitchEvent(KeyswitchEvent event, byte caller) {
     return false;
   }
   if (key.flavor() == KeyFlavor::layer) {
-    keymap_.handleLayerChange(event);
+    keymap_.handleLayerChange(event, active_keys_);
     return false;
   }
   if (key.isEmpty())

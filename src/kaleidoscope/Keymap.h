@@ -13,6 +13,7 @@
 #include "kaleidoscope/LayerKey.h"
 #include "kaleidoscope/cKeyAddr.h"
 #include "kaleidoscope/KeyswitchEvent.h"
+#include "kaleidoscope/KeyArray.h"
 
 
 namespace kaleidoscope {
@@ -50,7 +51,7 @@ class Keymap {
   void shiftToLayer(byte layer_index);
   void moveToLayer(byte layer_index);
 
-  void handleLayerChange(KeyswitchEvent event);
+  void handleLayerChange(KeyswitchEvent event, KeyArray& active_keys);
 
   Key operator[](KeyAddr key_addr) const;
 

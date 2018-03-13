@@ -9,6 +9,9 @@
 #include KALEIDOSCOPE_KEYADDR_H
 #include "kaleidoscope/Layer.h"
 #include "kaleidoscope/Key.h"
+#include "kaleidoscope/cKey.h"
+#include "kaleidoscope/KeyArray.h"
+#include "kaleidoscope/KeyFlavor.h"
 
 
 namespace kaleidoscope {
@@ -95,7 +98,7 @@ void Keymap::toggleLayer(byte layer_index) {
 }
 
 
-void Keymap::handleLayerChange(KeyswitchEvent event) {
+void Keymap::handleLayerChange(KeyswitchEvent event, KeyArray& active_keys) {
   byte layer_index    = event.key.layer.index();
   byte layer_key_type = event.key.layer.type();
 
@@ -112,6 +115,13 @@ void Keymap::handleLayerChange(KeyswitchEvent event) {
     case 1: // shift layer
       if (event.state.toggledOn()) {
         top_active_layer_index_ = layer_index;
+        for (KeyAddr k(0); k < KeyAddr(total_keys); ++k) {
+          if (k == event.addr)
+            continue;
+          Key& key = active_keys[k];
+          if ((key.flavor() == KeyFlavor::layer) && (key.layer.type() == 1))
+            key = cKey::blank;
+        }
       } else {
         updateTopActiveLayer_();
       }
