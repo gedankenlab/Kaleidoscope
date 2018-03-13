@@ -126,56 +126,6 @@ union Key {
     return (this->isTransparent() || this->isBlank());
   }
 
-  // These would be much cleaner if we could use C++14, where we're not restricted to a
-  // single statement for constexpr functions:
-  static constexpr Key keyboardKey(byte keycode,
-                                   byte mods = 0,
-                                   bool mods_right = false) {
-    // Key key;
-    // key.keyboard.flavor     = keyboard_flavor_id;
-    // key.keyboard.keycode    = keycode;
-    // key.keyboard.mods       = mods;
-    // key.keyboard.mods_right = mods_right;
-    // return key;
-    return Key((uint16_t(keyboard_flavor_id) << 13) + (mods | (mods_right << 4)) + keycode);
-  }
-  static constexpr Key consumerKey(uint16_t keycode) {
-    // Key key;
-    // key.consumer.flavor  = consumer_flavor_id;
-    // key.consumer.keycode = keycode;
-    // return key;
-    return Key((consumer_flavor_id << 10) | (0x03FF & keycode));
-  }
-  static constexpr Key systemKey(byte keycode) {
-    // Key key;
-    // key.system.flavor  = system_flaver_id;
-    // key.system.keycode = keycode;
-    // return key;
-    return Key((uint16_t(system_flavor_id) << 8) + keycode);
-  }
-  static constexpr Key mouseKey(byte keycode) {
-    // Key key;
-    // key.mouse.flavor  = mouse_flaver_id;
-    // key.mouse.keycode = keycode;
-    // return key;
-    return Key((uint16_t(mouse_flavor_id) << 8) + keycode);
-  }
-  static constexpr Key layerKey(byte keycode, byte meta) {
-    // Key key;
-    // key.layer.flavor  = layer_flaver_id;
-    // key.layer.meta    = meta;
-    // key.layer.keycode = keycode;
-    // return key;
-    return Key((uint16_t(layer_flavor_id) << 11) + (uint16_t(meta) << 8) + keycode);
-  }
-  static Key pluginKey(uint16_t keycode) {
-    // Key key;
-    // key.plugin.flavor  = plugin_flaver_id;
-    // key.plugin.keycode = keycode;
-    // return key;
-    return Key((plugin_flavor_id << 14) | (Key{}.plugin.keycode & keycode));
-  }
-
   // Probably should rename to `variety` or some other synonym
   KeyFlavor flavor() const;
 
@@ -271,4 +221,73 @@ inline Key getShallowEepromKey(uint16_t eeprom_addr) {
   return new_key;
 }
 
+// These would be much cleaner if we could use C++14, where we're not restricted to a
+// single statement for constexpr functions:
+constexpr Key keyboardKey(byte keycode,
+                          byte mods = 0,
+                          bool mods_right = false) {
+  // Key key;
+  // key.keyboard.flavor     = keyboard_flavor_id;
+  // key.keyboard.keycode    = keycode;
+  // key.keyboard.mods       = mods;
+  // key.keyboard.mods_right = mods_right;
+  // return key;
+  return Key((uint16_t(keyboard_flavor_id) << 13) + (mods | (mods_right << 4)) + keycode);
+}
+constexpr Key consumerKey(uint16_t keycode) {
+  // Key key;
+  // key.consumer.flavor  = consumer_flavor_id;
+  // key.consumer.keycode = keycode;
+  // return key;
+  return Key((consumer_flavor_id << 10) | (0x03FF & keycode));
+}
+constexpr Key systemKey(byte keycode) {
+  // Key key;
+  // key.system.flavor  = system_flaver_id;
+  // key.system.keycode = keycode;
+  // return key;
+  return Key((uint16_t(system_flavor_id) << 8) + keycode);
+}
+constexpr Key mouseKey(byte keycode) {
+  // Key key;
+  // key.mouse.flavor  = mouse_flaver_id;
+  // key.mouse.keycode = keycode;
+  // return key;
+  return Key((uint16_t(mouse_flavor_id) << 8) + keycode);
+}
+constexpr Key layerKey(byte keycode, byte meta) {
+  // Key key;
+  // key.layer.flavor  = layer_flaver_id;
+  // key.layer.meta    = meta;
+  // key.layer.keycode = keycode;
+  // return key;
+  return Key((uint16_t(layer_flavor_id) << 11) + (uint16_t(meta) << 8) + keycode);
+}
+constexpr Key pluginKey(uint16_t keycode) {
+  // Key key;
+  // key.plugin.flavor  = plugin_flaver_id;
+  // key.plugin.keycode = keycode;
+  // return key;
+  return Key((plugin_flavor_id << 14) | ((uint16_t(0xFFFF) >> 2) & keycode));
+}
+
 } // namespace kaleidoscope {
+
+#if 0
+// How to implement a pluginKey:
+constexpr Key qukeysKey(uint16_t index) {
+  // Key key;
+  // key.plugin.flavor  = plugin_flavor_id;
+  // key.plugin.keycode = qukeys_offset + index;
+  // return key;
+  return Key((plugin_flavor_id << 14) |
+             (uint16_t(0xFFFF) >> 2) & (qukeys_offset + index));
+}
+
+uint16_t qukeysIndex(Key key) {
+  assert(key.flavor() == KeyFlavor::plugin);
+  uint16_t index = key.plugin.keycode - qukeys_offset;
+  assert(index < total_qukeys);
+  return index;
+}
+#endif
