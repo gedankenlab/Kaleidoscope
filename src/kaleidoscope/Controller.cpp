@@ -82,19 +82,19 @@ void Controller::run() {
   keyboard_.scanMatrix();
 
   for (KeyswitchEvent event : keyboard_) {
-    if (isMasked(event.addr)) {
+    if (event.key.isMasked()) {
       if (event.state.toggledOff())
-        active_keys_[event.addr.addr] = cKey::transparent; // unmask(event.addr);
+        active_keys_[event.addr].unmask();
       continue;
     }
     if (event.state.toggledOff()) {
       // key release event
-      event.key = active_keys_[event.addr.addr];
-      active_keys_[event.addr.addr] = cKey::transparent; // unmask
+      event.key = active_keys_[event.addr];
+      active_keys_[event.addr].unmask();
     } else {
       // non-masked key press event
       event.key = keymap_[event.addr];
-      active_keys_[event.addr.addr] = event.key;
+      active_keys_[event.addr] = event.key;
     }
     byte caller = 0;
     handleKeyswitchEvent(event, caller); // `0` == Controller is the caller

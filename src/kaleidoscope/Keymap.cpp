@@ -121,7 +121,7 @@ void Keymap::handleLayerChange(KeyswitchEvent event, KeyArray& active_keys) {
             continue;
           Key& key = active_keys[k];
           if ((key.flavor() == KeyFlavor::layer) && (key.layer.type() == 1))
-            key = cKey::blank;
+            key.mask();
         }
       } else {
         updateTopActiveLayer_();

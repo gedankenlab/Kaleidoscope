@@ -52,10 +52,6 @@ class Controller {
   bool handleKeyswitchEvent(KeyswitchEvent event, byte caller = 0);
   void sendKeyboardReport();
 
-  void mask(KeyAddr key_addr);
-  void unmask(KeyAddr key_addr);
-  bool isMasked(KeyAddr key_addr) const;
-
   Key lookup(KeyAddr key_addr) const;
 
  private:
@@ -77,18 +73,6 @@ class Controller {
   //Plugin* plugins_[MAX_PLUGINS]; // need to define this statically somehow
 };
 
-
-inline void Controller::mask(KeyAddr k) {
-  active_keys_[k] = cKey::blank;
-}
-
-inline void Controller::unmask(KeyAddr k) {
-  active_keys_[k] = cKey::transparent;
-}
-
-inline bool Controller::isMasked(KeyAddr k) const {
-  return (active_keys_[k].isBlank());
-}
 
 inline Key Controller::lookup(KeyAddr k) const {
   return keymap_[k];
