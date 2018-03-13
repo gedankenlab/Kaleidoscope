@@ -19,7 +19,7 @@ constexpr byte keyboard_flavor_id { 0b000      };
 constexpr byte consumer_flavor_id { 0b001000   };
 constexpr byte   system_flavor_id { 0b00100100 };
 constexpr byte    mouse_flavor_id { 0b00100101 };
-constexpr byte    layer_flavor_id { 0b00101    };
+constexpr byte    layer_flavor_id { 0b001010   };
 constexpr byte   plugin_flavor_id { 0b01       };
 
 // These mod bits are in the same order as the mod bits in the HID keyboard report for
@@ -63,9 +63,8 @@ union Key {
   // Layer key type: 8 bits for keycode, 8 for type. "keycode" is probably not the best
   // name for the low byte.
   struct {
-    uint16_t keycode : 8, meta : 3, flavor : 5;
-    // 3 meta bits: 1 for shift/lock, 1 for eeprom/progmem?, 1 for ?
-    byte index() { // does this work? If so, does it belong here?
+    uint16_t keycode : 8, meta : 2, flavor : 6;
+    byte index() {
       return byte(keycode);
     }
     byte type() {
@@ -275,7 +274,7 @@ constexpr Key layerKey(byte layer_index, byte meta = 0) {
   // key.layer.meta    = meta;
   // key.layer.keycode = keycode;
   // return key;
-  return Key((uint16_t(layer_flavor_id) << 11) + (uint16_t(meta) << 8) + layer_index);
+  return Key((uint16_t(layer_flavor_id) << 10) + (uint16_t(meta) << 8) + layer_index);
 }
 constexpr Key pluginKey(uint16_t keycode) {
   // Key key;
