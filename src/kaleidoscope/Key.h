@@ -102,6 +102,15 @@ union Key {
     EEPROM.get(eeprom_addr, raw);
   }
 
+  void readKeycodeFromProgmem(const byte& progmem_key) {
+    raw = uint16_t(pgm_read_byte(&progmem_key));
+  }
+  void readKeycodeFromEeprom(uint16_t eeprom_addr) {
+    byte keycode;
+    EEPROM.get(eeprom_addr, keycode);
+    raw = uint16_t(keycode);
+  }
+
   // Actually, I see no point to these being constexpr; that only matters at compile time
   // (I'm pretty sure), and this function is inherently a run-time-only
   // function. Furthermore, they don't need to be here at all; they should be non-member,
@@ -287,6 +296,28 @@ constexpr Key operator-(uint16_t x, Key key) {
 }
 constexpr Key operator-(Key key, uint16_t x) {
   return Key(key.raw - x);
+}
+
+inline Key getProgmemKey(const Key& progmem_key) {
+  Key new_key;
+  new_key.readFromProgmem(progmem_key);
+  return new_key;
+}
+inline Key getEepromKey(uint16_t eeprom_addr) {
+  Key new_key;
+  new_key.readFromEeprom(eeprom_addr);
+  return new_key;
+}
+
+inline Key getShallowProgmemKey(const byte& progmem_keycode) {
+  Key new_key;
+  new_key.readKeycodeFromProgmem(progmem_keycode);
+  return new_key;
+}
+inline Key getShallowEepromKey(uint16_t eeprom_addr) {
+  Key new_key;
+  new_key.readKeycodeFromEeprom(eeprom_addr);
+  return new_key;
 }
 
 } // namespace kaleidoscope {
