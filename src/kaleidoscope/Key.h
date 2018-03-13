@@ -29,8 +29,8 @@ constexpr byte mod_shift   { 0b0010 };  // (1 << 1)
 constexpr byte mod_alt     { 0b0100 };  // (1 << 2)
 constexpr byte mod_gui     { 0b1000 };  // (1 << 3)
 
-constexpr uint16_t transparent { 0x0000 };
-constexpr uint16_t blank       { 0xFFFF };
+constexpr uint16_t transparent { 0xFFFF };
+constexpr uint16_t blank       { 0x0000 };
 
 
 union Key {
@@ -131,13 +131,13 @@ union Key {
   }
 
   void mask() {
-    raw = transparent;
-  }
-  void unmask() {
     raw = blank;
   }
+  void unmask() {
+    raw = transparent;
+  }
   bool isMasked() const {
-    return this->isTransparent();
+    return this->isBlank();
   }
 
   // Probably should rename to `variety` or some other synonym
