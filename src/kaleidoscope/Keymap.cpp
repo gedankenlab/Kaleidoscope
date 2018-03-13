@@ -3,6 +3,7 @@
 #include "kaleidoscope/Keymap.h"
 
 #include <Arduino.h>
+#include <assert.h>
 
 #include KALEIDOSCOPE_HARDWARE_H
 #include KALEIDOSCOPE_KEYADDR_H
@@ -85,28 +86,32 @@ void Keymap::deactivateLayer(byte layer_index) {
     updateTopActiveLayer_();
 }
 
-
-void Keymap::handleLayerChange(Key key) {
-  byte layer_index{byte(key.layer.keycode)};
-  if (layer_index < layer_count_) {
-    // toggle layer
-    if (getLayerState_(layer_index)) {
-      deactivateLayer(layer_index);
-    } else {
-      activateLayer(layer_index);
-    }
+void Keymap::toggleLayer(byte layer_index) {
+  if (getLayerState_(layer_index)) {
+    deactivateLayer(layer_index);
   } else {
-    layer_index -= layer_count_;
-    // shift layer
-    if (layer_index < layer_count_) {
-      top_active_layer_index_ = layer_index;
-      // TODO: finish this
-    }
+    activateLayer(layer_index);
   }
 }
 
 
-// This could be a private function
+void Keymap::handleLayerChange(Key key) {
+  byte layer_index    = key.layer.index();
+  byte layer_key_type = key.layer.type();
+
+  assert(layer_index < layer_count_);
+
+  // TODO: replace hardcoded constants
+  switch (key.layer.type() & 1) {
+    case 0: // toggle layer
+      return toggleLayer(layer_index);
+    case 1: // shift layer
+      top_active_layer_index_ = layer_index;
+      // TODO: figure out what else should happen here
+  }
+}
+
+
 void Keymap::updateTopActiveLayer_() {
   for (byte i = (layer_count_ - 1); i > default_layer_index_; --i) {
     if (getLayerState_(i)) {

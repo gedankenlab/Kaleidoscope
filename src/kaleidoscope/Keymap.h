@@ -30,23 +30,24 @@ class Keymap {
  public:
   // Note: `layers` is a pointer to an array of `Layer` pointers. I'm doing this so that
   // new (EEPROM) layers can be added after compile-time
-  Keymap(Layer** layers, byte count);
+  Keymap(Layer** layers, byte layer_count);
 
-  Key lookup(KeyAddr key_addr, byte layer) const;
+  Key lookup(KeyAddr key_addr, byte layer_index) const;
 
   LayerKey lookupActiveLayerKey(KeyAddr key_addr) const;
   byte lookupActiveLayer(KeyAddr key_addr) const;
   byte lookupLayer(KeyAddr key_addr) const; // alternative to lookupActiveLayer()
-  const Layer& layer(byte index) const;
+  const Layer& layer(byte layer_index) const;
 
-  bool isLayerActive(byte layer) const {
-    return getLayerState_(layer);
+  bool isLayerActive(byte layer_index) const {
+    return getLayerState_(layer_index);
   }
 
-  void activateLayer(byte layer);
-  void deactivateLayer(byte layer);
-  void shiftToLayer(byte layer);
-  void moveToLayer(byte layer);
+  void activateLayer(byte layer_index);
+  void deactivateLayer(byte layer_index);
+  void toggleLayer(byte layer_index);
+  void shiftToLayer(byte layer_index);
+  void moveToLayer(byte layer_index);
 
   void handleLayerChange(Key key);
 
@@ -79,8 +80,8 @@ class Keymap {
   // Also, maybe this is where we store the active_keys_ object (reference?)
   //Layer& active_keys_;
 
-  bool getLayerState_(byte layer) const;
-  void setLayerState_(byte layer, bool state);
+  bool getLayerState_(byte layer_index) const;
+  void setLayerState_(byte layer_index, bool state);
 
   // I think my new caching system makes these obsolete
   void clearLayerStates_();
