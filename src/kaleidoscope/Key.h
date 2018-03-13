@@ -203,25 +203,6 @@ union Key {
     return this->raw <= other.raw;
   }
 
-  // Comparison operators (integers). I don't think these are really necessary, or even
-  // desirable; we should remember to cast integers appropriately, instead. There's
-  // probably a small benefit in performance, though.
-  constexpr bool operator==(uint16_t val) const {
-    return this->raw == val;
-  }
-  constexpr bool operator>=(uint16_t val) const {
-    return this->raw >= val;
-  }
-  constexpr bool operator<=(uint16_t val) const {
-    return this->raw <= val;
-  }
-  constexpr bool operator>(uint16_t val) const {
-    return this->raw > val;
-  }
-  constexpr bool operator<(uint16_t val) const {
-    return this->raw < val;
-  }
-
   // Set key value from integer
   Key& operator=(uint16_t val) {
     this->raw = val;
