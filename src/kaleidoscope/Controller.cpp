@@ -21,6 +21,7 @@ void Controller::init() {
 
   report_.init();
 
+  // memset(&active_keys_, 0xFF, sizeof(active_keys_));
   for (Key& key : active_keys_) {
     key = cKey::transparent;
   }
@@ -38,8 +39,8 @@ void Controller::run() {
 
 bool Controller::handleKeyswitchEvent(KeyswitchEvent event, byte caller) {
   Key& key = event.key;
-  KeyAddr k = event.addr;
-  KeyswitchState state = event.state;
+  const KeyAddr& k = event.addr;
+  const KeyswitchState& state = event.state;
 
   if (active_keys_[k] == cKey::blank) {
     if (state.toggledOff())
