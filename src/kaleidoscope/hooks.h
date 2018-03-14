@@ -20,13 +20,13 @@ namespace hooks {
 void preScanHooks();
 
 /// Call keyswitch event handler hooks (run when a key press or release is detected)
-bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, byte& caller);
+bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, byte& caller_id);
 
 /// Call keyboard HID pre-report hooks (run when a keyboard HID report is about to be sent)
-bool preKeyboardReportHooks(kaleidoscope::hid::keyboard::Report& keyboard_report);
+bool preKeyboardReportHooks(hid::keyboard::Report& keyboard_report);
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
-void postKeyboardReportHooks();
+//void postKeyboardReportHooks();
 
 } // namespace hooks {
 } // namespace kaleidoscope {

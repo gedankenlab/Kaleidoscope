@@ -96,8 +96,7 @@ void Controller::run() {
       event.key = keymap_[event.addr];
       active_keys_[event.addr] = event.key;
     }
-    byte caller = 0;
-    handleKeyswitchEvent(event, caller); // `0` == Controller is the caller
+    handleKeyswitchEvent(event);
   }
 }
 

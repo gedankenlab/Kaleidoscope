@@ -24,19 +24,19 @@ void preScanHooks() {}
 /// Return true if processing should continue, false if the event has been completely
 /// handled, and no further action should take place in response to the event.
 __attribute__((weak))
-bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, byte& caller) {
+bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, byte& caller_id) {
   return true;
 }
 
 /// Call keyboard HID pre-report hooks (run when a keyboard HID report is about to be sent)
 __attribute__((weak))
-bool preKeyboardReportHooks(kaleidoscope::hid::keyboard::Report& keyboard_report) {
+bool preKeyboardReportHooks(hid::keyboard::Report& keyboard_report) {
   return true;
 }
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
-__attribute__((weak))
-void postKeyboardReportHooks() {}
+// __attribute__((weak))
+// void postKeyboardReportHooks() {}
 
 } // namespace hooks {
 } // namespace kaleidoscope {

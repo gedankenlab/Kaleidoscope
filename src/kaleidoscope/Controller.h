@@ -49,7 +49,9 @@ class Controller {
   //   p.init(plugin_count_++);
   // }
 
-  bool handleKeyswitchEvent(KeyswitchEvent event, byte caller = 0);
+  static constexpr byte id{0xFF};
+
+  bool handleKeyswitchEvent(KeyswitchEvent event, byte caller = id);
   void sendKeyboardReport();
 
   Key lookup(KeyAddr key_addr) const;
