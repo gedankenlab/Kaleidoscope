@@ -23,7 +23,7 @@ void Controller::init() {
 
   // memset(&active_keys_, 0xFF, sizeof(active_keys_));
   for (Key& key : active_keys_) {
-    key = cKey::transparent;
+    key = cKey::clear;
   }
 }
 
@@ -44,19 +44,19 @@ bool Controller::handleKeyswitchEvent(KeyswitchEvent event, byte caller) {
 
   if (active_keys_[k] == cKey::blank) {
     if (state.toggledOff())
-      active_keys_[k] = cKey::transparent;
+      active_keys_[k] = cKey::clear;
     return false;
   }
 
   // TODO: deal with invalid KeyAddrs & injected keys
   if (state.toggledOff()) {
     key = active_keys_[k];
-    active_keys_[k] = cKey::transparent;
+    active_keys_[k] = cKey::clear;
   } else if (state.toggledOn()){
     key = keymap_[k];
     active_keys_[k] = key;
   } else {
-    active_keys_[k] = cKey::transparent;
+    active_keys_[k] = cKey::clear;
     return false;
   }
   // TODO: more than one hook point here. First early hooks, where plugins might intercept
@@ -159,7 +159,7 @@ void Controller::sendKeyboardReports() {
   for (KeyAddr k; k < TOTAL_KEYS; ++k) {
     Key mapped_key = active_keys_[k];
     // this conditional should probably be in the hid::keyboard::pressKey() code instead
-    if (mapped_key != key_transparent && mapped_key != key_none) {
+    if (mapped_key != cKey::clear && mapped_key != cKey::blank) {
       report.add(mapped_key);
       //hid::keyboard::pressKey(mapped_key);
     }

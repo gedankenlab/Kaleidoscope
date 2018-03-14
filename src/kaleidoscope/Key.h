@@ -29,14 +29,14 @@ constexpr byte mod_shift   { 0b0010 };  // (1 << 1)
 constexpr byte mod_alt     { 0b0100 };  // (1 << 2)
 constexpr byte mod_gui     { 0b1000 };  // (1 << 3)
 
-constexpr uint16_t transparent { 0xFFFF };
-constexpr uint16_t blank       { 0x0000 };
+constexpr uint16_t clear { 0xFFFF };
+constexpr uint16_t blank { 0x0000 };
 
 
 union Key {
 
-  // Default key value is cKey::transparent
-  uint16_t raw { transparent };
+  // Default key value is cKey::clear
+  uint16_t raw { clear };
 
   // Keyboard key type: 8 bits for keycode, 4 modifier flags, one flag to indicate if the
   // modifiers should apply to the right hand keys instead of the left ones, and three
@@ -118,8 +118,8 @@ union Key {
   // because I think it's much clearer, especially in the light of my intention to
   // implement sparse layers. Of course, the hard-coded values must be replaced.
   constexpr bool isTransparent() const {
-    return (raw == transparent);
-    //return *this == cKey::transparent;
+    return (raw == clear);
+    //return *this == cKey::clear;
   }
   constexpr bool isBlank() const {
     return (raw == blank);
@@ -133,7 +133,7 @@ union Key {
     raw = blank;
   }
   void unmask() {
-    raw = transparent;
+    raw = clear;
   }
   bool isMasked() const {
     return this->isBlank();

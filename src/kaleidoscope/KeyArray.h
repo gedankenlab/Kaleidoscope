@@ -68,7 +68,7 @@ KeyArray active_keys;
 for (Key& key : active_keys) {
   if (key.isEmpty())
     continue;
-  key = cKey::transparent;
+  key = cKey::clear;
 }
 // The iterator might not be worth it:
 KeyArray active_keys;
@@ -76,6 +76,6 @@ for (KeyAddr k{cKeyAddr::start}; k < cKeyAddr::end; ++k) {
   Key& key = active_keys[k];
   if (key.isEmpty())
     continue;
-  key = cKey::transparent;
+  key = cKey::clear;
 }
 #endif
