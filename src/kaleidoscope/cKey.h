@@ -15,17 +15,20 @@ namespace kaleidoscope {
 // `const Key` object.
 namespace cKey {
 
-constexpr Key transparent { 0xFFFF };
-constexpr Key blank       { 0x0000 };
+constexpr Key clear { 0xFFFF };
+constexpr Key blank { 0x0000 };
+
+constexpr Key transparent = clear;
+constexpr Key no_key      = blank;
 
 } // namespace cKey {
 
 } // namespace kaleidoscope {
 
-#define ___ ::kaleidoscope::cKey::transparent
+#define ___ ::kaleidoscope::cKey::clear
 #define XXX ::kaleidoscope::cKey::blank
 
-#define Key_Transparent ::kaleidoscope::cKey::transparent
+#define Key_Transparent ::kaleidoscope::cKey::clear
 #define Key_NoKey       ::kaleidoscope::cKey::blank
 
 #include "kaleidoscope/cKey/backcompat/key_defs_keyboard.h"
