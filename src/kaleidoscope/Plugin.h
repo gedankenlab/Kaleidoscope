@@ -14,7 +14,7 @@ class Plugin {
 
  public:
   // Maybe this should be `getId()`, and take a Controller as the parameter?
-  void init(byte id) final {
+  virtual void init(byte id) final {
     if (id_ == 0xFF)
       id_ = id;
   }

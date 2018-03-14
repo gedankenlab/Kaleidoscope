@@ -23,7 +23,7 @@
 #include "kaleidoscope/KeyswitchEvent.h"
 #include "kaleidoscope/Layer.h"
 #include "kaleidoscope/cKey.h"
-//#include "kaleidoscope/Plugin.h"
+#include "kaleidoscope/Plugin.h"
 #include "kaleidoscope/hid/Report.h"
 #include "kaleidoscope/KeyArray.h"
 
