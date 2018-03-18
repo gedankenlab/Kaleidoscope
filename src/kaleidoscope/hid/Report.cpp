@@ -7,6 +7,8 @@
 
 #include "kaleidoscope/KeyFlavor.h"
 #include "kaleidoscope/Key.h"
+#include "kaleidoscope/cKey.h"
+
 
 // This version uses KeyboardioHID, not the rewrite
 
@@ -34,7 +36,16 @@ void Report::add(Key key) {
     return;
 
   switch (key.flavor()) {
-    case KeyFlavor::keyboard:  // TODO: add modifier flags
+    case KeyFlavor::keyboard:
+      if (byte modifiers = key.mods()) {
+        byte mod_keycode = cKey::first_modifier.keyboard.keycode;
+        while (modifiers != 0) {
+          if (mod_keycode & 1)
+            ::Keyboard.press(mod_keycode);
+          mod_keycode <<= 1;
+          modifiers   <<= 1;
+        }
+      }
       ::Keyboard.press(key.keyboard.keycode);
       return;
     case KeyFlavor::consumer:

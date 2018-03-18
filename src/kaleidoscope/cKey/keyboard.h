@@ -263,6 +263,7 @@ constexpr Key r_cmd = RightGui;
 constexpr Key l_win = LeftGui;
 constexpr Key r_win = RightGui;
 
+constexpr Key first_modifier = LeftControl;
 
 } // namespace cKey {
 
