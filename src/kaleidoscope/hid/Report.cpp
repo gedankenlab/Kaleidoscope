@@ -40,10 +40,10 @@ void Report::add(Key key) {
       if (byte modifiers = key.mods()) {
         byte mod_keycode = cKey::first_modifier.keyboard.keycode;
         while (modifiers != 0) {
-          if (mod_keycode & 1)
+          if (modifiers & 1)
             ::Keyboard.press(mod_keycode);
-          mod_keycode <<= 1;
-          modifiers   <<= 1;
+          mod_keycode += 1;
+          modifiers >>= 1;
         }
       }
       ::Keyboard.press(key.keyboard.keycode);

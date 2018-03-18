@@ -245,7 +245,7 @@ constexpr Key keyboardKey(byte keycode,
   // key.keyboard.mods       = mods;
   // key.keyboard.mods_right = mods_right;
   // return key;
-  return Key((uint16_t(keyboard_flavor_id) << 13) + (mods | (mods_right << 4)) + keycode);
+  return Key((uint16_t(keyboard_flavor_id) << 13) + (mods_right << 12) + (mods << 8) + keycode);
 }
 constexpr Key consumerKey(uint16_t keycode) {
   // Key key;
