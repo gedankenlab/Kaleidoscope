@@ -62,4 +62,15 @@ union KeyswitchState {
 
 };
 
+namespace cKeyswitchState {
+
+constexpr KeyswitchState inactive (0);
+constexpr KeyswitchState pressed  (1);
+constexpr KeyswitchState released (2);
+constexpr KeyswitchState held     (3);
+
+constexpr KeyswitchState idle = inactive;
+
+} // namespace cKeyswitchState {
+
 } // namespace kaleidoscope {

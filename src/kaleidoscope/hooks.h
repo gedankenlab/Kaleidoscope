@@ -10,6 +10,7 @@
 
 #include "kaleidoscope/KeyswitchEvent.h"
 #include "kaleidoscope/KeyArray.h"
+#include "kaleidoscope/Plugin.h"
 #include "kaleidoscope/hid/Report.h"
 
 
@@ -20,7 +21,7 @@ namespace hooks {
 void preScanHooks();
 
 /// Call keyswitch event handler hooks (run when a key press or release is detected)
-bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, byte& caller_id);
+bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, Plugin*& caller);
 
 /// Call keyboard HID pre-report hooks (run when a keyboard HID report is about to be sent)
 bool preKeyboardReportHooks(hid::keyboard::Report& keyboard_report);

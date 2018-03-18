@@ -21,6 +21,9 @@ constexpr Key blank { 0x0000 };
 constexpr Key transparent = clear;
 constexpr Key no_key      = blank;
 
+constexpr Key masked   = blank;
+constexpr Key unmasked = clear;
+
 } // namespace cKey {
 
 } // namespace kaleidoscope {

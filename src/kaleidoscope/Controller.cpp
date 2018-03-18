@@ -37,28 +37,28 @@ void Controller::run() {
   }
 }
 
-bool Controller::handleKeyswitchEvent(KeyswitchEvent event, byte caller) {
-  Key& key = event.key;
+bool Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
+
   const KeyAddr& k = event.addr;
   const KeyswitchState& state = event.state;
 
-  if (active_keys_[k] == cKey::blank) {
+  if (active_keys_[k] == cKey::masked) {
     if (state.toggledOff())
-      active_keys_[k] = cKey::clear;
+      active_keys_[k] = cKey::unmasked;
     return false;
   }
 
   // TODO: deal with invalid KeyAddrs & injected keys
   if (state.toggledOff()) {
-    key = active_keys_[k];
-    active_keys_[k] = cKey::clear;
-  } else if (state.toggledOn()){
-    key = keymap_[k];
-    active_keys_[k] = key;
+    event.key = active_keys_[k];
+  } else if (state.toggledOn()) {
+    event.key = keymap_[k];
   } else {
-    active_keys_[k] = cKey::clear;
+    // TODO: decide what to do if we get a `held` or `idle` state
+    //active_keys_[k] = cKey::clear;
     return false;
   }
+
   // TODO: more than one hook point here. First early hooks, where plugins might intercept
   // & delay events (and maybe promise to always eventually let them through --
   // e.g. Qukeys), then ones that will stop processing if they handle the event
@@ -67,49 +67,29 @@ bool Controller::handleKeyswitchEvent(KeyswitchEvent event, byte caller) {
   if (! hooks::keyswitchEventHooks(event, active_keys_, caller)) {
     return false;
   }
-  if (key.flavor() == KeyFlavor::layer) {
+
+  // Update active_keys_ based on the key state
+  if (state.toggledOff()) {
+    // I'm not 100% convinced this is what we want, but it's probably the best choice. It
+    // means that if a plugin wants to keep a key active on release, it has to return
+    // false in its event handler.
+    active_keys_[k] = cKey::clear;
+  } else if (state.toggledOn()) {
+    active_keys_[k] = event.key;
+  }
+
+  // Handle layer shifts and toggles. Maybe this should happen before updating
+  // active_keys_, but if we do that, the keymap will need access to active_keys_ to do
+  // the update.
+  if (event.key.flavor() == KeyFlavor::layer) {
     keymap_.handleLayerChange(event, active_keys_);
     return false;
   }
-  if (key.isEmpty())
+
+  if (event.key.isEmpty())
     return false;
   return true;
 }
-
-#if 0
-void Controller::run() {
-  hooks::preScanHooks();
-  keyboard_.scanMatrix();
-
-  for (KeyswitchEvent event : keyboard_) {
-    if (event.key.isMasked()) {
-      if (event.state.toggledOff())
-        active_keys_[event.addr].unmask();
-      continue;
-    }
-    if (event.state.toggledOff()) {
-      // key release event
-      event.key = active_keys_[event.addr];
-      active_keys_[event.addr].unmask();
-    } else {
-      // non-masked key press event
-      event.key = keymap_[event.addr];
-      active_keys_[event.addr] = event.key;
-    }
-    handleKeyswitchEvent(event);
-  }
-}
-
-// My big question here is whether to make the first param const and therefore immutable,
-// or to let plugins change parts of it (most likely event.key)? The second parameter
-// (caller) is there to prevent repeat processing of the same event by any plugin (and
-// therefore possible infinite loops)
-void Controller::handleKeyswitchEvent(KeyswitchEvent& event, byte caller) {
-  if (hooks::keyswitchEventHooks(event, active_keys_, caller)) {
-    sendKeyboardReport();
-  }
-}
-#endif
 
 // Hooks need to be added here to make it fully-functional
 void Controller::sendKeyboardReport() {

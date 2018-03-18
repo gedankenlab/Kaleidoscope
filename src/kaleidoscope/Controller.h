@@ -51,7 +51,7 @@ class Controller {
 
   static constexpr byte id{0xFF};
 
-  bool handleKeyswitchEvent(KeyswitchEvent event, byte caller = id);
+  bool handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller = nullptr);
   void sendKeyboardReport();
 
   Key lookup(KeyAddr key_addr) const;

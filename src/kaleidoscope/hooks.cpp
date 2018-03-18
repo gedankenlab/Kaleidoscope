@@ -24,7 +24,7 @@ void preScanHooks() {}
 /// Return true if processing should continue, false if the event has been completely
 /// handled, and no further action should take place in response to the event.
 __attribute__((weak))
-bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, byte& caller_id) {
+bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, Plugin*& caller) {
   return true;
 }
 
