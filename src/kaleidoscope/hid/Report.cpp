@@ -31,33 +31,42 @@ void Report::clear() {
   //nkro_keyboard_ = (BootKeyboard.getProtocol() != HID_BOOT_PROTOCOL);
 }
 
-void Report::add(Key key) {
-  if (key.isEmpty())
+void Report::add(Key key, byte mod_flags_allowed) {
+  if (key == cKey::clear)
     return;
 
   switch (key.flavor()) {
+
     case KeyFlavor::keyboard:
-      if (byte modifiers = key.mods()) {
+      {
+        byte modifiers = key.mods();
+        byte keycode = key.keyboard.keycode;
         byte mod_keycode = cKey::first_modifier.keyboard.keycode;
+        if (keycode < mod_keycode && keycode > 0)
+          modifiers = modifiers & mod_flags_allowed;
         while (modifiers != 0) {
           if (modifiers & 1)
             ::Keyboard.press(mod_keycode);
           mod_keycode += 1;
           modifiers >>= 1;
         }
+        ::Keyboard.press(key.keyboard.keycode);
+        return;
       }
-      ::Keyboard.press(key.keyboard.keycode);
-      return;
+
     case KeyFlavor::consumer:
       // This uses the CONSUMER preprocessor macro
       ::ConsumerControl.press(key.consumer.keycode);
       return;
+
     case KeyFlavor::system:
       // System Control is different; press() sends immediately
       ::SystemControl.press(key.system.keycode);
       return;
+
     case KeyFlavor::layer:
       return;
+
     default:
       return;
   }
@@ -71,22 +80,27 @@ void Report::remove(Key key) {
     return;
 
   switch (key.flavor()) {
+
     case KeyFlavor::keyboard:
       // Here we don't want to remove modifier flags, because they could have been added
       // by other keys (or plugins)
       ::Keyboard.release(key.keyboard.keycode);
       return;
+
     case KeyFlavor::consumer:
       // This uses the CONSUMER preprocessor macro
       ::ConsumerControl.release(key.consumer.keycode);
       return;
+
     case KeyFlavor::system:
       // System Control is different; release() sends immediately, and there's only one
       // keycode at a time
       ::SystemControl.release();
       return;
+
     case KeyFlavor::layer:
       return;
+
     default:
       return;
   }

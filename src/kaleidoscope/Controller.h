@@ -51,10 +51,13 @@ class Controller {
 
   static constexpr byte id{0xFF};
 
-  bool handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller = nullptr);
+  void handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller = nullptr);
   void sendKeyboardReport();
 
-  Key lookup(KeyAddr key_addr) const;
+  Key lookup(KeyAddr key_addr) const; // probably pointless
+  // TODO: add operator[] for active_keys_ access
+  // TODO: add getModFlags();
+  byte getModifierFlags() const; // return mod flags from non-blank, non-modifier keys
 
  private:
 
@@ -68,11 +71,12 @@ class Controller {
   // replace KeyboardioHID entirely
   hid::keyboard::Report& report_;
 
-  byte plugin_count_;
-  // actually, the plugins_[] array is probably useless, because we can't meaningfully
-  // iterate through it in order to call the plugin hook methods
-  // Actually, we can, if we use virtual functions for the hooks, but that has its own drawbacks
   //Plugin* plugins_[MAX_PLUGINS]; // need to define this statically somehow
+  byte plugin_count_;
+
+  // cache of modifier flags on non-modifier, non-blank keys
+  byte mod_flags_allowed_{0};
+
 };
 
 

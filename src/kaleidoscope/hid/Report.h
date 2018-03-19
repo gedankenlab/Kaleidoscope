@@ -20,7 +20,7 @@ class Report {
  public:
   void init();
   void clear();
-  void add(Key key);
+  void add(Key key, byte mods_allowed = 0xFF);
   void remove(Key key);
   void send();
   //byte activeMods();

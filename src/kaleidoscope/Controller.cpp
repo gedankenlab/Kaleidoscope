@@ -17,27 +17,27 @@ namespace kaleidoscope {
 
 
 void Controller::init() {
-  keyboard_.setup();
 
+  keyboard_.setup();
   report_.init();
 
-  // memset(&active_keys_, 0xFF, sizeof(active_keys_));
   for (Key& key : active_keys_) {
     key = cKey::clear;
   }
 }
 
 void Controller::run() {
+
   keyboard_.scanMatrix();
 
   for (KeyswitchEvent event : keyboard_) {
-    if (handleKeyswitchEvent(event)) {
-      sendKeyboardReport();
-    }
+    handleKeyswitchEvent(event);
   }
 }
 
-bool Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
+// I'm starting to think that we should just call the sendReport* functions from here,
+// rather than scattering the code around
+void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
 
   const KeyAddr& k = event.addr;
   const KeyswitchState& state = event.state;
@@ -45,7 +45,7 @@ bool Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
   if (active_keys_[k] == cKey::masked) {
     if (state.toggledOff())
       active_keys_[k] = cKey::unmasked;
-    return false;
+    return;
   }
 
   // TODO: deal with invalid KeyAddrs & injected keys
@@ -56,7 +56,7 @@ bool Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
   } else {
     // TODO: decide what to do if we get a `held` or `idle` state
     //active_keys_[k] = cKey::clear;
-    return false;
+    return;
   }
 
   // TODO: more than one hook point here. First early hooks, where plugins might intercept
@@ -65,7 +65,7 @@ bool Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
   // (e.g. Keymap), then maybe ones that need a "final" version of the report ready
   // (though that probably moves to the pre-report hook)
   if (! hooks::keyswitchEventHooks(event, active_keys_, caller)) {
-    return false;
+    return;
   }
 
   // Update active_keys_ based on the key state
@@ -83,12 +83,39 @@ bool Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
   // the update.
   if (event.key.flavor() == KeyFlavor::layer) {
     keymap_.handleLayerChange(event, active_keys_);
-    return false;
+    return;
   }
 
   if (event.key.isEmpty())
-    return false;
-  return true;
+    return;
+
+  switch (event.key.flavor()) {
+    case KeyFlavor::keyboard:
+      {
+        byte keycode = event.key.keyboard.keycode;
+        byte mod_keycode = cKey::first_modifier.keyboard.keycode;
+        if (event.state.toggledOn() && keycode < mod_keycode && keycode > 0) {
+          // If a printable keycode was just pressed, we need to override any modifier
+          // flags from held keys that would alter the newly-pressed keycode
+          mod_flags_allowed_ = event.key.mods();
+        } else {
+          mod_flags_allowed_ = 0xFF;
+        }
+      }
+      sendKeyboardReport();
+      break;
+    case KeyFlavor::consumer:
+      // sendConsumerReport();
+      break;
+    case KeyFlavor::system:
+      // sendSystemReport();
+      break;
+    case KeyFlavor::mouse:
+      // sendMouseReport();
+      break;
+    default:
+      break;
+  }
 }
 
 // Hooks need to be added here to make it fully-functional
@@ -97,7 +124,7 @@ void Controller::sendKeyboardReport() {
   //kaleidoscope::hid::releaseAllKeys();
   // Add all active keycodes to the report
   for (Key key : active_keys_) {
-    report_.add(key);
+    report_.add(key, mod_flags_allowed_);
     //kaleidoscope::hid::pressKey(key);
   }
   report_.send();
