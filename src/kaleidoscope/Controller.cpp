@@ -28,6 +28,8 @@ void Controller::init() {
 
 void Controller::run() {
 
+  hooks::preScanHooks();
+
   keyboard_.scanMatrix();
 
   for (KeyswitchEvent event : keyboard_) {
@@ -48,15 +50,17 @@ void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
     return;
   }
 
-  // TODO: deal with invalid KeyAddrs & injected keys
-  if (state.toggledOff()) {
-    event.key = active_keys_[k];
-  } else if (state.toggledOn()) {
-    event.key = keymap_[k];
-  } else {
-    // TODO: decide what to do if we get a `held` or `idle` state
-    //active_keys_[k] = cKey::clear;
-    return;
+  if (event.key.isEmpty()) {
+    // TODO: deal with invalid KeyAddrs & injected keys
+    if (state.toggledOff()) {
+      event.key = active_keys_[k];
+    } else if (state.toggledOn()) {
+      event.key = keymap_[k];
+    } else {
+      // TODO: decide what to do if we get a `held` or `idle` state
+      //active_keys_[k] = cKey::clear;
+      return;
+    }
   }
 
   // TODO: more than one hook point here. First early hooks, where plugins might intercept
