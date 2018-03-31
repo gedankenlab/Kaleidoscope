@@ -21,7 +21,7 @@ class Layer {
     : keys_{keys}, key_count_{count} {}
 
   Key operator[](KeyAddr k) const {
-    return getProgmemKey(keys_[k.addr]);
+    return getProgmemKey(keys_[byte(k)]);
   }
 
 

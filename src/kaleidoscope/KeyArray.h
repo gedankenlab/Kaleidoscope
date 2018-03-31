@@ -19,12 +19,12 @@ struct KeyArray {
   Key keys[total_keys];
 
   Key& operator[](KeyAddr k) {
-    assert(k.addr < total_keys);
-    return keys[k.addr];
+    assert(byte(k) < total_keys);
+    return keys[byte(k)];
   }
   const Key& operator[](KeyAddr k) const {
-    assert(k.addr < total_keys);
-    return keys[k.addr];
+    assert(byte(k) < total_keys);
+    return keys[byte(k)];
   }
 
   // Iterator -- Don't bother returning only non-empty values
