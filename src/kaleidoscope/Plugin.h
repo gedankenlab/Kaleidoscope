@@ -28,7 +28,7 @@ class Plugin {
     return true;
   }
 
-  virtual void preScanHook() {}
+  virtual void preScanHook(uint16_t current_time) {}
   
  protected:
 
