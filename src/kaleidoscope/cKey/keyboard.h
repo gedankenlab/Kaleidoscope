@@ -243,7 +243,7 @@ constexpr Key::Keyboard LeftGui { HID_KEYBOARD_LEFT_GUI };
 constexpr Key::Keyboard RightControl { HID_KEYBOARD_RIGHT_CONTROL };
 constexpr Key::Keyboard RightShift { HID_KEYBOARD_RIGHT_SHIFT };
 constexpr Key::Keyboard RightAlt { HID_KEYBOARD_RIGHT_ALT };
-constexpr Key::Keyboard RightGui ( HID_KEYBOARD_RIGHT_GUI, 0, false );
+constexpr Key::Keyboard RightGui { HID_KEYBOARD_RIGHT_GUI };
 
 //} // namespace Keyboard {
 
