@@ -41,6 +41,9 @@ void Report::add(Key key, byte mod_flags_allowed) {
     byte mod_keycode = cKey::first_modifier.keycode();
     if (keycode < mod_keycode && keycode > 0)
       modifiers = modifiers & mod_flags_allowed;
+    // This while loop should be replaced by directly setting the modifiers byte in the
+    // report, instead of iterating through it here, but that's probably not possible with
+    // KeyboardioHID right now.
     while (modifiers != 0) {
       if (modifiers & 1)
         ::Keyboard.press(mod_keycode);
