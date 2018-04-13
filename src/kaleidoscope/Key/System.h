@@ -9,8 +9,10 @@
 namespace kaleidoscope {
 
 class Key::System {
+
  private:
-  uint16_t keycode_ : 8, type_id_ : 8;
+  byte keycode_ : 8, type_id_ : 8;
+
  public:
   byte keycode() const { return keycode_; }
 

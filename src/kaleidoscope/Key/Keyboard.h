@@ -11,7 +11,7 @@ namespace kaleidoscope {
 class Key::Keyboard {
 
  private:
-  uint16_t keycode_ : 8, mods_ : 4, mods_right_ : 1, type_id_ : 3;
+  byte keycode_ : 8, mods_ : 4, mods_right_ : 1, type_id_ : 3;
 
   // These mod bits are in the same order as the mod bits in the HID keyboard report for
   // efficiency in passing them on. If they get rearranged, that will mess things up.

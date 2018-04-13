@@ -11,7 +11,7 @@ namespace kaleidoscope {
 class Key::Layer {
 
  private:
-  uint16_t index_ : 6, shift_ : 1, move_ : 1, reserved_ : 2, type_id_ : 6;
+  byte index_ : 6, shift_ : 1, move_ : 1, reserved_ : 2, type_id_ : 6;
 
  public:
   byte index() const { return index_; }
