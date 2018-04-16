@@ -6,11 +6,11 @@
 namespace kaleidoscope {
 
 byte Key::Keyboard::modifiers() const {
-  byte modifiers = mods_;
-  // If the fifth bit (mods_right_) is set, that means we have to shift the mods four bits
-  // to match the right-hand modifier bits in the HID report modifiers byte.
-  if (mods_right_)
-    modifiers <<= 4;
+  // Start with the left-modifier flag bits
+  byte modifiers = mods_left_;
+  // Add the right alt bit, if set
+  if (mod_ralt_)
+    modifiers |= mod_ralt;
   // If the keycode itself is also a modifier, include that as well
   modifiers |= keycodeModifier();
   // byte keycode_mod_bit = keycode_ - mod_keycode_offset;
@@ -21,12 +21,15 @@ byte Key::Keyboard::modifiers() const {
 
 inline
 byte Key::Keyboard::modifierFlags() const {
-  byte modifiers{mods_};
-  if (mods_right_)
-    modifiers <<= 4;
+  // Start with the left-modifier flag bits
+  byte modifiers = mods_left_;
+  // Add the right alt bit, if set
+  if (mod_ralt_)
+    modifiers |= mod_ralt;
   return modifiers;
 }
 
+#if 0
 inline
 bool Key::Keyboard::isTrueShift() const {
   //return { isModifier() && (modifiers() & mod_shift_flags) };
@@ -36,17 +39,18 @@ bool Key::Keyboard::isTrueShift() const {
   if (byte modifiers = keycodeModifier()) {
     // In this case, there's no need to shift the mod bits because we don't care if the
     // `shift` modifier is left or right
-    modifiers |= mods_;
+    modifiers |= mods_left_;
     return { modifiers & mod_shift_flags };
   } else {
     return false;
   }
 }
+#endif
 
 // This method is rendered obsolete by the more useful keycodeModifier() method
 inline
 bool Key::Keyboard::isModifier() const {
-  return { keycodeModifier() };
+  return bool(keycodeModifier());
 }
 
 // Return the modifiers byte for the keycode part of the Key object, if any
@@ -59,6 +63,7 @@ byte Key::Keyboard::keycodeModifier() const {
   return modifiers;
 }
 
+#if 0
 // This function doesn't really seem very useful. It's not helpful at compile time because
 // we have better, more efficient ways of setting the mod bits, and I'm struggling to come
 // up with any run-time use for it.
@@ -71,15 +76,16 @@ void Key::Keyboard::addModifier(Key key) {
   }
   mods_ |= (1 << mod_bit);
 }
+#endif
 
-void Key::Keyboard::setModifiers(byte mods, bool mods_right) {
-  mods_       = mods;
-  mods_right_ = mods_right;
+void Key::Keyboard::setModifiers(byte mods, bool ralt) {
+  mods_left_ = mods;
+  mod_ralt_  = ralt;
 }
 
-void Key::Keyboard::addModifiers(byte mods, bool mods_right) {
-  mods_       |= mods;
-  mods_right_ |= mods_right;
+void Key::Keyboard::addModifiers(byte mods, bool ralt) {
+  mods_left_ |= mods;
+  mod_ralt_  |= ralt;
 }
 
 } // namespace kaleidoscope {

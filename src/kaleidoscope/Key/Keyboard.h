@@ -21,6 +21,8 @@ class Key::Keyboard {
   static constexpr byte mod_alt     { 0b0100 };  // (1 << 2)
   static constexpr byte mod_gui     { 0b1000 };  // (1 << 3)
 
+  static constexpr byte mod_ralt { mod_alt << 4 };
+
   // Now I'm really starting to think that it's not worth the trouble to have the
   // mods_right_ member, and it would be simpler to just use the 5 mod flags from
   // Kaleidoscope as-is.
