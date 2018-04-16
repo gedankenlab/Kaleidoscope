@@ -35,8 +35,8 @@ bool preKeyboardReportHooks(hid::keyboard::Report& keyboard_report) {
 }
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
-// __attribute__((weak))
-// void postKeyboardReportHooks() {}
+__attribute__((weak))
+void postKeyboardReportHooks(KeyswitchEvent event) {}
 
 } // namespace hooks {
 } // namespace kaleidoscope {

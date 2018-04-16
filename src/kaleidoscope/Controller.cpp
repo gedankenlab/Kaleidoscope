@@ -105,6 +105,7 @@ void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
       mod_flags_allowed_ = 0xFF;
     }
     sendKeyboardReport();
+    hooks::postKeyboardReportHooks(event);
     return;
   }
 }
@@ -118,7 +119,8 @@ void Controller::sendKeyboardReport() {
     report_.add(key, mod_flags_allowed_);
     //kaleidoscope::hid::pressKey(key);
   }
-  report_.send();
+  if (hooks::preKeyboardReportHooks(report_))
+    report_.send();
   //kaleidoscope::hid::sendKeyboardReport();
 }
 

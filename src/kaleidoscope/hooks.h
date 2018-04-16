@@ -27,7 +27,7 @@ bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, Plugin*& 
 bool preKeyboardReportHooks(hid::keyboard::Report& keyboard_report);
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
-//void postKeyboardReportHooks();
+void postKeyboardReportHooks(KeyswitchEvent event);
 
 } // namespace hooks {
 } // namespace kaleidoscope {
