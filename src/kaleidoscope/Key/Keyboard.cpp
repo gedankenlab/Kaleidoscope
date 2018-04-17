@@ -19,16 +19,6 @@ byte Key::Keyboard::modifiers() const {
   return modifiers;
 }
 
-//inline
-byte Key::Keyboard::modifierFlags() const {
-  // Start with the left-modifier flag bits
-  byte modifiers = mods_left_;
-  // Add the right alt bit, if set
-  if (mod_ralt_)
-    modifiers |= mod_flag_ralt;
-  return modifiers;
-}
-
 // This function is really just here to serve a single plugin, but it is more efficient
 // than having it in Unshifter, so I'm ambivalent about it being here.
 //inline
@@ -44,20 +34,6 @@ bool Key::Keyboard::isRealShift() const {
     return false;
   }
 
-}
-
-// This method is rendered obsolete by the more useful keycodeModifier() method
-bool Key::Keyboard::isModifier() const {
-  return bool(keycodeModifier());
-}
-
-// Return the modifiers byte for the keycode part of the Key object, if any
-byte Key::Keyboard::keycodeModifier() const {
-  byte modifiers{0};
-  byte keycode_mod_bit = keycode_ - mod_keycode_offset;
-  if (keycode_mod_bit < 8)
-    modifiers |= (1 << keycode_mod_bit);
-  return modifiers;
 }
 
 void Key::Keyboard::setModifiers(byte mods, bool ralt) {

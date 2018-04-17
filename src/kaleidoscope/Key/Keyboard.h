@@ -82,4 +82,31 @@ class Key::Keyboard {
   }
 };
 
+// This method is rendered obsolete by the more useful keycodeModifier() method
+inline
+bool Key::Keyboard::isModifier() const {
+  byte keycode_mod_bit = keycode_ - mod_keycode_offset;
+  return { keycode_mod_bit < 8 };
+}
+
+inline
+byte Key::Keyboard::modifierFlags() const {
+  // Start with the left-modifier flag bits
+  byte modifiers = mods_left_;
+  // Add the right alt bit, if set
+  if (mod_ralt_)
+    modifiers |= mod_flag_ralt;
+  return modifiers;
+}
+
+// Return the modifiers byte for the keycode part of the Key object, if any
+inline
+byte Key::Keyboard::keycodeModifier() const {
+  byte modifiers{0};
+  byte keycode_mod_bit = keycode_ - mod_keycode_offset;
+  if (keycode_mod_bit < 8)
+    modifiers |= (1 << keycode_mod_bit);
+  return modifiers;
+}
+
 } // namespace kaleidoscope {
