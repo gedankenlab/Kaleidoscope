@@ -28,7 +28,7 @@ class Plugin {
     return true;
   }
 
-  virtual bool postReportHook(KeyswitchEvent event) {}
+  virtual void postReportHook(KeyswitchEvent event) {}
 
   virtual void preScanHook(uint16_t current_time) {}
   
