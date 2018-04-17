@@ -94,13 +94,11 @@ void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
     return;
 
   if (Key::Keyboard::testType(event.key)) {
-    Key::Keyboard key{event.key};
-    byte keycode = key.keycode();
-    byte mod_keycode = cKey::first_modifier.keycode();
-    if (event.state.toggledOn() && keycode < mod_keycode && keycode > 0) {
+    Key::Keyboard keyboard_key{event.key};
+    if (event.state.toggledOn() && !keyboard_key.isModifier()) {
       // If a printable keycode was just pressed, we need to override any modifier
       // flags from held keys that would alter the newly-pressed keycode
-      mod_flags_allowed_ = key.modifiers();
+      mod_flags_allowed_ = keyboard_key.modifierFlags();
     } else {
       mod_flags_allowed_ = 0xFF;
     }
