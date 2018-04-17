@@ -19,7 +19,7 @@ byte Key::Keyboard::modifiers() const {
   return modifiers;
 }
 
-inline
+//inline
 byte Key::Keyboard::modifierFlags() const {
   // Start with the left-modifier flag bits
   byte modifiers = mods_left_;
@@ -31,8 +31,8 @@ byte Key::Keyboard::modifierFlags() const {
 
 // This function is really just here to serve a single plugin, but it is more efficient
 // than having it in Unshifter, so I'm ambivalent about it being here.
-inline
-bool Key::Keyboard::isTrueShift() const {
+//inline
+bool Key::Keyboard::isRealShift() const {
   //return { isModifier() && (modifiers() & mod_shift_flags) };
 
   // We only consider a key to be a "true" `shift` key if it encodes only modifiers,
@@ -43,16 +43,15 @@ bool Key::Keyboard::isTrueShift() const {
   } else {
     return false;
   }
+
 }
 
 // This method is rendered obsolete by the more useful keycodeModifier() method
-inline
 bool Key::Keyboard::isModifier() const {
   return bool(keycodeModifier());
 }
 
 // Return the modifiers byte for the keycode part of the Key object, if any
-inline
 byte Key::Keyboard::keycodeModifier() const {
   byte modifiers{0};
   byte keycode_mod_bit = keycode_ - mod_keycode_offset;
