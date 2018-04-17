@@ -16,24 +16,16 @@ class Key::Keyboard {
 
   // These mod bits are in the same order as the mod bits in the HID keyboard report for
   // efficiency in passing them on. If they get rearranged, that will mess things up.
-  static constexpr byte mod_control { 0b0001 };  // (1 << 0)
-  static constexpr byte mod_shift   { 0b0010 };  // (1 << 1)
-  static constexpr byte mod_alt     { 0b0100 };  // (1 << 2)
-  static constexpr byte mod_gui     { 0b1000 };  // (1 << 3)
+  static constexpr byte mod_flag_control { 0b0001 };  // (1 << 0)
+  static constexpr byte mod_flag_shift   { 0b0010 };  // (1 << 1)
+  static constexpr byte mod_flag_alt     { 0b0100 };  // (1 << 2)
+  static constexpr byte mod_flag_gui     { 0b1000 };  // (1 << 3)
+  static constexpr byte mod_flag_ralt { mod_flag_alt << 4 };
 
-  static constexpr byte mod_ralt { mod_alt << 4 };
-
-  // Now I'm really starting to think that it's not worth the trouble to have the
-  // mods_right_ member, and it would be simpler to just use the 5 mod flags from
-  // Kaleidoscope as-is.
-
-  // These belong in the report, not here? I'm not sure where to put these, but they
-  // should be useful for answering questions like "is this key a pure modifier key with
-  // shift set?"
-  static constexpr byte mod_control_flags { mod_control | mod_control << 4 };
-  static constexpr byte mod_shift_flags   { mod_shift   | mod_shift   << 4 };
-  static constexpr byte mod_alt_flags     { mod_alt     | mod_alt     << 4 };
-  static constexpr byte mod_gui_flags     { mod_gui     | mod_gui     << 4 };
+  static constexpr byte mods_mask_control { mod_flag_control | mod_flag_control << 4 };
+  static constexpr byte mods_mask_shift   { mod_flag_shift   | mod_flag_shift   << 4 };
+  static constexpr byte mods_mask_alt     { mod_flag_alt     | mod_flag_alt     << 4 };
+  static constexpr byte mods_mask_gui     { mod_flag_gui     | mod_flag_gui     << 4 };
 
   static constexpr byte mod_keycode_offset { HID_KEYBOARD_LEFT_CONTROL };
 
@@ -44,7 +36,7 @@ class Key::Keyboard {
   byte keycodeModifier() const;
   byte modifierFlags() const;
   bool isModifier() const;
-  void addModifier(Key key);
+  bool isTrueShift() const;
   void setModifiers(byte mods, bool mod_ralt = false);
   void setModifiers(bool control, bool shift, bool alt, bool gui, bool ralt = false);
   void addModifiers(byte mods, bool mod_ralt = false);
