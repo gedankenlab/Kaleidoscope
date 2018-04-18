@@ -186,9 +186,9 @@ inline Key getShallowEepromKey(uint16_t eeprom_addr) {
 
 } // namespace kaleidoscope {
 
-#include "kaleidoscope/Key/Keyboard.h"
-#include "kaleidoscope/Key/Consumer.h"
-#include "kaleidoscope/Key/System.h"
-#include "kaleidoscope/Key/Layer.h"
-#include "kaleidoscope/Key/Plugin.h"
-#include "kaleidoscope/Key/Mouse.h"
+#include "kaleidoscope/Key/KeyboardKey.h"
+#include "kaleidoscope/Key/ConsumerKey.h"
+#include "kaleidoscope/Key/SystemKey.h"
+#include "kaleidoscope/Key/LayerKey.h"
+#include "kaleidoscope/Key/PluginKey.h"
+#include "kaleidoscope/Key/MouseKey.h"
