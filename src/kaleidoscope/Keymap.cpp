@@ -99,7 +99,7 @@ void Keymap::toggleLayer(byte layer_index) {
 
 
 void Keymap::handleLayerChange(KeyswitchEvent event, KeyArray& active_keys) {
-  Key::Layer layer_key{event.key};
+  LayerKey layer_key{event.key};
 
   assert(layer_key.index() < layer_count_);
 
@@ -110,7 +110,7 @@ void Keymap::handleLayerChange(KeyswitchEvent event, KeyArray& active_keys) {
         if (k == event.addr)
           continue;
         Key& key = active_keys[k];
-        if (Key::Layer::testType(key) && Key::Layer(key).isLayerShift())
+        if (LayerKey::testType(key) && LayerKey(key).isLayerShift())
           key.mask();
       }
     } else {

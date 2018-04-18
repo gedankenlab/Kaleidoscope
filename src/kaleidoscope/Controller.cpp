@@ -85,7 +85,7 @@ void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
   // Handle layer shifts and toggles. Maybe this should happen before updating
   // active_keys_, but if we do that, the keymap will need access to active_keys_ to do
   // the update.
-  if (Key::Layer::testType(event.key)) {
+  if (LayerKey::testType(event.key)) {
     keymap_.handleLayerChange(event, active_keys_);
     return;
   }
@@ -93,8 +93,8 @@ void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
   if (event.key.isEmpty())
     return;
 
-  if (Key::Keyboard::testType(event.key)) {
-    Key::Keyboard keyboard_key{event.key};
+  if (KeyboardKey::testType(event.key)) {
+    KeyboardKey keyboard_key{event.key};
     if (event.state.toggledOn() && !keyboard_key.isModifier()) {
       // If a printable keycode was just pressed, we need to override any modifier
       // flags from held keys that would alter the newly-pressed keycode
