@@ -40,7 +40,7 @@ class Keymap {
 
   Key lookup(KeyAddr key_addr, byte layer_index) const;
 
-  LayerKeyPair lookupActiveLayerKey(KeyAddr key_addr) const;
+  LayerKeyPair lookupActiveLayerAndKey(KeyAddr key_addr) const;
   byte lookupActiveLayer(KeyAddr key_addr) const;
   byte lookupLayer(KeyAddr key_addr) const; // alternative to lookupActiveLayer()
   const Layer& layer(byte layer_index) const;
