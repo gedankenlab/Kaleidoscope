@@ -10,7 +10,6 @@
 #include "kaleidoscope/Key.h"
 #include "kaleidoscope/KeymapEntry.h"
 #include "kaleidoscope/Layer.h"
-#include "kaleidoscope/LayerKey.h"
 #include "kaleidoscope/cKeyAddr.h"
 #include "kaleidoscope/KeyswitchEvent.h"
 #include "kaleidoscope/KeyArray.h"
@@ -26,6 +25,11 @@ constexpr byte bitfieldSize(int bits) {
 // Temporary constant, until I write the pre-build script(s)
 constexpr byte MAX_LAYERS = 32;
 
+struct LayerKeyPair {
+  byte layer;
+  Key  key;
+};
+
 
 class Keymap {
 
@@ -36,7 +40,7 @@ class Keymap {
 
   Key lookup(KeyAddr key_addr, byte layer_index) const;
 
-  LayerKey lookupActiveLayerKey(KeyAddr key_addr) const;
+  LayerKeyPair lookupActiveLayerKey(KeyAddr key_addr) const;
   byte lookupActiveLayer(KeyAddr key_addr) const;
   byte lookupLayer(KeyAddr key_addr) const; // alternative to lookupActiveLayer()
   const Layer& layer(byte layer_index) const;

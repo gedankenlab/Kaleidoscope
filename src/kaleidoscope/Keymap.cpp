@@ -38,7 +38,7 @@ byte Keymap::lookupActiveLayer(KeyAddr key_addr) const {
 
 // This function should do the caching of lookups to prevent EEPROM lookups from being too
 // slow
-LayerKey Keymap::lookupActiveLayerKey(KeyAddr key_addr) const {
+LayerKeyPair Keymap::lookupActiveLayerKey(KeyAddr key_addr) const {
   // First, unconditionally check the top layer
   byte layer_index{top_active_layer_index_};
   Key key = lookup(key_addr, layer_index);
