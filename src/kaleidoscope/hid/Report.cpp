@@ -36,18 +36,23 @@ void Report::add(Key key, byte mod_flags_allowed) {
 
   if (Key::Keyboard::testType(key)) {
     Key::Keyboard keyboard_key{key};
-    byte modifiers = keyboard_key.modifiers();
-    byte keycode = keyboard_key.keycode();
+
+    byte modifiers = keyboard_key.keycodeModifier();
+    byte mod_flags = keyboard_key.modifierFlags();
+
+    if (!modifiers) {
+      modifiers = mod_flags & mod_flags_allowed;
+    } else {
+      modifiers |= mod_flags;
+    }
     byte mod_keycode = cKey::first_modifier.keycode();
-    if (keycode < mod_keycode && keycode > 0)
-      modifiers = modifiers & mod_flags_allowed;
     // This while loop should be replaced by directly setting the modifiers byte in the
     // report, instead of iterating through it here, but that's probably not possible with
     // KeyboardioHID right now.
     while (modifiers != 0) {
       if (modifiers & 1)
         ::Keyboard.press(mod_keycode);
-      mod_keycode += 1;
+      ++mod_keycode;
       modifiers >>= 1;
     }
     ::Keyboard.press(keyboard_key.keycode());
