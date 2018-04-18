@@ -45,7 +45,7 @@ void Report::add(Key key, byte mod_flags_allowed) {
     } else {
       modifiers |= mod_flags;
     }
-    byte mod_keycode = cKey::first_modifier.keycode();
+    byte mod_keycode = KeyboardKey::mod_keycode_offset;
     // This while loop should be replaced by directly setting the modifiers byte in the
     // report, instead of iterating through it here, but that's probably not possible with
     // KeyboardioHID right now.

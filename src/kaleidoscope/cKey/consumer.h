@@ -4,7 +4,6 @@
 
 #include "HIDTables.h"
 #include "kaleidoscope/Key.h"
-#include "kaleidoscope/Key/Consumer.h"
 
 
 namespace kaleidoscope {

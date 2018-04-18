@@ -1,6 +1,6 @@
 // -*- c++ -*-
 
-#include "kaleidoscope/Key/Keyboard.h"
+#include "kaleidoscope/Key/KeyboardKey.h"
 
 
 namespace kaleidoscope {
