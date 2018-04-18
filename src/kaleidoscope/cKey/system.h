@@ -10,9 +10,7 @@ namespace kaleidoscope {
 
 // This namespace is for storing constants of type `Key`. The leading `c` stands for
 // `constant` or `const`
-namespace cKey {
-
-namespace System {
+namespace cSystemKey {
 
 constexpr SystemKey PowerDown { HID_SYSTEM_POWER_DOWN };
 constexpr SystemKey Sleep { HID_SYSTEM_SLEEP };
@@ -53,8 +51,6 @@ constexpr SystemKey DisplayToggleIntSlashExt { HID_SYSTEM_DISPLAY_TOGGLE_INT_SLA
 constexpr SystemKey DisplaySwapPrimarySlashSecondary { HID_SYSTEM_DISPLAY_SWAP_PRIMARY_SLASH_SECONDARY };
 constexpr SystemKey DisplayLCDAutoscale { HID_SYSTEM_DISPLAY_LCD_AUTOSCALE };
 
-} // namespace consumer {
-
-} // namespace cKey {
+} // namespace cSystemKey {
 
 } // namespace kaleidoscope {

@@ -12,9 +12,7 @@ namespace kaleidoscope {
 // This namespace is for storing constants of type `Key`. The leading `c` stands for
 // `constant` or `const`, so any symbol that begins with `cKey::` can be assumed to be a
 // `constexpr Key` object.
-namespace cKey {
-
-//namespace Keyboard {
+namespace cKeyboardKey {
 
 // Reserved (no_event_indicated)
 constexpr KeyboardKey NoEvent { HID_KEYBOARD_NO_EVENT };
@@ -270,6 +268,6 @@ constexpr KeyboardKey r_win = RightGui;
 constexpr KeyboardKey first_modifier = LeftControl;
 constexpr KeyboardKey last_modifier  = RightGui;
 
-} // namespace cKey {
+} // namespace cKeyboardKey {
 
 } // namespace kaleidoscope {

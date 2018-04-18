@@ -12,9 +12,7 @@ namespace kaleidoscope {
 // This namespace is for storing constants of type `Key`. The leading `c` stands for
 // `constant` or `const`
 // `const Key` object.
-namespace cKey {
-
-namespace Consumer {
+namespace cConsumerKey {
 
 constexpr ConsumerKey NumericKeyPad { HID_CONSUMER_NUMERIC_KEY_PAD };
 constexpr ConsumerKey ProgrammableButtons { HID_CONSUMER_PROGRAMMABLE_BUTTONS };
@@ -397,8 +395,6 @@ constexpr ConsumerKey AC_Split { HID_CONSUMER_AC_SPLIT };
 constexpr ConsumerKey AC_Distribute_Horizontally { HID_CONSUMER_AC_DISTRIBUTE_HORIZONTALLY };
 constexpr ConsumerKey AC_Distribute_Vertically { HID_CONSUMER_AC_DISTRIBUTE_VERTICALLY };
 
-} // namespace consumer {
-
-} // namespace cKey {
+} // namespace cConsumerKey {
 
 } // namespace kaleidoscope {
