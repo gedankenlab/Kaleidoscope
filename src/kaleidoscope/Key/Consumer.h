@@ -8,22 +8,23 @@
 
 namespace kaleidoscope {
 
-class Key::Consumer {
+class ConsumerKey {
+
  private:
   uint16_t keycode_ : 10, type_id_ : 6;
 
  public:
   uint16_t keycode() const { return keycode_; }
 
-  Consumer() : keycode_ (0), type_id_ (Key::consumer_type_id) {}
+  ConsumerKey() : keycode_ (0), type_id_ (Key::consumer_type_id) {}
 
   constexpr explicit
-  Consumer(uint16_t keycode) : keycode_ (keycode),
-                               type_id_ (Key::consumer_type_id) {}
+  ConsumerKey(uint16_t keycode) : keycode_ (keycode),
+                                  type_id_ (Key::consumer_type_id) {}
 
   explicit
-  Consumer(Key key) : keycode_ (uint16_t(key)      ),
-                      type_id_ (uint16_t(key) << 10)  {
+  ConsumerKey(Key key) : keycode_ (uint16_t(key)      ),
+                         type_id_ (uint16_t(key) << 10)  {
     assert(type_id_ == Key::consumer_type_id);
   }
 

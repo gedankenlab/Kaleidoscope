@@ -9,7 +9,7 @@
 
 namespace kaleidoscope {
 
-class Key::Keyboard {
+class KeyboardKey {
 
  private:
   byte keycode_ : 8, mods_left_ : 4, mod_ralt_ : 1, type_id_ : 3;
@@ -46,29 +46,29 @@ class Key::Keyboard {
   }
 
   // Run-time constructor; generates and empty Key (equal to cKey::blank)
-  Keyboard() : keycode_    (0),
-               mods_left_  (0),
-               mod_ralt_   (false),
-               type_id_    (Key::keyboard_type_id) {}
+  KeyboardKey() : keycode_    (0),
+                  mods_left_  (0),
+                  mod_ralt_   (false),
+                  type_id_    (Key::keyboard_type_id) {}
 
   // The primary constructor; sets all bit fields in the structure. This is what is used
-  // to define Key::Keyboard compile-time constants.
+  // to define KeyboardKey compile-time constants.
   constexpr explicit
-  Keyboard(byte keycode, byte mods_left = 0, bool mod_ralt = false)
+  KeyboardKey(byte keycode, byte mods_left = 0, bool mod_ralt = false)
       : keycode_(keycode), mods_left_(mods_left), mod_ralt_(mod_ralt),
         type_id_(Key::keyboard_type_id) {}
 
   // Conversion from Key object. The caller should first verify that it's got the
   // correct type of Key object before calling this constructor.
   explicit
-  Keyboard(Key key) : keycode_    (uint16_t(key)               ),
-                      mods_left_  (uint16_t(key) >>  8         ),
-                      mod_ralt_   (uint16_t(key) >> (8 + 4)    ),
-                      type_id_    (uint16_t(key) >> (8 + 4 + 1))  {
+  KeyboardKey(Key key) : keycode_    (uint16_t(key)               ),
+                         mods_left_  (uint16_t(key) >>  8         ),
+                         mod_ralt_   (uint16_t(key) >> (8 + 4)    ),
+                         type_id_    (uint16_t(key) >> (8 + 4 + 1))  {
     assert(type_id_ == Key::keyboard_type_id);
   }
 
-  // Cast operator to convert Key::Keyboard objects to plain Key objects
+  // Cast operator to convert KeyboardKey objects to plain Key objects
   constexpr
   operator Key() const {
     return Key( keycode_                   |
@@ -84,13 +84,13 @@ class Key::Keyboard {
 
 // This method is rendered obsolete by the more useful keycodeModifier() method
 inline
-bool Key::Keyboard::isModifier() const {
+bool KeyboardKey::isModifier() const {
   byte keycode_mod_bit = keycode_ - mod_keycode_offset;
   return { keycode_mod_bit < 8 };
 }
 
 inline
-byte Key::Keyboard::modifierFlags() const {
+byte KeyboardKey::modifierFlags() const {
   // Start with the left-modifier flag bits
   byte modifiers = mods_left_;
   // Add the right alt bit, if set
@@ -101,7 +101,7 @@ byte Key::Keyboard::modifierFlags() const {
 
 // Return the modifiers byte for the keycode part of the Key object, if any
 inline
-byte Key::Keyboard::keycodeModifier() const {
+byte KeyboardKey::keycodeModifier() const {
   byte modifiers{0};
   byte keycode_mod_bit = keycode_ - mod_keycode_offset;
   if (keycode_mod_bit < 8)
@@ -112,7 +112,7 @@ byte Key::Keyboard::keycodeModifier() const {
 // This function is really just here to serve a single plugin, but it is more efficient
 // than having it in Unshifter, so I'm ambivalent about it being here.
 inline
-bool Key::Keyboard::isRealShift() const {
+bool KeyboardKey::isRealShift() const {
   //return { isModifier() && (modifiers() & mod_shift_flags) };
 
   // We only consider a key to be a "true" `shift` key if it encodes only modifiers,
@@ -127,7 +127,7 @@ bool Key::Keyboard::isRealShift() const {
 }
 
 inline
-byte Key::Keyboard::modifiers() const {
+byte KeyboardKey::modifiers() const {
   // Start with the left-modifier flag bits
   byte modifiers = mods_left_;
   // Add the right alt bit, if set
@@ -142,13 +142,13 @@ byte Key::Keyboard::modifiers() const {
 }
 
 inline
-void Key::Keyboard::setModifiers(byte mods, bool ralt) {
+void KeyboardKey::setModifiers(byte mods, bool ralt) {
   mods_left_ = mods;
   mod_ralt_  = ralt;
 }
 
 inline
-void Key::Keyboard::addModifiers(byte mods, bool ralt) {
+void KeyboardKey::addModifiers(byte mods, bool ralt) {
   mods_left_ |= mods;
   mod_ralt_  |= ralt;
 }

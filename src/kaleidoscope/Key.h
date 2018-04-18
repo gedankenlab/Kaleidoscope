@@ -147,15 +147,6 @@ class Key {
     return Key(this->raw_ - other.raw_);
   }
 
-
- public:
-  class Keyboard;
-  class Consumer;
-  class System;
-  class Layer;
-  class Mouse;
-  class Plugin;
-
 };
 
 constexpr Key operator+(uint16_t x, Key key) {
