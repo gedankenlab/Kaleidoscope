@@ -10,22 +10,22 @@ namespace kaleidoscope {
 // This function should probably be removed; it's always more efficient to test just the
 // type we're interested in using the specific `Key` variant.
 KeyType Key::type() const {
-  if (Key::Keyboard::testType(*this))
+  if (KeyboardKey::testType(*this))
     return KeyType::keyboard;
 
-  if (Key::Plugin::testType(*this))
+  if (PluginKey::testType(*this))
     return KeyType::plugin;
 
-  if (Key::Layer::testType(*this))
+  if (LayerKey::testType(*this))
     return KeyType::layer;
 
-  if (Key::Mouse::testType(*this))
+  if (MouseKey::testType(*this))
     return KeyType::mouse;
 
-  if (Key::Consumer::testType(*this))
+  if (ConsumerKey::testType(*this))
     return KeyType::consumer;
 
-  if (Key::System::testType(*this))
+  if (SystemKey::testType(*this))
     return KeyType::system;
 
   if (raw_ == clear)
