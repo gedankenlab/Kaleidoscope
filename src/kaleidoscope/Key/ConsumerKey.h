@@ -34,7 +34,7 @@ class ConsumerKey {
                 type_id_ << 10   );
   }
 
-  static bool testType(Key key) {
+  static bool verify(Key key) {
     return ((uint16_t(key) >> 10) == Key::consumer_type_id);
   }
 };

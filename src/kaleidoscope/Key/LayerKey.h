@@ -44,7 +44,7 @@ class LayerKey {
                  type_id_  << (6 + 1 + 1 + 2) );
   }
 
-  static bool testType(Key key) {
+  static bool verify(Key key) {
     return ((uint16_t(key) >> (6 + 1 + 1 + 2)) == Key::layer_type_id);
   }
 };

@@ -77,7 +77,7 @@ class KeyboardKey {
                 type_id_    << (8 + 4 + 1)   );
   }
 
-  static constexpr bool testType(Key key) {
+  static constexpr bool verify(Key key) {
     return ((uint16_t(key) >> (8 + 4 + 1)) == Key::keyboard_type_id);
   }
 };

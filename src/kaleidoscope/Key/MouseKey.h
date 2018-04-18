@@ -34,7 +34,7 @@ class MouseKey {
                 type_id_ << 8   );
   }
 
-  static bool testType(Key key) {
+  static bool verify(Key key) {
     return ((uint16_t(key) >> 8) == Key::mouse_type_id);
   }
 };

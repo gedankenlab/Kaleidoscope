@@ -35,7 +35,7 @@ class SystemKey {
                 type_id_ << 8   );
   }
 
-  static bool testType(Key key) {
+  static bool verify(Key key) {
     return ((uint16_t(key) >> 8) == Key::system_type_id);
   }
 };
