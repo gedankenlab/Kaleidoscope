@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * AppSwitcher -- A Kaleidoscope Example
+ * AppSwitcher -- A Kaleidoglyph Example
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,13 +17,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#define KALEIDOSCOPE_HOSTOS_GUESSER 1
+#define KALEIDOGLYPH_HOSTOS_GUESSER 1
 
-#include <Kaleidoscope-HostOS.h>
+#include <Kaleidoglyph-HostOS.h>
 
 #include "Macros.h"
 
-namespace H = kaleidoscope::hostos;
+namespace H = kaleidoglyph::hostos;
 
 static bool appSwitchActive = false;
 
