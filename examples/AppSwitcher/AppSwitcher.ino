@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * AppSwitcher -- A Kaleidoscope Example
+ * AppSwitcher -- A Kaleidoglyph Example
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,10 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "Kaleidoscope.h"
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
-#include "Kaleidoscope-HostOS.h"
-#include "Kaleidoscope/HostOS-select.h"
+#include "Kaleidoglyph.h"
+#include "Kaleidoglyph-HIDAdaptor-KeyboardioHID.h"
+#include "Kaleidoglyph-HostOS.h"
+#include "Kaleidoglyph/HostOS-select.h"
 
 #include "Macros.h"
 
@@ -59,11 +59,11 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup() {
-  Kaleidoscope.use(&HostOS, &Macros);
+  Kaleidoglyph.use(&HostOS, &Macros);
 
-  Kaleidoscope.setup();
+  Kaleidoglyph.setup();
 }
 
 void loop() {
-  Kaleidoscope.loop();
+  Kaleidoglyph.loop();
 }

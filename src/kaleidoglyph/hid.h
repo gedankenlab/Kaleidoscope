@@ -1,36 +1,38 @@
-#pragma once
-#include <Arduino.h>
-#include "key_defs.h"
+// -*- c++ -*-
 
-namespace kaleidoscope {
+#pragma once
+
+#include <Arduino.h>
+
+#include "kaleidoglyph/Key.h"
+
+
+namespace kaleidoglyph {
 namespace hid {
 
 // A facade on top of our HID implementation
 
 extern void initializeKeyboard();
 
-extern void pressKey(Key mappedKey);
-extern void releaseKey(Key mappedKey);
+extern void pressKey(Key key);
+extern void releaseKey(Key key);
 extern void releaseAllKeys();
-extern void pressRawKey(Key mappedKey);
-extern void releaseRawKey(Key mappedKey);
+extern void pressRawKey(Key key);
+extern void releaseRawKey(Key key);
 /** Flushes any pending regular key switch events and sends them out */
 extern void sendKeyboardReport();
-
-extern boolean isModifierKeyActive(Key mappedKey);
-extern boolean wasModifierKeyActive(Key mappedKey);
 
 extern uint8_t getKeyboardLEDs();
 
 extern void initializeConsumerControl();
 
-extern void pressConsumerControl(Key mappedKey);
-extern void releaseConsumerControl(Key mappedKey);
+extern void pressConsumerControl(Key key);
+extern void releaseConsumerControl(Key key);
 
 extern void initializeSystemControl();
 
-extern void pressSystemControl(Key mappedKey);
-extern void releaseSystemControl(Key mappedKey);
+extern void pressSystemControl(Key key);
+extern void releaseSystemControl(Key key);
 
 extern void initializeMouse();
 
@@ -50,4 +52,4 @@ extern void pressAbsoluteMouseButtons(uint8_t buttons);
 extern void releaseAbsoluteMouseButtons(uint8_t buttons);
 
 }
-};
+}

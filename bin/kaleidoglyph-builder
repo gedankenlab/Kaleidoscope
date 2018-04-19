@@ -254,7 +254,7 @@ check_device_port () {
         echo "If you see this message and your keyboard is connected to your computer,"
         echo "it probably means that our serial port detection logic is buggy or incomplete."
         echo
-        echo "Please report this issue at https://github.com/keyboardio/Kaleidoscope";
+        echo "Please report this issue at https://github.com/keyboardio/Kaleidoglyph";
         exit 0;
     fi
 }
@@ -319,19 +319,19 @@ ROOT="$(cd $(dirname $0)/..; pwd)"
 export ROOT
 export SOURCEDIR="$(pwd)"
 
-if [ -e "${HOME}/.kaleidoscope-builder.conf" ]; then
-    . "${HOME}/.kaleidoscope-builder.conf"
+if [ -e "${HOME}/.kaleidoglyph-builder.conf" ]; then
+    . "${HOME}/.kaleidoglyph-builder.conf"
 fi
 
-if [ -e "${SOURCEDIR}/.kaleidoscope-builder.conf" ]; then
-    . "${SOURCEDIR}/.kaleidoscope-builder.conf"
+if [ -e "${SOURCEDIR}/.kaleidoglyph-builder.conf" ]; then
+    . "${SOURCEDIR}/.kaleidoglyph-builder.conf"
 fi
 
-if [ -e "${SOURCEDIR}/kaleidoscope-builder.conf" ]; then
-    . "${SOURCEDIR}/kaleidoscope-builder.conf"
+if [ -e "${SOURCEDIR}/kaleidoglyph-builder.conf" ]; then
+    . "${SOURCEDIR}/kaleidoglyph-builder.conf"
 fi
 
-. ${ROOT}/etc/kaleidoscope-builder.conf
+. ${ROOT}/etc/kaleidoglyph-builder.conf
 
 if [ ! -z "${VERBOSE}" ] && [ "${VERBOSE}" -gt 0 ]; then
     ARDUINO_VERBOSE="-verbose"

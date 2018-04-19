@@ -1,5 +1,5 @@
 /* -*- mode: c++ -*-
- * AppSwitcher -- A Kaleidoscope Example
+ * AppSwitcher -- A Kaleidoglyph Example
  * Copyright (C) 2016, 2017  Gergely Nagy
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <Kaleidoscope-Macros.h>
+#include <Kaleidoglyph-Macros.h>
 
 enum {
   M_APPSWITCH,

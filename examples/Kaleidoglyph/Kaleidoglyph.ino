@@ -4,19 +4,19 @@
 
 #define DEBUG_SERIAL false
 
-#include "Kaleidoscope-MouseKeys.h"
-#include "Kaleidoscope-Macros.h"
-#include "Kaleidoscope-LEDControl.h"
-#include "Kaleidoscope-Numlock.h"
-#include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
-#include "Kaleidoscope.h"
+#include "Kaleidoglyph-MouseKeys.h"
+#include "Kaleidoglyph-Macros.h"
+#include "Kaleidoglyph-LEDControl.h"
+#include "Kaleidoglyph-Numlock.h"
+#include "Kaleidoglyph-HIDAdaptor-KeyboardioHID.h"
+#include "Kaleidoglyph.h"
 
 #include "LED-Off.h"
-#include "Kaleidoscope-LEDEffect-SolidColor.h"
-#include "Kaleidoscope-LEDEffect-Breathe.h"
-#include "Kaleidoscope-LEDEffect-Chase.h"
-#include "Kaleidoscope-LEDEffect-Rainbow.h"
-#include "Kaleidoscope-Model01-TestMode.h"
+#include "Kaleidoglyph-LEDEffect-SolidColor.h"
+#include "Kaleidoglyph-LEDEffect-Breathe.h"
+#include "Kaleidoglyph-LEDEffect-Chase.h"
+#include "Kaleidoglyph-LEDEffect-Rainbow.h"
+#include "Kaleidoglyph-Model01-TestMode.h"
 
 #define NUMPAD_KEYMAP 2
 
@@ -65,13 +65,13 @@ KEYMAPS(
 )
 
 
-static kaleidoscope::LEDSolidColor solidRed(60, 0, 0);
-static kaleidoscope::LEDSolidColor solidOrange(60, 20, 0);
-static kaleidoscope::LEDSolidColor solidYellow(40, 35, 0);
-static kaleidoscope::LEDSolidColor solidGreen(0, 100, 0);
-static kaleidoscope::LEDSolidColor solidBlue(0, 15, 100);
-static kaleidoscope::LEDSolidColor solidIndigo(0, 0, 100);
-static kaleidoscope::LEDSolidColor solidViolet(70, 0, 60);
+static kaleidoglyph::LEDSolidColor solidRed(60, 0, 0);
+static kaleidoglyph::LEDSolidColor solidOrange(60, 20, 0);
+static kaleidoglyph::LEDSolidColor solidYellow(40, 35, 0);
+static kaleidoglyph::LEDSolidColor solidGreen(0, 100, 0);
+static kaleidoglyph::LEDSolidColor solidBlue(0, 15, 100);
+static kaleidoglyph::LEDSolidColor solidIndigo(0, 0, 100);
+static kaleidoglyph::LEDSolidColor solidViolet(70, 0, 60);
 
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   if (macroIndex == 1 && keyToggledOn(keyState)) {
@@ -86,9 +86,9 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 }
 
 void setup() {
-  Kaleidoscope.setup();
+  Kaleidoglyph.setup();
 
-  Kaleidoscope.use(&TestMode,
+  Kaleidoglyph.use(&TestMode,
                    &LEDControl, &LEDOff,
                    &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
                    &LEDBreatheEffect, &LEDRainbowEffect, &LEDChaseEffect, &NumLock,
@@ -102,5 +102,5 @@ void setup() {
 
 
 void loop() {
-  Kaleidoscope.loop();
+  Kaleidoglyph.loop();
 }
