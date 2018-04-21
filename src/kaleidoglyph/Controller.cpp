@@ -42,19 +42,18 @@ void Controller::run() {
 void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
 
   const KeyAddr& k = event.addr;
-  const KeyswitchState& state = event.state;
 
   if (active_keys_[k] == cKey::masked) {
-    if (state.toggledOff())
+    if (event.state.toggledOff())
       active_keys_[k] = cKey::unmasked;
     return;
   }
 
   if (event.key.isEmpty()) {
     // TODO: deal with invalid KeyAddrs & injected keys
-    if (state.toggledOff()) {
+    if (event.state.toggledOff()) {
       event.key = active_keys_[k];
-    } else if (state.toggledOn()) {
+    } else if (event.state.toggledOn()) {
       event.key = keymap_[k];
     } else {
       // TODO: decide what to do if we get a `held` or `idle` state
@@ -73,12 +72,12 @@ void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
   }
 
   // Update active_keys_ based on the key state
-  if (state.toggledOff()) {
+  if (event.state.toggledOff()) {
     // I'm not 100% convinced this is what we want, but it's probably the best choice. It
     // means that if a plugin wants to keep a key active on release, it has to return
     // false in its event handler.
     active_keys_[k] = cKey::clear;
-  } else if (state.toggledOn()) {
+  } else if (event.state.toggledOn()) {
     active_keys_[k] = event.key;
   }
 
