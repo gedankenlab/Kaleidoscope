@@ -52,6 +52,8 @@ class Controller {
   static constexpr byte id{0xFF};
 
   void handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller = nullptr);
+  void pressKeyswitch(KeyAddr k, Plugin* caller = nullptr);
+  void releaseKeyswitch(KeyAddr k, Plugin* caller = nullptr);
   void sendKeyboardReport();
 
   Key lookup(KeyAddr key_addr) const; // probably pointless
@@ -84,5 +86,16 @@ inline Key Controller::lookup(KeyAddr k) const {
   return keymap_[k];
 }
 
+inline
+void pressKeyswitch(KeyAddr k, Plugin* caller) {
+  KeyswitchEvent event{k, cKeyswitchState::pressed};
+  handleKeyswitchEvent(event, caller);
+}
+
+inline
+void releaseKeyswitch(KeyAddr k, Plugin* caller) {
+  KeyswitchEvent event{k, cKeyswitchState::released};
+  handleKeyswitchEvent(event, caller);
+}
 
 } // namespace kaleidoglyph {
