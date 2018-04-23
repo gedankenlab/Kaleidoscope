@@ -30,9 +30,12 @@
 
 namespace kaleidoglyph {
 
+
 /// The core Kaleidoglyph program; it controls everything else
 class Controller {
+
  public:
+
   Controller(Keymap & keymap,
              hardware::Keyboard& keyboard,
              hid::keyboard::Report& keyboard_report)
@@ -82,7 +85,8 @@ class Controller {
 };
 
 
-inline Key Controller::lookup(KeyAddr k) const {
+inline
+Key Controller::lookup(KeyAddr k) const {
   return keymap_[k];
 }
 
