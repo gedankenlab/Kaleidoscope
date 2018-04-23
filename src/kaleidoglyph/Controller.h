@@ -87,13 +87,13 @@ inline Key Controller::lookup(KeyAddr k) const {
 }
 
 inline
-void pressKeyswitch(KeyAddr k, Plugin* caller) {
+void Controller::pressKeyswitch(KeyAddr k, Plugin* caller) {
   KeyswitchEvent event{k, cKeyswitchState::pressed};
   handleKeyswitchEvent(event, caller);
 }
 
 inline
-void releaseKeyswitch(KeyAddr k, Plugin* caller) {
+void Controller::releaseKeyswitch(KeyAddr k, Plugin* caller) {
   KeyswitchEvent event{k, cKeyswitchState::released};
   handleKeyswitchEvent(event, caller);
 }
