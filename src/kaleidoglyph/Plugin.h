@@ -32,16 +32,6 @@ class Plugin {
   
  protected:
 
-  // This should maybe use a void* instead of a Plugin*. Also, maybe this should be in
-  // keyswitchEventHook instead? (with the return value reversed). No, and NO!
-  virtual bool checkCaller(Plugin*& caller) const final {
-    if (caller == nullptr)
-      return false;
-    if (caller == this)
-      caller = nullptr;
-    return true;
-  }
-
 };
 
 } // namespace kaleidoglyph {
