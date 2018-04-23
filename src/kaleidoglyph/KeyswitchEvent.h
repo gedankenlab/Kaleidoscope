@@ -6,6 +6,7 @@
 #include KALEIDOGLYPH_KEYADDR_H
 
 #include "kaleidoglyph/Key.h"
+#include "kaleidoglyph/cKey.h"
 #include "kaleidoglyph/KeyswitchState.h"
 
 
@@ -18,7 +19,8 @@ struct KeyswitchEvent {
   KeyswitchState  state;
 
   KeyswitchEvent() {}
-  KeyswitchEvent(Key _key, KeyAddr _addr, KeyswitchState _state)
+
+  KeyswitchEvent(KeyAddr _addr, KeyswitchState _state, Key _key = cKey::clear)
     : key(_key), addr(_addr), state(_state) {}
 
 };
