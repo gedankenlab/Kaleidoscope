@@ -71,8 +71,10 @@ class Controller {
   // replace KeyboardioHID entirely
   hid::keyboard::Report& report_;
 
-  //Plugin* plugins_[MAX_PLUGINS]; // need to define this statically somehow
-  byte plugin_count_;
+  // I'm not certain this really belongs here; it may be better to have the plugin pointer
+  // array stored independently of the controller.
+  Plugin** plugins_{nullptr};
+  byte plugin_count_{0};
 
   // cache of modifier flags on non-modifier, non-blank keys
   byte mod_flags_allowed_{0};
