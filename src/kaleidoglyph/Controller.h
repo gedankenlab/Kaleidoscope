@@ -20,7 +20,7 @@
 #include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
 #include KALEIDOGLYPH_KEYADDR_H
 #include "kaleidoglyph/Keymap.h"
-#include "kaleidoglyph/KeyswitchEvent.h"
+#include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/Layer.h"
 #include "kaleidoglyph/cKey.h"
 #include "kaleidoglyph/Plugin.h"
@@ -54,7 +54,7 @@ class Controller {
 
   static constexpr byte id{0xFF};
 
-  void handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller = nullptr);
+  void handleKeyEvent(KeyEvent event, Plugin* caller = nullptr);
   void pressKeyswitch(KeyAddr k, Plugin* caller = nullptr);
   void releaseKeyswitch(KeyAddr k, Plugin* caller = nullptr);
   void sendKeyboardReport();
@@ -92,14 +92,14 @@ Key Controller::lookup(KeyAddr k) const {
 
 inline
 void Controller::pressKeyswitch(KeyAddr k, Plugin* caller) {
-  KeyswitchEvent event{k, cKeyState::pressed};
-  handleKeyswitchEvent(event, caller);
+  KeyEvent event{k, cKeyState::pressed};
+  handleKeyEvent(event, caller);
 }
 
 inline
 void Controller::releaseKeyswitch(KeyAddr k, Plugin* caller) {
-  KeyswitchEvent event{k, cKeyState::released};
-  handleKeyswitchEvent(event, caller);
+  KeyEvent event{k, cKeyState::released};
+  handleKeyEvent(event, caller);
 }
 
 } // namespace kaleidoglyph {

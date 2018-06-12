@@ -8,7 +8,7 @@
 #include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
 #include "kaleidoglyph/hid/Report.h"
 #include "kaleidoglyph/hooks.h"
-#include "kaleidoglyph/KeyswitchEvent.h"
+#include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/cKey.h"
 #include "kaleidoglyph/Key.h"
 
@@ -32,14 +32,14 @@ void Controller::run() {
 
   keyboard_.scanMatrix();
 
-  for (KeyswitchEvent event : keyboard_) {
-    handleKeyswitchEvent(event);
+  for (KeyEvent event : keyboard_) {
+    handleKeyEvent(event);
   }
 }
 
 // I'm starting to think that we should just call the sendReport* functions from here,
 // rather than scattering the code around
-void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
+void Controller::handleKeyEvent(KeyEvent event, Plugin* caller) {
 
   const KeyAddr& k = event.addr;
   const KeyState& state = event.state;

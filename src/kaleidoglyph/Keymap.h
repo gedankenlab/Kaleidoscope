@@ -11,7 +11,7 @@
 #include "kaleidoglyph/KeymapEntry.h"
 #include "kaleidoglyph/Layer.h"
 #include "kaleidoglyph/cKeyAddr.h"
-#include "kaleidoglyph/KeyswitchEvent.h"
+#include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/KeyArray.h"
 
 
@@ -55,7 +55,7 @@ class Keymap {
   void shiftToLayer(byte layer_index);
   void moveToLayer(byte layer_index);
 
-  void handleLayerChange(KeyswitchEvent event, KeyArray& active_keys);
+  void handleLayerChange(KeyEvent event, KeyArray& active_keys);
 
   Key operator[](KeyAddr key_addr) const;
 

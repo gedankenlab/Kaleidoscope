@@ -7,7 +7,7 @@
 // I think it will work to put "hooks.cpp" in the sketch module, with the *.ino file.
 
 #include "kaleidoglyph/hooks.h"
-#include "kaleidoglyph/KeyswitchEvent.h"
+#include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/KeyArray.h"
 #include "kaleidoglyph/hid/Report.h"
 
@@ -24,7 +24,7 @@ void preScanHooks() {}
 /// Return true if processing should continue, false if the event has been completely
 /// handled, and no further action should take place in response to the event.
 __attribute__((weak))
-bool keyswitchEventHooks(KeyswitchEvent& event, KeyArray& active_keys, Plugin*& caller) {
+bool keyswitchEventHooks(KeyEvent& event, KeyArray& active_keys, Plugin*& caller) {
   return true;
 }
 
@@ -36,7 +36,7 @@ bool preKeyboardReportHooks(hid::keyboard::Report& keyboard_report) {
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
 __attribute__((weak))
-void postKeyboardReportHooks(KeyswitchEvent event) {}
+void postKeyboardReportHooks(KeyEvent event) {}
 
 } // namespace hooks {
 } // namespace kaleidoglyph {
