@@ -7,20 +7,20 @@
 
 namespace kaleidoglyph {
 
-class KeyswitchState {
+class KeyState {
 
  public:
 
   constexpr
-  KeyswitchState() : raw_(0) {}
+  KeyState() : raw_(0) {}
 
   // Constructor sets all reserved bits to zero.
   explicit constexpr
-  KeyswitchState(byte state)
+  KeyState(byte state)
     : raw_(state & 0x03) {}
 
   constexpr
-  KeyswitchState(bool curr, bool prev)
+  KeyState(bool curr, bool prev)
     : raw_(curr | (prev << 1)) {}
 
   // These comparisons all assume that the reserved bits are all zero.
@@ -68,15 +68,15 @@ class KeyswitchState {
 
 };
 
-namespace cKeyswitchState {
+namespace cKeyState {
 
-constexpr KeyswitchState inactive (0);
-constexpr KeyswitchState pressed  (1);
-constexpr KeyswitchState released (2);
-constexpr KeyswitchState held     (3);
+constexpr KeyState inactive (0);
+constexpr KeyState pressed  (1);
+constexpr KeyState released (2);
+constexpr KeyState held     (3);
 
-constexpr KeyswitchState idle = inactive;
+constexpr KeyState idle = inactive;
 
-} // namespace cKeyswitchState {
+} // namespace cKeyState {
 
 } // namespace kaleidoglyph {

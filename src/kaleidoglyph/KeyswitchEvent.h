@@ -7,20 +7,20 @@
 
 #include "kaleidoglyph/Key.h"
 #include "kaleidoglyph/cKey.h"
-#include "kaleidoglyph/KeyswitchState.h"
+#include "kaleidoglyph/KeyState.h"
 
 
 namespace kaleidoglyph {
 
 struct KeyswitchEvent {
 
-  Key             key;
-  KeyAddr         addr;
-  KeyswitchState  state;
+  Key       key;
+  KeyAddr   addr;
+  KeyState  state;
 
   KeyswitchEvent() {}
 
-  KeyswitchEvent(KeyAddr _addr, KeyswitchState _state, Key _key = cKey::clear)
+  KeyswitchEvent(KeyAddr _addr, KeyState _state, Key _key = cKey::clear)
     : key(_key), addr(_addr), state(_state) {}
 
 };

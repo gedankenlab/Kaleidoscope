@@ -42,7 +42,7 @@ void Controller::run() {
 void Controller::handleKeyswitchEvent(KeyswitchEvent event, Plugin* caller) {
 
   const KeyAddr& k = event.addr;
-  const KeyswitchState& state = event.state;
+  const KeyState& state = event.state;
 
   if (active_keys_[k] == cKey::masked) {
     if (state.toggledOff())
