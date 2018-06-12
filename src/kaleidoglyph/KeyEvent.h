@@ -12,15 +12,15 @@
 
 namespace kaleidoglyph {
 
-struct KeyswitchEvent {
+struct KeyEvent {
 
   Key       key;
   KeyAddr   addr;
   KeyState  state;
 
-  KeyswitchEvent() {}
+  KeyEvent() {}
 
-  KeyswitchEvent(KeyAddr _addr, KeyState _state, Key _key = cKey::clear)
+  KeyEvent(KeyAddr _addr, KeyState _state, Key _key = cKey::clear)
     : key(_key), addr(_addr), state(_state) {}
 
 };

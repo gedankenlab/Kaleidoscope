@@ -4,7 +4,7 @@
 
 #include <Arduino.h>
 
-#include "kaleidoglyph/KeyswitchEvent.h"
+#include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/KeyArray.h"
 #include "kaleidoglyph/hid/Report.h"
 
@@ -18,7 +18,7 @@ class Plugin {
   virtual void preScanHook(uint16_t current_time) {}
 
   // I might decide to break this up into multiple hooks
-  virtual bool keyswitchEventHook(KeyswitchEvent& event, Plugin*& caller) {
+  virtual bool keyswitchEventHook(KeyEvent& event, Plugin*& caller) {
     return true;
   }
 
@@ -28,7 +28,7 @@ class Plugin {
   }
 
   // Should probably be renamed postKeyboardReportHook()
-  virtual void postReportHook(KeyswitchEvent event) {}
+  virtual void postReportHook(KeyEvent event) {}
   
  protected:
 
