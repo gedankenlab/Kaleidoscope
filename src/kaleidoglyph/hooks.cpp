@@ -17,26 +17,35 @@ namespace hooks {
 
 /// Call pre-keyswitch-scan hooks (run every cycle, before keyswitches are scanned)
 __attribute__((weak))
-void preScanHooks() {}
+void beforeKeyswitchScan() {}
 
-/// Call keyswitch event handler hooks (run when a key press or release is detected)
+/// Call onKeyswitchEvent handler hooks (run when a key press or release is detected)
 ///
-/// Return true if processing should continue, false if the event has been completely
-/// handled, and no further action should take place in response to the event.
+/// Returns an `EventHandlerResult`: `proceed` if processing should continue, `abort` if
+/// it should stop, and no further action should take place in response to the event.
 __attribute__((weak))
-bool keyswitchEventHooks(KeyEvent& event, KeyArray& active_keys, Plugin*& caller) {
-  return true;
+EventHandlerResult onKeyswitchEvent(KeyEvent& event) {
+  return EventHandlerResult::proceed;
+}
+
+/// Call onKeyEvent handler hooks (run when a key press or release is detected)
+///
+/// Returns an `EventHandlerResult`: `proceed` if processing should continue, or `abort`
+/// if it should stop, and no further action should take place in response to the event.
+__attribute__((weak))
+EventHandlerResult onKeyEvent(byte plugin_id, KeyEvent& event) {
+  return EventHandlerResult::proceed;
 }
 
 /// Call keyboard HID pre-report hooks (run when a keyboard HID report is about to be sent)
 __attribute__((weak))
-bool preKeyboardReportHooks(hid::keyboard::Report& keyboard_report) {
+bool beforeKeyboardReport(hid::keyboard::Report& keyboard_report) {
   return true;
 }
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
 __attribute__((weak))
-void postKeyboardReportHooks(KeyEvent event) {}
+void afterKeyboardReport(KeyEvent event) {}
 
 } // namespace hooks {
 } // namespace kaleidoglyph {

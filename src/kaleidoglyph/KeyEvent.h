@@ -17,6 +17,7 @@ struct KeyEvent {
   Key       key;
   KeyAddr   addr;
   KeyState  state;
+  byte      caller;
 
   KeyEvent() {}
 

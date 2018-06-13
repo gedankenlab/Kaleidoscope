@@ -9,8 +9,8 @@ namespace kaleidoglyph {
 
 enum class EventHandlerResult : byte {
 
-  ok,
-  done,
+  proceed,
+  abort,
   nxplugin,
 
 };

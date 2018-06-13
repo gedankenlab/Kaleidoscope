@@ -15,33 +15,29 @@ class Plugin {
  public:
 
   // Run every cycle before the keyswitch scan
-  virtual void preScanHook(uint16_t current_time) {}
+  void beforeKeyswitchScan(uint16_t current_time) {}
+  // I should get rid of the current_time arg, and make that available more generally
 
-  // I might decide to break this up into multiple hooks
-  virtual bool keyswitchEventHook(KeyEvent& event, Plugin*& caller) {
+  // Runs when a (physical) keyswitch event is processed
+  EventHandlerResult onKeyswitchEvent(KeyEvent& event) {
+    return EventHandlerResult::proceed;
+  }
+
+  // Runs when a (physical or injected) key event is processed
+  EventHandlerResult onKeyEvent(KeyEvent& event) {
+    return EventHandlerResult::proceed;
+  }
+
+  // Runs before a keyboard HID report is sent to the host
+  bool beforeKeyboardReport(hid::keyboard::Report& keyboard_report) {
     return true;
   }
 
-  // Should probably be renamed preKeyboardReportHook()
-  virtual bool preReportHook(hid::keyboard::Report& keyboard_report) {
-    return true;
-  }
+  // Runs after a keyboard HID report is sent to the host
+  void afterKeyboardReport(KeyEvent event) {}
 
-  // Should probably be renamed postKeyboardReportHook()
-  virtual void postReportHook(KeyEvent event) {}
+  // TODO: add LED update hook(s), mouse report hook(s), maybe onSetup()
   
- protected:
-
-  // This should maybe use a void* instead of a Plugin*. Also, maybe this should be in
-  // keyswitchEventHook instead? (with the return value reversed). No, and NO!
-  virtual bool checkCaller(Plugin*& caller) const final {
-    if (caller == nullptr)
-      return false;
-    if (caller == this)
-      caller = nullptr;
-    return true;
-  }
-
 };
 
 } // namespace kaleidoglyph {

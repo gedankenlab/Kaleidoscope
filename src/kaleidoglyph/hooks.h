@@ -18,16 +18,19 @@ namespace kaleidoglyph {
 namespace hooks {
 
 /// Call pre-keyswitch-scan hooks (run every cycle, before keyswitches are scanned)
-void preScanHooks();
+void beforeKeyswitchScan();
 
 /// Call keyswitch event handler hooks (run when a key press or release is detected)
-bool keyswitchEventHooks(KeyEvent& event, KeyArray& active_keys, Plugin*& caller);
+EventHandlerResult onKeyswitchEvent(KeyEvent& event);
+
+/// Call keyswitch event handler hook for plugin with given id
+EventHandlerResult onKeyEvent(byte plugin_id, KeyEvent& event);
 
 /// Call keyboard HID pre-report hooks (run when a keyboard HID report is about to be sent)
-bool preKeyboardReportHooks(hid::keyboard::Report& keyboard_report);
+bool beforeKeyboardReport(hid::keyboard::Report& keyboard_report);
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
-void postKeyboardReportHooks(KeyEvent event);
+void afterKeyboardReport(KeyEvent event);
 
 } // namespace hooks {
 } // namespace kaleidoglyph {

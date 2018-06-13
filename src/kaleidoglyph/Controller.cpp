@@ -39,7 +39,7 @@ void Controller::run() {
 
 // I'm starting to think that we should just call the sendReport* functions from here,
 // rather than scattering the code around
-void Controller::handleKeyEvent(KeyEvent event, Plugin* caller) {
+void Controller::handleKeyEvent(KeyEvent event) {
 
   const KeyAddr& k = event.addr;
   const KeyState& state = event.state;
@@ -68,10 +68,52 @@ void Controller::handleKeyEvent(KeyEvent event, Plugin* caller) {
   // e.g. Qukeys), then ones that will stop processing if they handle the event
   // (e.g. Keymap), then maybe ones that need a "final" version of the report ready
   // (though that probably moves to the pre-report hook)
-  if (! hooks::keyswitchEventHooks(event, active_keys_, caller)) {
+  if (hooks::onKeyEvent(event) != EventHandlerResult::proceed) {
     return;
   }
+  // --------------------------------------------------------------------------------
 
+  EventHandlerResult result;
+
+  if (! event.state.isInjected()) {
+    result = hooks::onKeyswitchEvent(event);
+    if (result == EventHandlerResult::abort) {
+      return;
+    }
+  }
+
+  PluginMask plugin_mask{};
+  Key prev_key{event.key};
+
+  for (byte id{1}; id < plugin_count; ++id) {
+    if (plugin_mask.isMasked(id)) continue;
+
+    result = hooks::onKeyEvent(id, event);
+    assert(result != EventHandlerResult::nxplugin);
+    if (result == EventHandlerResult::abort) {
+      return;
+    }
+    // The following is a more forgiving version, which handles nxplugin results
+    // switch (result) {
+    //   case EventHandlerResult::nxplugin: // this should never happenxs
+    //     plugin_mask.maskPlugin(id);
+    //     continue;
+    //   case EventHandlerResult::abort:
+    //     return;
+    //   default:
+    //     break;
+    // }
+    if (event.key != prev_key) {
+      plugin_mask.maskPlugin(id);
+      prev_key = event.key;
+      id = 1;
+      continue;
+    }
+  }
+
+  // --------------------------------------------------------------------------------
+
+  
   // Update active_keys_ based on the key state
   if (state.toggledOff()) {
     // I'm not 100% convinced this is what we want, but it's probably the best choice. It
