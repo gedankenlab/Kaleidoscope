@@ -92,13 +92,13 @@ Key Controller::lookup(KeyAddr k) const {
 
 inline
 void Controller::pressKeyswitch(KeyAddr k, Plugin* caller) {
-  KeyEvent event{k, cKeyState::pressed};
+  KeyEvent event{k, cKeyState::press};
   handleKeyEvent(event, caller);
 }
 
 inline
 void Controller::releaseKeyswitch(KeyAddr k, Plugin* caller) {
-  KeyEvent event{k, cKeyState::released};
+  KeyEvent event{k, cKeyState::release};
   handleKeyEvent(event, caller);
 }
 

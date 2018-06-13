@@ -63,12 +63,14 @@ class KeyState {
 
 namespace cKeyState {
 
-constexpr KeyState inactive (0);
-constexpr KeyState pressed  (1);
-constexpr KeyState released (2);
-constexpr KeyState held     (3);
+constexpr KeyState idle    (0);
+constexpr KeyState press   (1);
+constexpr KeyState release (2);
+constexpr KeyState hold    (3);
 
-constexpr KeyState idle = inactive;
+constexpr KeyState injected_press   (true,  false, true);
+constexpr KeyState injected_release (false, true,  true);
+constexpr KeyState injected_hold    (true,  true,  true);
 
 } // namespace cKeyState {
 
