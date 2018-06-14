@@ -47,13 +47,6 @@ class Controller {
   void init(); // setup();
   void run();  // loop();
 
-  // this might turn out to be a macro instead; we want this to happen at compile time
-  // void initPlugin(Plugin & p) {
-  //   p.init(plugin_count_++);
-  // }
-
-  static constexpr byte id{0xFF};
-
   void handleKeyEvent(KeyEvent event);
   void pressKeyswitch(KeyAddr k, byte caller = 0); // should use `pluginid::controller`
   void releaseKeyswitch(KeyAddr k, byte caller = 0);
