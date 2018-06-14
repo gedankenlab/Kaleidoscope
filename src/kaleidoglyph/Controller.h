@@ -64,6 +64,10 @@ class Controller {
   // TODO: add getModFlags();
   byte getModifierFlags() const; // return mod flags from non-blank, non-modifier keys
 
+  uint32_t scanStartTime() const {
+    return scan_start_time_;
+  }
+
  private:
 
   // active_keys_ can't really be a Layer because that would reference PROGMEM
@@ -81,6 +85,8 @@ class Controller {
 
   // cache of modifier flags on non-modifier, non-blank keys
   byte mod_flags_allowed_{0};
+
+  uint32_t scan_start_time_{0};
 
 };
 
