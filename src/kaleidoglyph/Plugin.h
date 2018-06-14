@@ -21,7 +21,7 @@ class Plugin {
   // inherit from this class at all, and the functions here are mostly pointless.
 
   // Run every cycle before the keyswitch scan
-  void beforeKeyswitchScan() {}
+  void preKeyswitchScan() {}
   // I should get rid of the current_time arg, and make that available more generally
 
   // Runs when a (physical) keyswitch event is processed
@@ -35,12 +35,12 @@ class Plugin {
   }
 
   // Runs before a keyboard HID report is sent to the host
-  bool beforeKeyboardReport(hid::keyboard::Report& keyboard_report) {
+  bool preKeyboardReport(hid::keyboard::Report& keyboard_report) {
     return true;
   }
 
   // Runs after a keyboard HID report is sent to the host
-  void afterKeyboardReport(KeyEvent event) {}
+  void postKeyboardReport(KeyEvent event) {}
 
   // TODO: add LED update hook(s), mouse report hook(s), maybe onSetup()
   

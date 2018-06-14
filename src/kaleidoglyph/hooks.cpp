@@ -17,7 +17,7 @@ namespace hooks {
 
 /// Call pre-keyswitch-scan hooks (run every cycle, before keyswitches are scanned)
 __attribute__((weak))
-void beforeKeyswitchScan() {}
+void preKeyswitchScan() {}
 
 /// Call onKeyswitchEvent handler hooks (run when a key press or release is detected)
 ///
@@ -39,13 +39,13 @@ EventHandlerResult onKeyEvent(byte plugin_id, KeyEvent& event) {
 
 /// Call keyboard HID pre-report hooks (run when a keyboard HID report is about to be sent)
 __attribute__((weak))
-bool beforeKeyboardReport(hid::keyboard::Report& keyboard_report) {
+bool preKeyboardReport(hid::keyboard::Report& keyboard_report) {
   return true;
 }
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
 __attribute__((weak))
-void afterKeyboardReport(KeyEvent event) {}
+void postKeyboardReport(KeyEvent event) {}
 
 } // namespace hooks {
 } // namespace kaleidoglyph {

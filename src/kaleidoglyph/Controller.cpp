@@ -30,7 +30,7 @@ void Controller::run() {
 
   scan_start_time_ = millis();
 
-  hooks::beforeKeyswitchScan();
+  hooks::preKeyswitchScan();
 
   keyboard_.scanMatrix();
 
