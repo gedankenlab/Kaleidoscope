@@ -13,6 +13,12 @@ namespace kaleidoglyph {
 class Plugin {
 
  public:
+  // Note: The following functions would ideally be virtual, but aren't because the
+  // compiler stores the vtables in RAM, not just in PROGMEM. This would rapidly use up an
+  // unacceptably large amount of precious memory in an AVR chip, so we simply shadow
+  // them, rather than doing proper inheritance. I don't like this much, but it's the best
+  // solution we have right now. In fact, as it is, the plugins don't even really need to
+  // inherit from this class at all, and the functions here are mostly pointless.
 
   // Run every cycle before the keyswitch scan
   void beforeKeyswitchScan(uint16_t current_time) {}
