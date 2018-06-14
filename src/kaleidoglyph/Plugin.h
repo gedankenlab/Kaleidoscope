@@ -21,7 +21,7 @@ class Plugin {
   // inherit from this class at all, and the functions here are mostly pointless.
 
   // Run every cycle before the keyswitch scan
-  void beforeKeyswitchScan(uint16_t current_time) {}
+  void beforeKeyswitchScan() {}
   // I should get rid of the current_time arg, and make that available more generally
 
   // Runs when a (physical) keyswitch event is processed
