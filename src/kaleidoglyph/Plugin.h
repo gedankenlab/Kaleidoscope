@@ -6,6 +6,7 @@
 
 #include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/KeyArray.h"
+#include "kaleidoglyph/EventHandlerResult.h"
 #include "kaleidoglyph/hid/Report.h"
 
 namespace kaleidoglyph {

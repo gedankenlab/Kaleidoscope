@@ -12,6 +12,11 @@
 #include "kaleidoglyph/cKey.h"
 #include "kaleidoglyph/Key.h"
 
+#if defined(CONTROLLER_CONSTANTS_H)
+#include CONTROLLER_CONSTANTS_H
+#else
+constexpr byte key_event_handler_count = 0;
+#endif
 
 namespace kaleidoglyph {
 
@@ -38,6 +43,18 @@ void Controller::run() {
     handleKeyEvent(event);
   }
 }
+
+class PluginMask {
+ public:
+  bool isMasked(byte id) {
+    return bitRead(mask_[id / 8], id % 8);
+  }
+  bool maskPlugin(byte id) {
+    return bitSet(mask_[id / 8], id % 8);
+  }
+ private:
+  byte mask_[(key_event_handler_count / 8) + ((key_event_handler_count % 8) ? 1 : 0)] = {};
+};
 
 // I'm starting to think that we should just call the sendReport* functions from here,
 // rather than scattering the code around
@@ -70,9 +87,10 @@ void Controller::handleKeyEvent(KeyEvent event) {
   // e.g. Qukeys), then ones that will stop processing if they handle the event
   // (e.g. Keymap), then maybe ones that need a "final" version of the report ready
   // (though that probably moves to the pre-report hook)
-  if (hooks::onKeyEvent(event) != EventHandlerResult::proceed) {
-    return;
-  }
+  // if (hooks::onKeyEvent(event) != EventHandlerResult::proceed) {
+  //   return;
+  // }
+
   // --------------------------------------------------------------------------------
 
   EventHandlerResult result;
@@ -84,11 +102,19 @@ void Controller::handleKeyEvent(KeyEvent event) {
     }
   }
 
-  PluginMask plugin_mask{};
+  // We could just use an `if(key_event_handler_count > 0)` test here, but I like the idea
+  // of getting a compiler warning if we screwed up and set that to zero. Maybe if
+  // controller-constants.h ends up containing other stuff, too, it would make sense to
+  // switch to the plain if().
+#if defined(CONTROLLER_CONSTANTS_H)
+  byte plugin_mask[(key_event_handler_count / 8) +
+                   ((key_event_handler_count % 8) ? 1 : 0)] = {};
   Key prev_key{event.key};
 
-  for (byte id{1}; id < plugin_count; ++id) {
-    if (plugin_mask.isMasked(id)) continue;
+  for (byte id{0}; id < key_event_handler_count; ++id) {
+    byte id_byte = id / 8;
+    byte id_bit  = id % 8;
+    if (bitRead(plugin_mask[id_byte], id_bit)) continue;
 
     result = hooks::onKeyEvent(id, event);
     assert(result != EventHandlerResult::nxplugin);
@@ -106,12 +132,13 @@ void Controller::handleKeyEvent(KeyEvent event) {
     //     break;
     // }
     if (event.key != prev_key) {
-      plugin_mask.maskPlugin(id);
+      bitSet(plugin_mask[id_byte], id_bit);
       prev_key = event.key;
-      id = 1;
+      id = 0;
       continue;
     }
   }
+#endif
 
   // --------------------------------------------------------------------------------
 
@@ -147,7 +174,7 @@ void Controller::handleKeyEvent(KeyEvent event) {
       mod_flags_allowed_ = 0xFF;
     }
     sendKeyboardReport();
-    hooks::postKeyboardReportHooks(event);
+    hooks::postKeyboardReport(event);
     return;
   }
 }
@@ -161,7 +188,7 @@ void Controller::sendKeyboardReport() {
     report_.add(key, mod_flags_allowed_);
     //kaleidoglyph::hid::pressKey(key);
   }
-  if (hooks::preKeyboardReportHooks(report_))
+  if (hooks::preKeyboardReport(report_))
     report_.send();
   //kaleidoglyph::hid::sendKeyboardReport();
 }
