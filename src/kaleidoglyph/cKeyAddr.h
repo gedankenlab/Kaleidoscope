@@ -2,12 +2,10 @@
 
 #pragma once
 
-#include KALEIDOGLYPH_HARDWARE_H
-#include KALEIDOGLYPH_KEYADDR_H
+#include "kaleidoglyph/KeyAddr.h"
 
 
 namespace kaleidoglyph {
-
 namespace cKeyAddr {
 
 constexpr KeyAddr start   { 0              };
@@ -20,5 +18,4 @@ constexpr KeyAddr unknown { total_keys     };
 constexpr KeyAddr invalid { 0xFF           };
 
 } // namespace cKeyAddr {
-
 } // namespace kaleidoglyph {

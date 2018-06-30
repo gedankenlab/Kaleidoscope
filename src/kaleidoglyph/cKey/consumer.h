@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "HIDTables.h"
-#include "kaleidoglyph/Key.h"
+#include "kaleidoglyph/Key/ConsumerKey.h"
+#include "kaleidoglyph/cKey/HIDTables.h"
 
 
 namespace kaleidoglyph {

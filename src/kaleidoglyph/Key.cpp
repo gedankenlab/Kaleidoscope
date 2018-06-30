@@ -2,8 +2,6 @@
 
 #include <Arduino.h>
 
-#include "kaleidoglyph/cKey.h"
-
 
 namespace kaleidoglyph {
 

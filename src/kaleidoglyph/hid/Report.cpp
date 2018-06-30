@@ -3,13 +3,17 @@
 #include "kaleidoglyph/hid/Report.h"
 
 #include <Arduino.h>
+
+// This should get changed to use KALEIDOGLYPH_HID_H, defined in the hardware module
 #include <KeyboardioHID.h>
 
 #include "kaleidoglyph/Key.h"
 #include "kaleidoglyph/cKey.h"
 
 
-// This version uses KeyboardioHID, not the rewrite
+// This version uses KeyboardioHID, not the rewrite. Maybe it would be better to use an
+// equivalent of the HIDAdaptor module used by Kaleidoscope, but I'm skeptical that the
+// extra layer is really worthwhile.
 
 namespace kaleidoglyph {
 namespace hid {

@@ -5,8 +5,7 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
-#include KALEIDOGLYPH_HARDWARE_H
-#include KALEIDOGLYPH_KEYADDR_H
+#include "kaleidoglyph/KeyAddr.h"
 
 
 namespace kaleidoglyph {
@@ -186,6 +185,8 @@ inline Key getShallowEepromKey(uint16_t eeprom_addr) {
 
 } // namespace kaleidoglyph {
 
+// These trailing includes provide all the built-in Key variants, but maybe it's better
+// not to include them here, but instead do so individually wherever they're needed.
 #include "kaleidoglyph/Key/KeyboardKey.h"
 #include "kaleidoglyph/Key/ConsumerKey.h"
 #include "kaleidoglyph/Key/SystemKey.h"

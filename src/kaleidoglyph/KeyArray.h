@@ -5,10 +5,8 @@
 #include <Arduino.h>
 #include <assert.h>
 
-#include KALEIDOGLYPH_HARDWARE_H
-
-#include KALEIDOGLYPH_KEYADDR_H
 #include "kaleidoglyph/Key.h"
+#include "kaleidoglyph/KeyAddr.h"
 #include "kaleidoglyph/KeymapEntry.h"
 #include "kaleidoglyph/cKeyAddr.h"
 

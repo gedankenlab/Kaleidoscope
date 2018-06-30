@@ -1,16 +1,30 @@
 // -*- c++ -*-
 
-// This file contains function declarations only. The definitions need to be supplied in
-// code generated either by preprocessor macros or a pre-build perl script that writes all
-// the hook method calls for the sketch based on the plugins that are used.
+// This file contains dummy versions of the master hook functions. The real versions
+// depend on the specific plugins that are used in the given sketch, and should be defined
+// in `<sketch_dir>/src/sketch/hooks.cpp`. The sketch's master header file
+// (e.g. `Model01-Firmware.h`, referred to as `KALEIDOGLYPH_SKETCH_H`), should contain a
+// reference to that file like so:
+//
+// #define KALEIDOGLYPH_HOOKS_H <sketch/hooks.h>
 
-// I think it will work to put "hooks.cpp" in the sketch module, with the *.ino file.
+#if defined(KALEIDOGLYPH_SKETCH_H)
+#include KALEIDOGLYPH_SKETCH_H
+#endif
+
+#if defined(KALEIDOGLYPH_HOOKS_H)
+#include KALEIDOGLYPH_HOOKS_H
+#else
+// --------------------------------------------------------------------------------
+// Default, in case the sketch hasn't defined a hooks.h file:
 
 #include "kaleidoglyph/hooks.h"
-#include "kaleidoglyph/KeyEvent.h"
-#include "kaleidoglyph/KeyArray.h"
-#include "kaleidoglyph/hid/Report.h"
 
+#include <Arduino.h>
+
+#include "kaleidoglyph/EventHandlerResult.h"
+#include "kaleidoglyph/KeyEvent.h"
+#include "kaleidoglyph/hid/Report.h"
 
 namespace kaleidoglyph {
 namespace hooks {
@@ -49,3 +63,6 @@ void postKeyboardReport(KeyEvent event) {}
 
 } // namespace hooks {
 } // namespace kaleidoglyph {
+
+// --------------------------------------------------------------------------------
+#endif

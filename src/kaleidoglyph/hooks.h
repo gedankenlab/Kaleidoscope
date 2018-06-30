@@ -8,9 +8,10 @@
 
 #pragma once
 
+#include <Arduino.h>
+
+#include "kaleidoglyph/EventHandlerResult.h"
 #include "kaleidoglyph/KeyEvent.h"
-#include "kaleidoglyph/KeyArray.h"
-#include "kaleidoglyph/Plugin.h"
 #include "kaleidoglyph/hid/Report.h"
 
 

@@ -4,15 +4,13 @@
 
 #include <Arduino.h>
 
-#include KALEIDOGLYPH_HARDWARE_H
-#include KALEIDOGLYPH_KEYADDR_H
-
 #include "kaleidoglyph/Key.h"
+#include "kaleidoglyph/KeyAddr.h"
+#include "kaleidoglyph/KeyArray.h"
+#include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/KeymapEntry.h"
 #include "kaleidoglyph/Layer.h"
 #include "kaleidoglyph/cKeyAddr.h"
-#include "kaleidoglyph/KeyEvent.h"
-#include "kaleidoglyph/KeyArray.h"
 
 
 namespace kaleidoglyph {
@@ -143,6 +141,5 @@ class Keymap {
   };
 
 };
-
 
 } // namespace kaleidoglyph {

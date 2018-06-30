@@ -18,7 +18,7 @@
 //#include <Kaleidoglyph-Hardware-Model01.h>
 #include KALEIDOGLYPH_HARDWARE_H
 #include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
-#include KALEIDOGLYPH_KEYADDR_H
+#include "kaleidoglyph/KeyAddr.h"
 #include "kaleidoglyph/Keymap.h"
 #include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/Layer.h"
@@ -41,8 +41,7 @@ class Controller {
              hid::keyboard::Report& keyboard_report)
       : keymap_(keymap),
         keyboard_(keyboard),
-        report_(keyboard_report),
-        plugin_count_(0) {}
+        report_(keyboard_report) {}
   
   void init(); // setup();
   void run();  // loop();
@@ -64,7 +63,6 @@ class Controller {
  private:
 
   // active_keys_ can't really be a Layer because that would reference PROGMEM
-  //Key active_keys_[total_keys];
   KeyArray active_keys_;
 
   Keymap& keymap_;
@@ -72,9 +70,6 @@ class Controller {
   // I want to make report_ a full member, not a pointer, but maybe not until I
   // replace KeyboardioHID entirely
   hid::keyboard::Report& report_;
-
-  //Plugin* plugins_[MAX_PLUGINS]; // need to define this statically somehow
-  byte plugin_count_;
 
   // cache of modifier flags on non-modifier, non-blank keys
   byte mod_flags_allowed_{0};

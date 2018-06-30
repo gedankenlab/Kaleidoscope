@@ -6,16 +6,31 @@
 
 #include KALEIDOGLYPH_HARDWARE_H
 #include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
+#include "kaleidoglyph/EventHandlerResult.h"
+#include "kaleidoglyph/Key.h"
+#include "kaleidoglyph/KeyAddr.h"
+#include "kaleidoglyph/KeyEvent.h"
+#include "kaleidoglyph/KeyState.h"
+#include "kaleidoglyph/cKey.h"
 #include "kaleidoglyph/hid/Report.h"
 #include "kaleidoglyph/hooks.h"
-#include "kaleidoglyph/KeyEvent.h"
-#include "kaleidoglyph/cKey.h"
-#include "kaleidoglyph/Key.h"
+
+#include "kaleidoglyph/KeyEventHandlerId.h"
 
 #if defined(CONTROLLER_CONSTANTS_H)
 #include CONTROLLER_CONSTANTS_H
 #else
 constexpr byte key_event_handler_count = 0;
+#endif
+
+#if defined(SKETCH_KEY_EVENT_HANDLER_ID_H)
+#include SKETCH_KEY_EVENT_HANDLER_ID_H
+#else
+namespace kaleidoglyph {
+enum class KeyEventHandlerId : byte {
+  count
+};
+}
 #endif
 
 namespace kaleidoglyph {
@@ -44,6 +59,9 @@ void Controller::run() {
   }
 }
 
+// This class clarifies things, but probably isn't as efficient, and maybe just adds extra
+// complexity
+namespace {
 class PluginMask {
  public:
   bool isMasked(byte id) {
@@ -55,6 +73,7 @@ class PluginMask {
  private:
   byte mask_[(key_event_handler_count / 8) + ((key_event_handler_count % 8) ? 1 : 0)] = {};
 };
+}
 
 // I'm starting to think that we should just call the sendReport* functions from here,
 // rather than scattering the code around
@@ -78,7 +97,7 @@ void Controller::handleKeyEvent(KeyEvent event) {
     } else {
       // TODO: decide what to do if we get a `held` or `idle` state
       //active_keys_[k] = cKey::clear;
-      return;
+      return; // assert(false)?
     }
   }
 
@@ -102,43 +121,29 @@ void Controller::handleKeyEvent(KeyEvent event) {
     }
   }
 
-  // We could just use an `if(key_event_handler_count > 0)` test here, but I like the idea
-  // of getting a compiler warning if we screwed up and set that to zero. Maybe if
-  // controller-constants.h ends up containing other stuff, too, it would make sense to
-  // switch to the plain if().
-#if defined(CONTROLLER_CONSTANTS_H)
-  byte plugin_mask[(key_event_handler_count / 8) +
-                   ((key_event_handler_count % 8) ? 1 : 0)] = {};
-  Key prev_key{event.key};
+  if (byte(KeyEventHandlerId::count) > 0) {
+    byte plugin_mask[(KeyEventHandlerId::count / 8) +
+                     ((KeyEventHandlerId::count % 8) ? 1 : 0)] = {};
+    Key prev_key{event.key};
 
-  for (byte id{0}; id < key_event_handler_count; ++id) {
-    byte id_byte = id / 8;
-    byte id_bit  = id % 8;
-    if (bitRead(plugin_mask[id_byte], id_bit)) continue;
+    for (byte id{0}; id < byte(KeyEventHandlerId::count); ++id) {
+      byte id_byte = id / 8;
+      byte id_bit  = id % 8;
+      if (bitRead(plugin_mask[id_byte], id_bit)) continue;
 
-    result = hooks::onKeyEvent(id, event);
-    assert(result != EventHandlerResult::nxplugin);
-    if (result == EventHandlerResult::abort) {
-      return;
-    }
-    // The following is a more forgiving version, which handles nxplugin results
-    // switch (result) {
-    //   case EventHandlerResult::nxplugin: // this should never happenxs
-    //     plugin_mask.maskPlugin(id);
-    //     continue;
-    //   case EventHandlerResult::abort:
-    //     return;
-    //   default:
-    //     break;
-    // }
-    if (event.key != prev_key) {
-      bitSet(plugin_mask[id_byte], id_bit);
-      prev_key = event.key;
-      id = 0;
-      continue;
+      result = hooks::onKeyEvent(KeyEventHandlerId(id), event);
+      assert(result != EventHandlerResult::nxplugin);
+      if (result == EventHandlerResult::abort) {
+        return;
+      }
+      if (event.key != prev_key) {
+        bitSet(plugin_mask[id_byte], id_bit);
+        prev_key = event.key;
+        id = 0;
+        continue;
+      }
     }
   }
-#endif
 
   // --------------------------------------------------------------------------------
 

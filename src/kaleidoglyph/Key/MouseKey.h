@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <Arduino.h>
+
 #include "kaleidoglyph/Key.h"
 
 

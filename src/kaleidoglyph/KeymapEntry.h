@@ -2,10 +2,8 @@
 
 #pragma once
 
-#include KALEIDOGLYPH_HARDWARE_H
-#include KALEIDOGLYPH_KEYADDR_H
 #include "kaleidoglyph/Key.h"
-
+#include "kaleidoglyph/KeyAddr.h"
 
 namespace kaleidoglyph {
 

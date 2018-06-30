@@ -2,8 +2,8 @@
 
 #pragma once
 
+#include "kaleidoglyph/Key/KeyboardKey.h"
 #include "kaleidoglyph/cKey/HIDTables.h"
-#include "kaleidoglyph/Key.h"
 
 
 // Keyboard HID mappings

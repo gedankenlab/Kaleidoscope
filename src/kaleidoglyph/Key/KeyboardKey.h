@@ -2,9 +2,11 @@
 
 #pragma once
 
+#include <Arduino.h>
+#include <assert.h>
+
 #include "kaleidoglyph/Key.h"
 #include "kaleidoglyph/cKey/HIDTables.h"
-#include <assert.h>
 
 
 namespace kaleidoglyph {

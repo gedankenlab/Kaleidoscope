@@ -2,8 +2,10 @@
 
 #pragma once
 
-#include "kaleidoglyph/Key.h"
+#include <Arduino.h>
 #include <assert.h>
+
+#include "kaleidoglyph/Key.h"
 
 
 namespace kaleidoglyph {
