@@ -23,8 +23,8 @@
 constexpr byte key_event_handler_count = 0;
 #endif
 
-#if defined(SKETCH_KEY_EVENT_HANDLER_ID_H)
-#include SKETCH_KEY_EVENT_HANDLER_ID_H
+#if defined(KALEIDOGLYPH_KEY_EVENT_HANDLER_ID_H)
+#include KALEIDOGLYPH_KEY_EVENT_HANDLER_ID_H
 #else
 namespace kaleidoglyph {
 enum class KeyEventHandlerId : byte {
@@ -83,8 +83,9 @@ void Controller::handleKeyEvent(KeyEvent event) {
   const KeyState& state = event.state;
 
   if (active_keys_[k] == cKey::masked) {
-    if (state.toggledOff())
-      active_keys_[k] = cKey::unmasked;
+    if (state.toggledOff()) {
+      active_keys_[k] = cKey::clear;
+    }
     return;
   }
 
@@ -121,22 +122,35 @@ void Controller::handleKeyEvent(KeyEvent event) {
     }
   }
 
-  if (byte(KeyEventHandlerId::count) > 0) {
-    byte plugin_mask[(KeyEventHandlerId::count / 8) +
-                     ((KeyEventHandlerId::count % 8) ? 1 : 0)] = {};
+  if (KeyEventHandlerId::count > 0) {
+    // plugin_mask exists so that when a plugin restarts the loop below, it gets skipped
+    // in the processing of the event (until the loop ends). It prevents infinite looping
+    // from a misbehaving plugin. It's a bitfield where each bit represents one plugin. If
+    // that plugin's bit is 1, it is masked and will be skipped.
+    byte plugin_mask[KeyEventHandlerId::count +
+                     (KeyEventHandlerId::count ? 1 : 0)] = {};
+    // A mechanism for knowing if a plugin has changed the value of `event.key` in its
+    // `onKeyEvent()` handler function:
     Key prev_key{event.key};
 
-    for (byte id{0}; id < byte(KeyEventHandlerId::count); ++id) {
+    // This loop makes plugin order mostly irrelevant for the onKeyEvent hooks.
+    for (byte id{0}; id < KeyEventHandlerId::count; ++id) {
+      // If we have more than eight plugins with `onKeyEvent()` handlers, we need byte and
+      // bit indices to identify the plugin. Any plugin with its mask bit set is skipped.
       byte id_byte = id / 8;
       byte id_bit  = id % 8;
       if (bitRead(plugin_mask[id_byte], id_bit)) continue;
 
-      result = hooks::onKeyEvent(KeyEventHandlerId(id), event);
+      result = hooks::onKeyEvent(id, event);
       assert(result != EventHandlerResult::nxplugin);
       if (result == EventHandlerResult::abort) {
         return;
       }
       if (event.key != prev_key) {
+        // If the plugin changed the `event.key` value, it gets masked, and processing
+        // starts over, so that the first plugin gets a chance to deal with the event with
+        // this new `Key` value. This means that plugins need to be able to deal with
+        // multiple events that are actually the same event redefined.
         bitSet(plugin_mask[id_byte], id_bit);
         prev_key = event.key;
         id = 0;
@@ -148,7 +162,8 @@ void Controller::handleKeyEvent(KeyEvent event) {
   // --------------------------------------------------------------------------------
 
   
-  // Update active_keys_ based on the key state
+  // Update active_keys_ based on the key state. Note that this is done *after* plugin
+  // event handlers have been called, and had a chance to alter the `Key` value.
   if (state.toggledOff()) {
     // I'm not 100% convinced this is what we want, but it's probably the best choice. It
     // means that if a plugin wants to keep a key active on release, it has to return
@@ -166,9 +181,12 @@ void Controller::handleKeyEvent(KeyEvent event) {
     return;
   }
 
-  if (event.key.isEmpty())
+  if (event.key.isEmpty()) {
     return;
+  }
 
+  // Handle keyboard keys. Maybe this should come before the LayerKey test, because this
+  // type is expected to be the most common?
   if (KeyboardKey::verify(event.key)) {
     KeyboardKey keyboard_key{event.key};
     if (event.state.toggledOn() && !keyboard_key.isModifier()) {
