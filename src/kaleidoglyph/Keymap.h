@@ -17,7 +17,7 @@ namespace kaleidoglyph {
 
 /// Calculates the number of bytes needed to store a bitfield of the given size in bits
 constexpr byte bitfieldSize(int bits) {
-  return (bits / 8) + ((bits % 8) ? 1 : 0);
+  return ((bits - 1) / 8) + 1;
 }
 
 // Temporary constant, until I write the pre-build script(s)
