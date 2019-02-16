@@ -19,8 +19,8 @@ struct KeyEvent {
 
   KeyEvent() {}
 
-  KeyEvent(KeyAddr _addr, KeyState _state, Key _key = cKey::clear)
-    : key(_key), addr(_addr), state(_state) {}
+  KeyEvent(KeyAddr _addr, KeyState _state, Key _key = cKey::clear, byte _caller = 0)
+      : key(_key), addr(_addr), state(_state), caller(_caller) {}
 
 };
 
