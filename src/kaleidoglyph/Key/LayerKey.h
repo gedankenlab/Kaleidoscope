@@ -51,4 +51,17 @@ class LayerKey {
   }
 };
 
+inline
+bool isLayerShiftKey(const Key key) {
+  if (LayerKey::verify(key)) {
+    return LayerKey{key}.isLayerShift();
+  }
+  return false;
+}
+
+constexpr
+Key layerShiftKey(const byte index) {
+  return ( Key{LayerKey(index, true)} );
+}
+
 } // namespace kaleidoglyph {

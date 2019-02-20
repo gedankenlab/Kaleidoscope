@@ -60,6 +60,16 @@ class Controller {
     return scan_start_time_;
   }
 
+  // Experimental
+  Key& operator[](KeyAddr k) {
+    assert(byte(k) < total_keys);
+    return active_keys_[k];
+  }
+  const Key& operator[](KeyAddr k) const {
+    assert(byte(k) < total_keys);
+    return active_keys_[k];
+  }
+
  private:
 
   // active_keys_ can't really be a Layer because that would reference PROGMEM
@@ -78,6 +88,16 @@ class Controller {
 
 };
 
+
+// inline
+// Key Controller::getActiveKey(KeyAddr k) const {
+//   return active_keys_[k];
+// }
+
+// inline
+// void Controller::setActiveKey(KeyAddr k, Key key) const {
+//   active_keys_[k] = key;
+// }
 
 inline
 Key Controller::lookup(KeyAddr k) const {
