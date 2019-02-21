@@ -43,6 +43,10 @@ class KeyboardKey {
     byte keycode_mod_num = keycode_ - mod_keycode_offset;
     return { keycode_mod_num < 8 };
   }
+  constexpr
+  byte modifierIndex() const {
+    return { keycode_ - mod_keycode_offset };
+  }
   bool isRealShift() const;
   void setModifiers(byte mods, bool mod_ralt = false);
   //void setModifiers(bool control, bool shift, bool alt, bool gui, bool ralt = false);
@@ -157,6 +161,16 @@ inline
 void KeyboardKey::addModifiers(byte mods, bool ralt) {
   mods_left_ |= mods;
   mod_ralt_  |= ralt;
+}
+
+constexpr
+bool isKeyboardKey(Key key) {
+  return KeyboardKey::verify(key);
+}
+
+constexpr
+bool isModifierKey(Key key) {
+  return { KeyboardKey::verify(key) && KeyboardKey(key).isModifier() };
 }
 
 } // namespace kaleidoglyph {
