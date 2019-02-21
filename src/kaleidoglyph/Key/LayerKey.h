@@ -16,8 +16,11 @@ class LayerKey {
   byte index_ : 6, shift_ : 1, move_ : 1, reserved_ : 2, type_id_ : 6;
 
  public:
+  constexpr
   byte index() const { return index_; }
+  constexpr
   bool isLayerShift() const { return shift_; }
+  constexpr
   bool isLayerMove() const { return move_; }
 
   LayerKey() : index_(0), shift_(false), move_(false), reserved_(0),
@@ -46,9 +49,16 @@ class LayerKey {
                  type_id_  << (6 + 1 + 1 + 2) );
   }
 
-  static bool verify(Key key) {
+  static constexpr
+  bool verify(Key key) {
     return ((uint16_t(key) >> (6 + 1 + 1 + 2)) == Key::layer_type_id);
   }
+
+  static constexpr
+  Key layerShiftKey(const byte index) {
+    return ( Key{LayerKey(index, true)} );
+  }
+
 };
 
 inline

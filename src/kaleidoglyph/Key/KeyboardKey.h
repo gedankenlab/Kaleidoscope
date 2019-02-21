@@ -38,7 +38,11 @@ class KeyboardKey {
   byte modifiers() const;
   byte keycodeModifier() const;
   byte modifierFlags() const;
-  bool isModifier() const;
+  constexpr
+  bool isModifier() const {
+    byte keycode_mod_num = keycode_ - mod_keycode_offset;
+    return { keycode_mod_num < 8 };
+  }
   bool isRealShift() const;
   void setModifiers(byte mods, bool mod_ralt = false);
   //void setModifiers(bool control, bool shift, bool alt, bool gui, bool ralt = false);
@@ -79,17 +83,17 @@ class KeyboardKey {
                 type_id_    << (8 + 4 + 1)   );
   }
 
-  static constexpr bool verify(Key key) {
+  static constexpr
+  bool verify(Key key) {
     return ((uint16_t(key) >> (8 + 4 + 1)) == Key::keyboard_type_id);
   }
-};
 
-// This method is rendered obsolete by the more useful keycodeModifier() method
-inline
-bool KeyboardKey::isModifier() const {
-  byte keycode_mod_bit = keycode_ - mod_keycode_offset;
-  return { keycode_mod_bit < 8 };
-}
+  static constexpr
+  Key modifierKey(byte n) {
+    return ( Key{ KeyboardKey(KeyboardKey::mod_keycode_offset + n) } );
+  }
+
+};
 
 inline
 byte KeyboardKey::modifierFlags() const {
