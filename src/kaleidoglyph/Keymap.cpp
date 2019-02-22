@@ -98,8 +98,8 @@ void Keymap::toggleLayer(byte layer_index) {
 
 
 void Keymap::handleLayerChange(KeyEvent event, KeyArray& active_keys) {
+  assert(isLayerKey(event.key));
   LayerKey layer_key{event.key};
-
   assert(layer_key.index() < layer_count_);
 
   if (layer_key.isLayerShift()) {
@@ -109,7 +109,7 @@ void Keymap::handleLayerChange(KeyEvent event, KeyArray& active_keys) {
         if (k == event.addr)
           continue;
         Key& key = active_keys[k];
-        if (LayerKey::verify(key) && LayerKey(key).isLayerShift())
+        if (isLayerShiftKey(key))
           key.mask();
       }
     } else {
@@ -135,17 +135,20 @@ void Keymap::updateTopActiveLayer_() {
 }
 
 
-inline bool Keymap::getLayerState_(byte layer_index) const {
+inline
+bool Keymap::getLayerState_(byte layer_index) const {
   return bitRead(layer_states_[layer_index / 8], layer_index % 8);
 }
 
 
-inline void Keymap::setLayerState_(byte layer_index, bool state) {
+inline
+void Keymap::setLayerState_(byte layer_index, bool state) {
   bitWrite(layer_states_[layer_index / 8], layer_index % 8, state);
 }
 
 
-inline void Keymap::clearLayerStates_() {
+inline
+void Keymap::clearLayerStates_() {
   for (byte i(0); i < sizeof(layer_states_); ++i) {
     layer_states_[i] = 0;
   }

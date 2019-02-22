@@ -52,8 +52,6 @@ class Controller {
   void sendKeyboardReport();
 
   Key lookup(KeyAddr key_addr) const; // probably pointless
-  // TODO: add operator[] for active_keys_ access
-  // TODO: add getModFlags();
   byte getModifierFlags() const; // return mod flags from non-blank, non-modifier keys
 
   uint32_t scanStartTime() const {

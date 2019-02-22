@@ -36,9 +36,16 @@ class MouseKey {
                 type_id_ << 8   );
   }
 
-  static bool verify(Key key) {
+  static constexpr
+  bool verify(Key key) {
     return ((uint16_t(key) >> 8) == Key::mouse_type_id);
   }
+
 };
+
+constexpr
+bool isMouseKey(const Key key) {
+  return MouseKey::verify(key);
+}
 
 } // namespace kaleidoglyph {

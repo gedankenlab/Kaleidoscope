@@ -56,7 +56,7 @@ class KeyboardKey {
     setModifiers(0);
   }
 
-  // Run-time constructor; generates and empty Key (equal to cKey::blank)
+  // Run-time constructor; generates an empty Key (equal to cKey::blank)
   KeyboardKey() : keycode_    (0),
                   mods_left_  (0),
                   mod_ralt_   (false),
@@ -91,11 +91,6 @@ class KeyboardKey {
   static constexpr
   bool verify(Key key) {
     return ((uint16_t(key) >> (8 + 4 + 1)) == Key::keyboard_type_id);
-  }
-
-  static constexpr
-  Key modifierKey(byte n) {
-    return ( Key{ KeyboardKey(KeyboardKey::mod_keycode_offset + n) } );
   }
 
 };
@@ -172,6 +167,11 @@ bool isKeyboardKey(Key key) {
 constexpr
 bool isModifierKey(Key key) {
   return { KeyboardKey::verify(key) && KeyboardKey(key).isModifier() };
+}
+
+constexpr
+KeyboardKey modifierKey(byte n) {
+  return KeyboardKey(KeyboardKey::mod_keycode_offset + n);
 }
 
 } // namespace kaleidoglyph {

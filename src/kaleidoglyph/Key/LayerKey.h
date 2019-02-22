@@ -21,8 +21,9 @@ class LayerKey {
   constexpr
   bool isLayerShift() const { return shift_; }
   constexpr
-  bool isLayerMove() const { return move_; }
+  bool isLayerToggle() const { return !shift_; }
 
+  constexpr
   LayerKey() : index_(0), shift_(false), move_(false), reserved_(0),
                type_id_(Key::layer_type_id) {}
 
@@ -31,7 +32,7 @@ class LayerKey {
       : index_(index), shift_(shift), move_(move), reserved_(0),
         type_id_(Key::layer_type_id) {}
 
-  explicit
+  constexpr explicit
   LayerKey(Key key) : index_    (uint16_t(key)                   ),
                       shift_    (uint16_t(key) >>  6             ),
                       move_     (uint16_t(key) >> (6 + 1)        ),
@@ -54,14 +55,14 @@ class LayerKey {
     return ((uint16_t(key) >> (6 + 1 + 1 + 2)) == Key::layer_type_id);
   }
 
-  static constexpr
-  Key layerShiftKey(const byte index) {
-    return ( Key{LayerKey(index, true)} );
-  }
-
 };
 
-inline
+constexpr
+bool isLayerKey(const Key key) {
+  return LayerKey::verify(key);
+}
+
+constexpr
 bool isLayerShiftKey(const Key key) {
   if (LayerKey::verify(key)) {
     return LayerKey{key}.isLayerShift();
@@ -70,8 +71,21 @@ bool isLayerShiftKey(const Key key) {
 }
 
 constexpr
-Key layerShiftKey(const byte index) {
-  return ( Key{LayerKey(index, true)} );
+bool isLayerToggleKey(const Key key) {
+  if (LayerKey::verify(key)) {
+    return LayerKey{key}.isLayerToggle();
+  }
+  return false;
+}
+
+constexpr
+LayerKey layerShiftKey(const byte index) {
+  return LayerKey(index, true);
+}
+
+constexpr
+LayerKey layerToggleKey(const byte index) {
+  return LayerKey(index, false);
 }
 
 } // namespace kaleidoglyph {

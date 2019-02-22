@@ -71,7 +71,7 @@ class PluginMask {
     return bitSet(mask_[id / 8], id % 8);
   }
  private:
-  byte mask_[(key_event_handler_count / 8) + ((key_event_handler_count % 8) ? 1 : 0)] = {};
+  byte mask_[bitfieldSize(KeyEventHandlerId::count)] = {};
 };
 }
 
