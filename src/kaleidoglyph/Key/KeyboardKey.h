@@ -45,7 +45,8 @@ class KeyboardKey {
   }
   constexpr
   byte modifierIndex() const {
-    return { keycode_ - mod_keycode_offset };
+    byte keycode_mod_num = keycode_ - mod_keycode_offset;
+    return keycode_mod_num;
   }
   bool isRealShift() const;
   void setModifiers(byte mods, bool mod_ralt = false);
