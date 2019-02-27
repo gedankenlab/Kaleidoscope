@@ -38,7 +38,7 @@ void preKeyswitchScan() {}
 /// Returns an `EventHandlerResult`: `proceed` if processing should continue, `abort` if
 /// it should stop, and no further action should take place in response to the event.
 __attribute__((weak))
-EventHandlerResult onKeyswitchEvent(KeyEvent& event) {
+EventHandlerResult onKeyswitchEvent(KeyEvent& /*event*/) {
   return EventHandlerResult::proceed;
 }
 
@@ -47,19 +47,19 @@ EventHandlerResult onKeyswitchEvent(KeyEvent& event) {
 /// Returns an `EventHandlerResult`: `proceed` if processing should continue, or `abort`
 /// if it should stop, and no further action should take place in response to the event.
 __attribute__((weak))
-EventHandlerResult onKeyEvent(byte plugin_id, KeyEvent& event) {
+EventHandlerResult onKeyEvent(byte /*plugin_id*/, KeyEvent& /*event*/) {
   return EventHandlerResult::proceed;
 }
 
 /// Call keyboard HID pre-report hooks (run when a keyboard HID report is about to be sent)
 __attribute__((weak))
-bool preKeyboardReport(hid::keyboard::Report& keyboard_report) {
+bool preKeyboardReport(hid::keyboard::Report& /*keyboard_report*/) {
   return true;
 }
 
 /// Call keyboard HID post-report hooks (run after a keyboard HID report is sent)
 __attribute__((weak))
-void postKeyboardReport(KeyEvent event) {}
+void postKeyboardReport(KeyEvent /*event*/) {}
 
 } // namespace hooks {
 } // namespace kaleidoglyph {

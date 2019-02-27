@@ -25,22 +25,22 @@ class Plugin {
   // I should get rid of the current_time arg, and make that available more generally
 
   // Runs when a (physical) keyswitch event is processed
-  EventHandlerResult onKeyswitchEvent(KeyEvent& event) {
+  EventHandlerResult onKeyswitchEvent(KeyEvent&) {
     return EventHandlerResult::proceed;
   }
 
   // Runs when a (physical or injected) key event is processed
-  EventHandlerResult onKeyEvent(KeyEvent& event) {
+  EventHandlerResult onKeyEvent(KeyEvent&) {
     return EventHandlerResult::proceed;
   }
 
   // Runs before a keyboard HID report is sent to the host
-  bool preKeyboardReport(hid::keyboard::Report& keyboard_report) {
+  bool preKeyboardReport(hid::keyboard::Report&) {
     return true;
   }
 
   // Runs after a keyboard HID report is sent to the host
-  void postKeyboardReport(KeyEvent event) {}
+  void postKeyboardReport(KeyEvent) {}
 
   // TODO: add LED update hook(s), mouse report hook(s), maybe onSetup()
   
