@@ -14,9 +14,9 @@ constexpr byte bitfieldSize(int bits) {
   return ((bits - 1) / 8) + 1;
 }
 
-/// I'd really like to know if this works...
+/// This replaces the `ELEMENTS(array)` macro:
 template<size_t SIZE, class T>
-constexpr size_t arraySize(T (&array)[SIZE]) {
+constexpr size_t arraySize(T (&/*array*/)[SIZE]) {
   return SIZE;
 }
 

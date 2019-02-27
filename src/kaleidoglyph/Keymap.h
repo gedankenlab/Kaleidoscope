@@ -11,14 +11,10 @@
 #include "kaleidoglyph/KeymapEntry.h"
 #include "kaleidoglyph/Layer.h"
 #include "kaleidoglyph/cKeyAddr.h"
+#include "kaleidoglyph/utils.h"
 
 
 namespace kaleidoglyph {
-
-/// Calculates the number of bytes needed to store a bitfield of the given size in bits
-constexpr byte bitfieldSize(int bits) {
-  return ((bits - 1) / 8) + 1;
-}
 
 // Temporary constant, until I write the pre-build script(s)
 constexpr byte MAX_LAYERS = 32;

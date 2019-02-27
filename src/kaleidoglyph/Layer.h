@@ -7,6 +7,7 @@
 #include "kaleidoglyph/Key.h"
 #include "kaleidoglyph/KeyAddr.h"
 #include "kaleidoglyph/KeymapEntry.h"
+#include "kaleidoglyph/utils.h"
 
 
 namespace kaleidoglyph {
@@ -96,12 +97,12 @@ for (KeymapEntry entry : layer) {
 #endif
 
 
-#define ELEMENTS(ARRAY) (sizeof(ARRAY)/sizeof(ARRAY[0]))
+//#define ELEMENTS(ARRAY) (sizeof(ARRAY)/sizeof(ARRAY[0]))
 
 // This defines a macro that ensures the right number of keys are defined for a full layer
 // (for an SRAM layer, obviously)
 #define SRAM_LAYER(LAYER_NAME, ...)                                     \
   constexpr Key LAYER_NAME ## _keys[] = { __VA_ARGS__ };                \
-  static_assert(ELEMENTS(LAYER_NAME ## _keys) == total_keys,            \
+  static_assert(arraySize(LAYER_NAME ## _keys) == total_keys,           \
                 "Error: wrong number of keys defined in layer '"        \
                 #LAYER_NAME "'; must be exactly " TOTAL_KEYS_STR);
