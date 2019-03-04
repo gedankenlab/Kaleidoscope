@@ -17,21 +17,6 @@
 
 #include "kaleidoglyph/KeyEventHandlerId.h"
 
-#if defined(CONTROLLER_CONSTANTS_H)
-#include CONTROLLER_CONSTANTS_H
-#else
-constexpr byte key_event_handler_count = 0;
-#endif
-
-#if defined(KALEIDOGLYPH_KEY_EVENT_HANDLER_ID_H)
-#include KALEIDOGLYPH_KEY_EVENT_HANDLER_ID_H
-#else
-namespace kaleidoglyph {
-enum class KeyEventHandlerId : byte {
-  count
-};
-}
-#endif
 
 namespace kaleidoglyph {
 
