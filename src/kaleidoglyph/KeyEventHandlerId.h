@@ -11,8 +11,11 @@
 // least none that use the `onKeyEvent()` handler method, so all we need to define is the
 // `count` constant (which should be zero):
 namespace kaleidoglyph {
-enum class KeyEventHandlerId : byte {
-  count
+
+class KeyEventHandlerId {
+ public:
+  static constexpr byte count{0};
 };
+
 }
 #endif
