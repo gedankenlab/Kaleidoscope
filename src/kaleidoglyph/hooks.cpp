@@ -33,6 +33,12 @@ namespace hooks {
 __attribute__((weak))
 void preKeyswitchScan() {}
 
+/// Call LED update hooks (run once every LED update cycle)
+__attribute__((weak))
+bool setForegroundColor(KeyAddr /*k*/) {
+  return false;
+}
+
 /// Call onKeyswitchEvent handler hooks (run when a key press or release is detected)
 ///
 /// Returns an `EventHandlerResult`: `proceed` if processing should continue, `abort` if

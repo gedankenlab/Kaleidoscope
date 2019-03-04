@@ -10,6 +10,8 @@
 
 #include <Arduino.h>
 
+#include KALEIDOGLYPH_HARDWARE_H
+#include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
 #include "kaleidoglyph/EventHandlerResult.h"
 #include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/hid/Report.h"
@@ -20,6 +22,9 @@ namespace hooks {
 
 /// Call pre-keyswitch-scan hooks (run every cycle, before keyswitches are scanned)
 void preKeyswitchScan();
+
+/// Restore foreground LED colors
+bool setForegroundColor(KeyAddr k);
 
 /// Call keyswitch event handler hooks (run when a key press or release is detected)
 EventHandlerResult onKeyswitchEvent(KeyEvent& event);
