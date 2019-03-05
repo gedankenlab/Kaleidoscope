@@ -64,7 +64,7 @@ class Keymap {
   // Bitfield storing the state of each layer (1 = on, 0 = off). The alternative to this
   // is having each layer store its own state in a boolean (or a bitfield, if it has other
   // state info to store)
-  byte layer_states_[bitfieldSize(MAX_LAYERS)];
+  byte layer_states_[bitfieldByteSize(MAX_LAYERS)];
 
   // The index of the highest active layer
   byte default_layer_index_ {0};
@@ -72,7 +72,7 @@ class Keymap {
   // Maybe: a cache of the current value for each key. This could be updated entirely
   // whenever a layer change happens, or it could be cleared (set all values to
   // Key_Transparent), and each key gets updated when lookup() is called on that key_addr.
-  mutable Key keymap_cache_[total_keys];
+  mutable KeyArray keymap_cache_;
   // We could also have a very aggressive cache which stores the layer that each key is
   // mapped from (updated on lookup, cleared when necessary)
   mutable byte active_layers_[total_keys];
