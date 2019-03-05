@@ -17,28 +17,28 @@ class KeyAddrBitfield {
  public:
   KeyAddrBitfield() = default;
 
-  bool bitRead(KeyAddr k) const {
+  bool read(KeyAddr k) const {
     assert(byte(k) < total_keys);
     byte r = byte(k) / 8;
     byte c = byte(k) % 8;
     return bitRead(data_[r], c);
   }
 
-  void bitSet(KeyAddr k) {
+  void set(KeyAddr k) {
     assert(byte(k) < total_keys);
     byte r = byte(k) / 8;
     byte c = byte(k) % 8;
     bitSet(data_[r], c);
   }
 
-  void bitClear(KeyAddr k) {
+  void clear(KeyAddr k) {
     assert(byte(k) < total_keys);
     byte r = byte(k) / 8;
     byte c = byte(k) % 8;
     bitClear(data_[r], c);
   }
 
-  void bitWrite(KeyAddr k, bool v) {
+  void write(KeyAddr k, bool v) {
     assert(byte(k) < total_keys);
     byte r = byte(k) / 8;
     byte c = byte(k) % 8;
@@ -88,11 +88,9 @@ class KeyAddrBitfield {
 
 };
 
-} // namespace kaleidoglyph {
-
 
 inline
-bool Keyboard::Iterator::operator!=(const Iterator& other) {
+bool KeyAddrBitfield::Iterator::operator!=(const Iterator& other) {
   // First, the test for the end condition (return false when all the bytes have been
   // tested):
   while (x_ < other.x_) {
@@ -108,7 +106,7 @@ bool Keyboard::Iterator::operator!=(const Iterator& other) {
       // If the low (remaining) bit is set, generate a `KeyAddr` object from the bitfield
       // coordinates and store it for the dereference operator to return:
       if (bank_ & 1) {
-        addr_ = KeyAddr{(x_ * 8) + y_};
+        addr_ = KeyAddr{ byte((x_ * 8) + y_) };
         return true;
       }
       // The low bit wasn't set, so we shift the data by one and track that shift with the
@@ -125,18 +123,20 @@ bool Keyboard::Iterator::operator!=(const Iterator& other) {
 }
 
 inline
-KeyAddr Keyboard::Iterator::operator*() {
+KeyAddr KeyAddrBitfield::Iterator::operator*() {
   return addr_;
 }
 
 inline
-void Keyboard::Iterator::operator++() {
+void KeyAddrBitfield::Iterator::operator++() {
   // After the comparison operator returns `true`, we advance the bit coordinate to check
   // the next bit in whichever byte we're looking at. If it's already at 7, that's okay,
   // because `bank_` (see above) will be all zeros when it gets checked at the start of
   // the while loop.
   ++y_;
 }
+
+} // namespace kaleidoglyph {
 
 
 // ================================================================================

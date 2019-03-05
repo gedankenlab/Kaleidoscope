@@ -18,13 +18,19 @@
 
 
 namespace kaleidoglyph {
+
+// forward declaration
+class LedController;
+
 namespace hooks {
 
 /// Call pre-keyswitch-scan hooks (run every cycle, before keyswitches are scanned)
 void preKeyswitchScan();
 
+void setLedForeground(KeyAddr k);
+
 /// Restore foreground LED colors
-bool setForegroundColor(KeyAddr k);
+bool setForegroundColor(KeyAddr k, LedController& led_controller);
 
 /// Call keyswitch event handler hooks (run when a key press or release is detected)
 EventHandlerResult onKeyswitchEvent(KeyEvent& event);

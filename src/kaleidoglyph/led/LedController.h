@@ -4,14 +4,16 @@
 
 #include <Arduino.h>
 
-#include KALEIDOGLYPH_HARDWARE_H
-#include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
+#include "kaleidoglyph/hardware/Keyboard.h"
 #include "kaleidoglyph/KeyAddr.h"
+#include "kaleidoglyph/Color.h"
 #include "kaleidoglyph/KeyAddrBitfield.h"
+#include "kaleidoglyph/led/LedBackgroundMode.h"
 #include "kaleidoglyph/utils.h"
+#include "kaleidoglyph/hooks.h"
+
 
 namespace kaleidoglyph {
-namespace led {
 
 #if defined(LED_CONTROLLER_CONSTANTS_H)
 #include LED_CONTROLLER_CONSTANTS_H
@@ -25,7 +27,7 @@ class LedController {
 
   LedController(Controller& controller,
                 hardware::Keyboard& keyboard,
-                LedMode** modes = nullptr,
+                LedBackgroundMode** modes = nullptr,
                 byte modes_count = 0)
       : controller_(controller),
         keyboard_(keyboard),
@@ -41,9 +43,9 @@ class LedController {
   void setForeground(KeyAddr k);
 
   void nextMode() {
-    next_mode_index_ = curr_mode_index + 1;
-    if (next_mode_index >= modes_count_)
-      next_mode_index = 0;
+    next_mode_index_ = curr_mode_index_ + 1;
+    if (next_mode_index_ >= modes_count_)
+      next_mode_index_ = 0;
   }
 
   void setActiveMode(byte index);
@@ -56,8 +58,8 @@ class LedController {
   Controller& controller_;
   hardware::Keyboard& keyboard_;
 
-  LedMode* const modes_[];
-  byte     const modes_count_;
+  LedBackgroundMode** modes_;
+  byte                modes_count_;
 
   byte curr_mode_index_{0};
   byte next_mode_index_{0};
@@ -82,7 +84,7 @@ Color LedController::getKeyColor(KeyAddr k) const {
 
 // Set the color of a key. It will get updated on the next LED update.
 inline
-bool LedController::setKeyColor(KeyAddr k, Color color) {
+void LedController::setKeyColor(KeyAddr k, Color color) {
   keyboard_.setKeyColor(k, color);
 }
 
@@ -98,14 +100,14 @@ void LedController::setActiveMode(byte index) {
 // repeatedly override the background LED mode anyway.
 inline
 void LedController::setForeground(KeyAddr k) {
-  foreground_mask_.bitSet(k);
+  foreground_mask_.set(k);
 }
 
 inline
 void LedController::restoreBackgroundColor(KeyAddr k) {
-  foreground_mask_.bitClear(k);
-  if (led_modes_[curr_mode_index_] != nullptr) {
-    Color color = led_modes_[curr_mode_index_]->getKeyColor(k);
+  foreground_mask_.clear(k);
+  if (modes_ != nullptr && modes_[curr_mode_index_] != nullptr) {
+    Color color = modes_[curr_mode_index_]->getKeyColor(k);
     setKeyColor(k, color);
   } else {
     setKeyColor(k, Color{0, 0, 0});
@@ -117,14 +119,14 @@ void LedController::activateBackgroundMode() {
   for (KeyAddr k{cKeyAddr::start}; k < cKeyAddr::end; ++k) {
     setKeyColor(k, Color{0, 0, 0});
   }
-  if (led_modes_[curr_mode_index_] != nullptr)
-    led_modes_[curr_mode_index_]->activate();
+  if (modes_ != nullptr && modes_[curr_mode_index_] != nullptr)
+    modes_[curr_mode_index_]->activate(*this);
 }
 
 inline
 void LedController::updateBackgroundColors() {
-  if (led_modes_[curr_mode_index_] != nullptr)
-    led_modes_[curr_mode_index_]->update();
+  if (modes_ != nullptr && modes_[curr_mode_index_] != nullptr)
+    modes_[curr_mode_index_]->update(*this);
 }
 
 inline
@@ -146,7 +148,7 @@ void LedController::preKeyswitchScan() {
       sync_complete = false;
       return;
     }
-    sync_complete = syncLeds();
+    sync_complete = keyboard_.syncLeds();
     return;
   }
 
@@ -165,7 +167,7 @@ void LedController::preKeyswitchScan() {
 inline
 void LedController::restoreForegroundColors() {
   for (KeyAddr k : foreground_mask_) {
-    bool masked = hooks::setForegroundColor(k, this);
+    bool masked = hooks::setForegroundColor(k, *this);
     // a plugin's `setForegroundColor()` function will call
     // `led_controller->setKeyColor()` and return `true`, or return `false`.
     if (! masked)
@@ -173,5 +175,4 @@ void LedController::restoreForegroundColors() {
   }
 }
 
-} // namespace led {
 } // namespace kaleidoglyph {

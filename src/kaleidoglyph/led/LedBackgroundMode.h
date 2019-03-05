@@ -4,17 +4,23 @@
 
 #include <Kaleidoglyph.h>
 
-namespace kaleidoglyph {
-namespace led {
+#include <kaleidoglyph/KeyAddr.h>
 
-class BackgroundMode : public kaleidoglyph::Plugin {
+
+namespace kaleidoglyph {
+
+// Forward declaration; we can't include the header
+class LedController;
+
+class LedBackgroundMode : public Plugin {
 
  public:
   virtual void activate(LedController&) {}
   virtual void update(LedController&) {}
-  virtual Color getKeyColor(KeyAddr) const { return Color{0, 0, 0}; }
+  virtual Color getKeyColor(KeyAddr /*k*/) const {
+    return Color{0, 0, 0};
+  }
 
 };
 
-} // namespace led {
 } // namespace kaleidoglyph {
