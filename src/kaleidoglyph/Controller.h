@@ -54,7 +54,7 @@ class Controller {
   Key lookup(KeyAddr key_addr) const; // probably pointless
   byte getModifierFlags() const; // return mod flags from non-blank, non-modifier keys
 
-  uint32_t scanStartTime() const {
+  static uint32_t scanStartTime() {
     return scan_start_time_;
   }
 
@@ -82,7 +82,10 @@ class Controller {
   // cache of modifier flags on non-modifier, non-blank keys
   byte mod_flags_allowed_{0};
 
-  uint32_t scan_start_time_{0};
+  // This one is a class variable; that makes it possible to access without needing a
+  // reference (implemented as a pointer) to the `controller` object in every instance
+  // that just needs to know the current time.
+  static uint32_t scan_start_time_;
 
 };
 

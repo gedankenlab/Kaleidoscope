@@ -155,7 +155,7 @@ void LedController::preKeyswitchScan() {
   // This is the only thing we need the Controller reference for. It's a run-time only
   // thing, and I'd like to get rid of that initialization order dependency, without
   // resorting to global singletons.
-  byte current_time = controller_.scanStartTime();
+  byte current_time = Controller::scanStartTime();
   byte elapsed_time = current_time - last_sync_time;
   if (elapsed_time > led_sync_interval) {
     restoreForegroundColors();

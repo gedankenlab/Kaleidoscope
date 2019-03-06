@@ -21,6 +21,8 @@
 
 namespace kaleidoglyph {
 
+// Initialize the timer variable
+uint32_t Controller::scan_start_time_{0};
 
 void Controller::init() {
 
