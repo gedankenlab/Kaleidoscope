@@ -14,6 +14,7 @@
 #include "kaleidoglyph/cKey.h"
 #include "kaleidoglyph/hid/Report.h"
 #include "kaleidoglyph/hooks.h"
+#include "kaleidoglyph/utils.h"
 
 #include "kaleidoglyph/KeyEventHandlerId.h"
 
@@ -112,8 +113,8 @@ void Controller::handleKeyEvent(KeyEvent event) {
     // in the processing of the event (until the loop ends). It prevents infinite looping
     // from a misbehaving plugin. It's a bitfield where each bit represents one plugin. If
     // that plugin's bit is 1, it is masked and will be skipped.
-    byte plugin_mask[KeyEventHandlerId::count +
-                     (KeyEventHandlerId::count ? 1 : 0)] = {};
+    byte plugin_mask[bitfieldByteSize(KeyEventHandlerId::count)] = {};
+
     // A mechanism for knowing if a plugin has changed the value of `event.key` in its
     // `onKeyEvent()` handler function:
     Key prev_key{event.key};
