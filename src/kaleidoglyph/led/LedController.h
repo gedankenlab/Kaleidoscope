@@ -38,14 +38,18 @@ class LedController {
   // overly complex.
   Color getKeyColor(KeyAddr k) const;
   void setKeyColor(KeyAddr k, Color color);
+  void setKeyColor(Color color);
 
   void preKeyswitchScan();
   void setForeground(KeyAddr k);
 
   void nextMode() {
     next_mode_index_ = curr_mode_index_ + 1;
-    if (next_mode_index_ >= modes_count_)
+    if (next_mode_index_ > modes_count_)
       next_mode_index_ = 0;
+  }
+  void backgroundOff() {
+    next_mode_index_ = 0xFF;
   }
 
   void setActiveMode(byte index);
@@ -55,14 +59,16 @@ class LedController {
 
  private:
 
+  static constexpr byte invalid_index_{0xFF};
+
   Controller& controller_;
   hardware::Keyboard& keyboard_;
 
   LedBackgroundMode** modes_;
   byte                modes_count_;
 
-  byte curr_mode_index_{0};
-  byte next_mode_index_{0};
+  byte curr_mode_index_{invalid_index_};
+  byte next_mode_index_{invalid_index_};
 
   //LedMode* active_mode_{nullptr};
 
@@ -73,6 +79,11 @@ class LedController {
   
   void activateBackgroundMode();
   void updateBackgroundColors();
+  void clearBackgroundColors();
+
+  bool isValidMode(byte index) {
+    return (index < modes_count_ && modes_[index] != nullptr);
+  }
 
 };
 
@@ -86,6 +97,13 @@ Color LedController::getKeyColor(KeyAddr k) const {
 inline
 void LedController::setKeyColor(KeyAddr k, Color color) {
   keyboard_.setKeyColor(k, color);
+}
+
+inline
+void LedController::setKeyColor(Color color) {
+  for (KeyAddr k{cKeyAddr::start}; k < cKeyAddr::end; ++k) {
+    setKeyColor(k, color);
+  }
 }
 
 // When LED modes change, all we do is set this index; the actual mode change takes place
@@ -106,7 +124,7 @@ void LedController::setForeground(KeyAddr k) {
 inline
 void LedController::restoreBackgroundColor(KeyAddr k) {
   foreground_mask_.clear(k);
-  if (modes_ != nullptr && modes_[curr_mode_index_] != nullptr) {
+  if (isValidMode(curr_mode_index_)) {
     Color color = modes_[curr_mode_index_]->getKeyColor(k);
     setKeyColor(k, color);
   } else {
@@ -115,18 +133,25 @@ void LedController::restoreBackgroundColor(KeyAddr k) {
 }
 
 inline
-void LedController::activateBackgroundMode() {
+void LedController::clearBackgroundColors() {
   for (KeyAddr k{cKeyAddr::start}; k < cKeyAddr::end; ++k) {
     setKeyColor(k, Color{0, 0, 0});
   }
-  if (modes_ != nullptr && modes_[curr_mode_index_] != nullptr)
+}
+
+inline
+void LedController::activateBackgroundMode() {
+  clearBackgroundColors();
+  if (isValidMode(curr_mode_index_)) {
     modes_[curr_mode_index_]->activate(*this);
+  }
 }
 
 inline
 void LedController::updateBackgroundColors() {
-  if (modes_ != nullptr && modes_[curr_mode_index_] != nullptr)
+  if (isValidMode(curr_mode_index_)) {
     modes_[curr_mode_index_]->update(*this);
+  }
 }
 
 inline
@@ -138,7 +163,6 @@ void LedController::preKeyswitchScan() {
   if (sync_in_progress) {
     if (sync_complete) {
       if (next_mode_index_ != curr_mode_index_) {
-        assert(next_mode_index_ < modes_count_);
         curr_mode_index_ = next_mode_index_;
         activateBackgroundMode();
       } else {
