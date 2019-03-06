@@ -39,6 +39,7 @@ class LedController {
   Color getKeyColor(KeyAddr k) const;
   void setKeyColor(KeyAddr k, Color color);
   void setKeyColor(Color color);
+  void setLedColor(LedAddr led, Color color);
 
   void preKeyswitchScan();
   void setForeground(KeyAddr k);
@@ -97,6 +98,11 @@ Color LedController::getKeyColor(KeyAddr k) const {
 inline
 void LedController::setKeyColor(KeyAddr k, Color color) {
   keyboard_.setKeyColor(k, color);
+}
+
+inline
+void LedController::setLedColor(LedAddr led, Color color) {
+  keyboard_.setLedColor(led, color);
 }
 
 inline
