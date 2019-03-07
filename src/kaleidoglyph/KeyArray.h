@@ -13,15 +13,19 @@
 
 namespace kaleidoglyph {
 
+template <byte SIZE = total_keys>
 struct KeyArray {
-  Key keys[total_keys];
+  Key keys[SIZE];
 
+  byte size() {
+    return SIZE;
+  }
   Key& operator[](KeyAddr k) {
-    assert(byte(k) < total_keys);
+    assert(byte(k) < SIZE);
     return keys[byte(k)];
   }
   const Key& operator[](KeyAddr k) const {
-    assert(byte(k) < total_keys);
+    assert(byte(k) < SIZE);
     return keys[byte(k)];
   }
 
@@ -32,16 +36,16 @@ struct KeyArray {
 
  public:
   Iterator begin() {
-    return {*this, cKeyAddr::start};
+    return {*this, KeyAddr(0)};
   }
   Iterator end() {
-    return {*this, cKeyAddr::end};
+    return {*this, KeyAddr(SIZE)};
   }
 
  private:
   class Iterator {
    public:
-    Iterator(KeyArray& array, KeyAddr k) : array_(array), k_(k) {}
+    Iterator(KeyArray<SIZE>& array, KeyAddr k) : array_(array), k_(k) {}
     bool operator!=(const Iterator& other) const {
       return k_ != other.k_;
     }
@@ -53,7 +57,7 @@ struct KeyArray {
       return *this;
     }
    private:
-    KeyArray& array_;
+    KeyArray<SIZE>& array_;
     KeyAddr k_;
   };
 };

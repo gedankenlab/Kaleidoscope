@@ -97,7 +97,7 @@ void Keymap::toggleLayer(byte layer_index) {
 }
 
 
-void Keymap::handleLayerChange(KeyEvent event, KeyArray& active_keys) {
+void Keymap::handleLayerChange(KeyEvent event, KeyArray<total_keys>& active_keys) {
   assert(isLayerKey(event.key));
   LayerKey layer_key{event.key};
   assert(layer_key.index() < layer_count_);

@@ -49,7 +49,7 @@ class Keymap {
   void shiftToLayer(byte layer_index);
   void moveToLayer(byte layer_index);
 
-  void handleLayerChange(KeyEvent event, KeyArray& active_keys);
+  void handleLayerChange(KeyEvent event, KeyArray<total_keys>& active_keys);
 
   Key operator[](KeyAddr key_addr) const;
 
@@ -72,7 +72,7 @@ class Keymap {
   // Maybe: a cache of the current value for each key. This could be updated entirely
   // whenever a layer change happens, or it could be cleared (set all values to
   // Key_Transparent), and each key gets updated when lookup() is called on that key_addr.
-  mutable KeyArray keymap_cache_;
+  mutable KeyArray<total_keys> keymap_cache_;
   // We could also have a very aggressive cache which stores the layer that each key is
   // mapped from (updated on lookup, cleared when necessary)
   mutable byte active_layers_[total_keys];

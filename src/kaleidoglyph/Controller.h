@@ -71,7 +71,7 @@ class Controller {
  private:
 
   // active_keys_ can't really be a Layer because that would reference PROGMEM
-  KeyArray active_keys_;
+  KeyArray<total_keys> active_keys_;
 
   Keymap& keymap_;
   hardware::Keyboard& keyboard_;
