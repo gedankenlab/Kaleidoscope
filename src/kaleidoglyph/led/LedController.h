@@ -42,6 +42,8 @@ class LedController {
   void setLedColor(LedAddr led, Color color);
 
   void preKeyswitchScan();
+  EventHandlerResult onKeyEvent(KeyEvent& event);
+  
   void setForeground(KeyAddr k);
 
   void nextMode() {
@@ -203,6 +205,16 @@ void LedController::restoreForegroundColors() {
     if (! masked)
       restoreBackgroundColor(k);
   }
+}
+
+inline
+EventHandlerResult LedController::onKeyEvent(KeyEvent& event) {
+  if (event.state.toggledOn()) {
+    if (event.key == cLedKey::next_mode) {
+      nextMode();
+    }
+  }
+  return EventHandlerResult::proceed;
 }
 
 } // namespace kaleidoglyph {

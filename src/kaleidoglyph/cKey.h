@@ -5,6 +5,7 @@
 #include "kaleidoglyph/Key.h"
 #include "kaleidoglyph/cKey/keyboard.h"
 #include "kaleidoglyph/cKey/consumer.h"
+#include "kaleidoglyph/led/LedKey.h"
 
 
 // Keyboard HID mappings

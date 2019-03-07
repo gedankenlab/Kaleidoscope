@@ -40,6 +40,7 @@ class Key {
   static constexpr byte consumer_type_id { 0b001000   };
   static constexpr byte   system_type_id { 0b00100100 };
   static constexpr byte    mouse_type_id { 0b00100101 };
+  static constexpr byte      led_type_id { 0b00100110 };
   static constexpr byte    layer_type_id { 0b001010   };
   static constexpr byte   plugin_type_id { 0b01       };
 
@@ -92,7 +93,7 @@ class Key {
 
   // This function should be removed; it bloats the code, the firmware, and causes it to
   // run slower than testing for each variant individually.
-  KeyType type() const;
+  //KeyType type() const;
 
 
   // Comparison operators (Key objects)
