@@ -30,7 +30,7 @@ class Key {
   static constexpr byte    mouse_type_id { 0b00100101 };
   static constexpr byte      led_type_id { 0b00100110 };
   static constexpr byte    layer_type_id { 0b001010   };
-  static constexpr byte   plugin_type_id { 0b01       };
+  static constexpr byte   plugin_type_id { 0b1        };
 
   constexpr explicit
   Key(uint16_t raw) : raw_(raw) {}

@@ -10,9 +10,17 @@
 
 namespace kaleidoglyph {
 
+// This is a template class for plugin-specific keys. Each plugin can define a PluginKey
+// type with its own unique `_plugin_id`, which should be overridable via a file
+// optionally included from the sketch. The default is for each plugin to use an id that
+// is seven bits long. With the first bit being reserved to identify the key as a plugin
+// key, that leaves eight bits for plugin data, which is likely to be enough for most
+// purposes. If all plugins use this system, that allows up to 128 plugins, each with 256
+// unique `Key` values -- far more than anyone could possibly need (and much more than
+// most keyboard MCU's could support at one time).
 template <uint16_t _plugin_id,
-          byte _data_bits = 8,
-          typename _DataType = byte>
+          byte     _data_bits = 8,
+          typename _DataType  = byte>
 class PluginKey {
 
   // Honorary template parameters:
@@ -21,7 +29,7 @@ class PluginKey {
   };
   static constexpr byte _type_id_bits = 16 - _data_bits;
 
-  static constexpr _DataType plugin_id_mask = (uint16_t(~0) >> (_data_bits + 2));
+  static constexpr _DataType plugin_id_mask = (uint16_t(~0) >> (_data_bits + 1));
   static constexpr _DataType plugin_id = (_plugin_id & plugin_id_mask);
   static_assert(plugin_id == _plugin_id,
                 "_plugin_id cannot use more than six bits");
@@ -56,7 +64,7 @@ class PluginKey {
   }
 
   static constexpr
-  bool verifyType(Key key) {
+  bool verifyType(Key key) const {
     return ((uint16_t(key) >> _data_bits) == _type_id);
   }
 
@@ -64,9 +72,9 @@ class PluginKey {
 
 // Examples:
 #if 0
-typedef PluginKey<0b001111> SomePluginKey;
-typedef PluginKey<0b001011_110, 5, uint16_t> SmallPluginKey;
-typedef PluginKey<0b10, 12, uint16_t> BigPluginKey;
+typedef PluginKey<0b0001111> SomePluginKey;
+typedef PluginKey<0b0001011_110, 5, uint16_t> SmallPluginKey;
+typedef PluginKey<0b100, 12, uint16_t> BigPluginKey;
 #endif
 
 } // namespace kaleidoglyph {
