@@ -10,18 +10,6 @@
 
 namespace kaleidoglyph {
 
-enum class KeyType : byte {
-  keyboard,
-  consumer,
-  system,
-  mouse,
-  layer,
-  plugin,
-  clear,
-  unknown
-};
-
-
 class Key {
 
  private:
