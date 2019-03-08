@@ -64,7 +64,7 @@ class PluginKey {
   }
 
   static constexpr
-  bool verifyType(Key key) const {
+  bool verifyType(Key key) {
     return ((uint16_t(key) >> _data_bits) == _type_id);
   }
 
