@@ -38,7 +38,7 @@ void Report::add(Key key, byte mod_flags_allowed) {
   if (key == cKey::clear)
     return;
 
-  if (KeyboardKey::verify(key)) {
+  if (KeyboardKey::verifyType(key)) {
     KeyboardKey keyboard_key{key};
 
     byte modifiers = keyboard_key.keycodeModifier();
@@ -61,10 +61,10 @@ void Report::add(Key key, byte mod_flags_allowed) {
     }
     ::Keyboard.press(keyboard_key.keycode());
     return;
-  } else if (ConsumerKey::verify(key)) {
+  } else if (ConsumerKey::verifyType(key)) {
     ::ConsumerControl.press(ConsumerKey(key).keycode());
     return;
-  } else if (SystemKey::verify(key)) {
+  } else if (SystemKey::verifyType(key)) {
     // System Control is different; press() sends immediately
     ::SystemControl.press(SystemKey(key).keycode());
     return;
@@ -78,19 +78,19 @@ void Report::remove(Key key) {
   if (key.isEmpty())
     return;
 
-  if (KeyboardKey::verify(key)) {
+  if (KeyboardKey::verifyType(key)) {
     // Here we don't want to remove modifier flags, because they could have been added
     // by other keys (or plugins)
     ::Keyboard.release(KeyboardKey(key).keycode());
     return;
   }
 
-  if (ConsumerKey::verify(key)) {
+  if (ConsumerKey::verifyType(key)) {
     ::ConsumerControl.release(ConsumerKey(key).keycode());
     return;
   }
 
-  if (SystemKey::verify(key)) {
+  if (SystemKey::verifyType(key)) {
     // System Control is different; release() sends immediately, and there's only one
     // keycode at a time
     ::SystemControl.release();

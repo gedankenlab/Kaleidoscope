@@ -89,7 +89,7 @@ class KeyboardKey {
   }
 
   static constexpr
-  bool verify(Key key) {
+  bool verifyType(Key key) {
     return ((uint16_t(key) >> (8 + 4 + 1)) == Key::keyboard_type_id);
   }
 
@@ -161,12 +161,12 @@ void KeyboardKey::addModifiers(byte mods, bool ralt) {
 
 constexpr
 bool isKeyboardKey(Key key) {
-  return KeyboardKey::verify(key);
+  return KeyboardKey::verifyType(key);
 }
 
 constexpr
 bool isModifierKey(Key key) {
-  return { KeyboardKey::verify(key) && KeyboardKey(key).isModifier() };
+  return { KeyboardKey::verifyType(key) && KeyboardKey(key).isModifier() };
 }
 
 constexpr

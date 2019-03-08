@@ -164,7 +164,7 @@ void Controller::handleKeyEvent(KeyEvent event) {
   // Handle layer shifts and toggles. Maybe this should happen before updating
   // active_keys_, but if we do that, the keymap will need access to active_keys_ to do
   // the update.
-  if (LayerKey::verify(event.key)) {
+  if (LayerKey::verifyType(event.key)) {
     keymap_.handleLayerChange(event, active_keys_);
     return;
   }
@@ -175,7 +175,7 @@ void Controller::handleKeyEvent(KeyEvent event) {
 
   // Handle keyboard keys. Maybe this should come before the LayerKey test, because this
   // type is expected to be the most common?
-  if (KeyboardKey::verify(event.key)) {
+  if (KeyboardKey::verifyType(event.key)) {
     KeyboardKey keyboard_key{event.key};
     if (event.state.toggledOn() && !keyboard_key.isModifier()) {
       // If a printable keycode was just pressed, we need to override any modifier

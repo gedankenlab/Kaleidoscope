@@ -51,7 +51,7 @@ class LayerKey {
   }
 
   static constexpr
-  bool verify(Key key) {
+  bool verifyType(Key key) {
     return ((uint16_t(key) >> (6 + 1 + 1 + 2)) == Key::layer_type_id);
   }
 
@@ -59,12 +59,12 @@ class LayerKey {
 
 constexpr
 bool isLayerKey(const Key key) {
-  return LayerKey::verify(key);
+  return LayerKey::verifyType(key);
 }
 
 constexpr
 bool isLayerShiftKey(const Key key) {
-  if (LayerKey::verify(key)) {
+  if (LayerKey::verifyType(key)) {
     return LayerKey{key}.isLayerShift();
   }
   return false;
@@ -72,7 +72,7 @@ bool isLayerShiftKey(const Key key) {
 
 constexpr
 bool isLayerToggleKey(const Key key) {
-  if (LayerKey::verify(key)) {
+  if (LayerKey::verifyType(key)) {
     return LayerKey{key}.isLayerToggle();
   }
   return false;

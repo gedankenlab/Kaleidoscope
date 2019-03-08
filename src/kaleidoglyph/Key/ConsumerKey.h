@@ -37,14 +37,14 @@ class ConsumerKey {
   }
 
   static constexpr
-  bool verify(Key key) {
+  bool verifyType(Key key) {
     return ((uint16_t(key) >> 10) == Key::consumer_type_id);
   }
 };
 
 constexpr
 bool isConsumerKey(const Key key) {
-  return ConsumerKey::verify(key);
+  return ConsumerKey::verifyType(key);
 }
 
 } // namespace kaleidoglyph {

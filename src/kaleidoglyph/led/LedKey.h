@@ -54,7 +54,7 @@ class LedKey {
                 type_id_ << index_bits   );
   }
 
-  static bool verify(Key key) {
+  static bool verifyType(Key key) {
     return ((uint16_t(key) >> index_bits) == led_type_id);
   }
 };

@@ -38,14 +38,14 @@ class SystemKey {
   }
 
   static constexpr
-  bool verify(Key key) {
+  bool verifyType(Key key) {
     return ((uint16_t(key) >> 8) == Key::system_type_id);
   }
 };
 
 constexpr
 bool isSystemKey(const Key key) {
-  return SystemKey::verify(key);
+  return SystemKey::verifyType(key);
 }
 
 } // namespace kaleidoglyph {
