@@ -15,9 +15,9 @@ namespace kaleidoglyph {
 // when calling this function (e.g. `bitfieldSize<uint16_t>(n)`). The default `UnitType`
 // is `byte` (i.e. `uint8_t`, which is almost always what we want, so most of the time we
 // can also drop that template parameter (e.g. `bitfieldSize(n)`).
-template <typename UnitType = byte, typename WidthType>
-constexpr WidthType bitfieldSize(WidthType n) {
-  return ((n - 1) / (8 * sizeof(UnitType))) + 1;
+template <typename _UnitType = byte, typename _WidthType>
+constexpr _WidthType bitfieldSize(_WidthType n) {
+  return ((n - 1) / (8 * sizeof(_UnitType))) + 1;
 }
 
 /// Calculates the number of bytes needed to store a bitfield of the given size in bits
@@ -27,8 +27,8 @@ constexpr byte bitfieldByteSize(int bits) {
 
 
 /// This replaces the `ELEMENTS(array)` macro:
-template<size_t SIZE, class T>
-constexpr size_t arraySize(T (&/*array*/)[SIZE]) {
+template<size_t _size, class T>
+constexpr size_t arraySize(T (&/*array*/)[_size]) {
   return SIZE;
 }
 
