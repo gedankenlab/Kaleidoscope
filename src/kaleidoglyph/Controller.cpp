@@ -15,8 +15,8 @@
 #include "kaleidoglyph/hid/Report.h"
 #include "kaleidoglyph/hooks.h"
 #include "kaleidoglyph/utils.h"
-
 #include "kaleidoglyph/KeyEventHandlerId.h"
+#include "kaleidoglyph/Bitfield.h"
 
 
 namespace kaleidoglyph {
@@ -47,20 +47,10 @@ void Controller::run() {
   }
 }
 
-// This class clarifies things, but probably isn't as efficient, and maybe just adds extra
-// complexity
+// Helper class for masking onKeyEvent() plugin hooks that have changed the Key value for
+// a given event:
 namespace {
-class PluginMask {
- public:
-  bool isMasked(byte id) {
-    return bitRead(mask_[id / 8], id % 8);
-  }
-  bool maskPlugin(byte id) {
-    return bitSet(mask_[id / 8], id % 8);
-  }
- private:
-  byte mask_[bitfieldSize(KeyEventHandlerId::count)] = {};
-};
+typedef Bitfield<KeyEventHandlerId::count, byte> PluginMask;
 }
 
 // I'm starting to think that we should just call the sendReport* functions from here,
@@ -115,7 +105,8 @@ void Controller::handleKeyEvent(KeyEvent event) {
     // in the processing of the event (until the loop ends). It prevents infinite looping
     // from a misbehaving plugin. It's a bitfield where each bit represents one plugin. If
     // that plugin's bit is 1, it is masked and will be skipped.
-    byte plugin_mask[bitfieldByteSize(KeyEventHandlerId::count)] = {};
+    //byte plugin_mask[bitfieldByteSize(KeyEventHandlerId::count)] = {};
+    PluginMask plugin_mask;
 
     // A mechanism for knowing if a plugin has changed the value of `event.key` in its
     // `onKeyEvent()` handler function:
@@ -125,9 +116,8 @@ void Controller::handleKeyEvent(KeyEvent event) {
     for (byte id{0}; id < KeyEventHandlerId::count; ++id) {
       // If we have more than eight plugins with `onKeyEvent()` handlers, we need byte and
       // bit indices to identify the plugin. Any plugin with its mask bit set is skipped.
-      byte id_byte = id / 8;
-      byte id_bit  = id % 8;
-      if (bitRead(plugin_mask[id_byte], id_bit)) continue;
+      if (plugin_mask.read(id))
+        continue;
 
       result = hooks::onKeyEvent(id, event);
       assert(result != EventHandlerResult::nxplugin);
@@ -139,7 +129,7 @@ void Controller::handleKeyEvent(KeyEvent event) {
         // starts over, so that the first plugin gets a chance to deal with the event with
         // this new `Key` value. This means that plugins need to be able to deal with
         // multiple events that are actually the same event redefined.
-        bitSet(plugin_mask[id_byte], id_bit);
+        plugin_mask.set(id);
         prev_key = event.key;
         id = 0;
         continue;
