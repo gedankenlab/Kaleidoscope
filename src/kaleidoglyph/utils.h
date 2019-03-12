@@ -29,7 +29,7 @@ constexpr byte bitfieldByteSize(int bits) {
 /// This replaces the `ELEMENTS(array)` macro:
 template<size_t _size, class T>
 constexpr size_t arraySize(T (&/*array*/)[_size]) {
-  return SIZE;
+  return _size;
 }
 
 } // namespace kaleidoglyph {
