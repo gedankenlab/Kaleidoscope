@@ -192,6 +192,9 @@ void Controller::sendKeyboardReport() {
   if (hooks::preKeyboardReport(report_))
     report_.send();
   //kaleidoglyph::hid::sendKeyboardReport();
+
+  // If we call the post-report hooks here, we can also let plugins check what was sent:
+  //hooks::postKeyboardReport(event, report_);
 }
 
 /*
