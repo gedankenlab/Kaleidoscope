@@ -36,6 +36,7 @@ class KeyboardKey {
   constexpr
   byte keycode() const { return keycode_; }
   byte modifiers() const;
+  constexpr
   byte keycodeModifier() const;
   byte modifierFlags() const;
   constexpr
@@ -106,7 +107,7 @@ byte KeyboardKey::modifierFlags() const {
 }
 
 // Return the modifiers byte for the keycode part of the Key object, if any
-inline
+constexpr
 byte KeyboardKey::keycodeModifier() const {
   byte modifiers{0};
   byte keycode_mod_bit = keycode_ - mod_keycode_offset;

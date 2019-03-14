@@ -14,7 +14,7 @@
 #include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
 #include "kaleidoglyph/EventHandlerResult.h"
 #include "kaleidoglyph/KeyEvent.h"
-#include "kaleidoglyph/hid/Report.h"
+#include "kaleidoglyph/hid/keyboard.h"
 
 
 namespace kaleidoglyph {

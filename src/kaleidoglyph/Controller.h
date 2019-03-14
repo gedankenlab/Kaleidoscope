@@ -15,16 +15,14 @@
 //#include KALEIDOGLYPH_HARDWARE_H  // defined above in Kaleidoglyph-Constants
 //#include KALEIDOGLYPH_HID_H
 
-//#include <Kaleidoglyph-Hardware-Model01.h>
-#include KALEIDOGLYPH_HARDWARE_H
-#include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
+#include "kaleidoglyph/hardware/Keyboard.h"
 #include "kaleidoglyph/KeyAddr.h"
 #include "kaleidoglyph/Keymap.h"
 #include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/Layer.h"
 #include "kaleidoglyph/cKey.h"
 #include "kaleidoglyph/Plugin.h"
-#include "kaleidoglyph/hid/Report.h"
+#include "kaleidoglyph/hid/keyboard.h"
 #include "kaleidoglyph/KeyArray.h"
 
 
@@ -38,10 +36,10 @@ class Controller {
 
   Controller(Keymap & keymap,
              hardware::Keyboard& keyboard,
-             hid::keyboard::Report& keyboard_report)
+             hid::keyboard::Dispatcher& dispatcher)
       : keymap_(keymap),
         keyboard_(keyboard),
-        report_(keyboard_report) {}
+        dispatcher_(dispatcher) {}
   
   void init(); // setup();
   void run();  // loop();
@@ -77,7 +75,7 @@ class Controller {
   hardware::Keyboard& keyboard_;
   // I want to make report_ a full member, not a pointer, but maybe not until I
   // replace KeyboardioHID entirely
-  hid::keyboard::Report& report_;
+  hid::keyboard::Dispatcher& dispatcher_;
 
   // cache of modifier flags on non-modifier, non-blank keys
   byte mod_flags_allowed_{0};

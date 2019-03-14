@@ -4,15 +4,14 @@
 
 #include <Arduino.h>
 
-#include KALEIDOGLYPH_HARDWARE_H
-#include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
+#include "kaleidoglyph/hardware/Keyboard.h"
 #include "kaleidoglyph/EventHandlerResult.h"
 #include "kaleidoglyph/Key.h"
 #include "kaleidoglyph/KeyAddr.h"
 #include "kaleidoglyph/KeyEvent.h"
 #include "kaleidoglyph/KeyState.h"
 #include "kaleidoglyph/cKey.h"
-#include "kaleidoglyph/hid/Report.h"
+#include <Kaleidoglyph-HID.h>
 #include "kaleidoglyph/hooks.h"
 #include "kaleidoglyph/utils.h"
 #include "kaleidoglyph/KeyEventHandlerId.h"
@@ -27,7 +26,7 @@ uint32_t Controller::scan_start_time_{0};
 void Controller::init() {
 
   keyboard_.setup();
-  report_.init();
+  dispatcher_.init();
 
   for (Key& key : active_keys_) {
     key = cKey::clear;
@@ -182,15 +181,34 @@ void Controller::handleKeyEvent(KeyEvent event) {
 
 // Hooks need to be added here to make it fully-functional
 void Controller::sendKeyboardReport() {
-  report_.clear();
+  hid::keyboard::Report keyboard_report;
+  //report_.clear();
   //kaleidoglyph::hid::releaseAllKeys();
   // Add all active keycodes to the report
   for (Key key : active_keys_) {
-    report_.add(key, mod_flags_allowed_);
-    //kaleidoglyph::hid::pressKey(key);
+
+    // Most keys are going to be a no-op:
+    if (key == cKey::clear) continue;
+
+    // Next most common should be KeyboardKeys:
+    if (KeyboardKey::verifyType(key)) {
+      KeyboardKey keyboard_key{key};
+
+      byte modifiers = keyboard_key.keycodeModifier();
+      byte mod_flags = keyboard_key.modifierFlags();
+
+      if (modifiers == 0) {
+        keyboard_report.addKeycode(keyboard_key.keycode());
+        modifiers = mod_flags & mod_flags_allowed_;
+      } else {
+        modifiers |= mod_flags;
+      }
+      keyboard_report.addModifiers(modifiers);
+    }
   }
-  if (hooks::preKeyboardReport(report_))
-    report_.send();
+
+  if (hooks::preKeyboardReport(keyboard_report))
+    dispatcher_.sendReport(keyboard_report);
   //kaleidoglyph::hid::sendKeyboardReport();
 
   // If we call the post-report hooks here, we can also let plugins check what was sent:

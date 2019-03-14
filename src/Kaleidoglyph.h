@@ -40,10 +40,10 @@
 #include KALEIDOGLYPH_HARDWARE_KEYBOARD_H
 // HID module (currently not used, but should be. It's not obvious, but this is hardware specific)
 //#include KALEIDOGLYPH_HID_H
+#include "Kaleidoglyph-HID.h"
 
 #include "kaleidoglyph/Controller.h"
 #include "kaleidoglyph/Key.h"
 #include "kaleidoglyph/Keymap.h"
 #include "kaleidoglyph/Layer.h"
 #include "kaleidoglyph/cKey.h"
-#include "kaleidoglyph/hid/Report.h"
