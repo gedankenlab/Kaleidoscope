@@ -26,7 +26,8 @@ uint32_t Controller::scan_start_time_{0};
 void Controller::init() {
 
   keyboard_.setup();
-  dispatcher_.init();
+  hid_keyboard_dispatcher_.init();
+  hid_consumer_dispatcher_.init();
 
   for (KeymapEntry entry : active_keys_) {
     active_keys_[entry.addr] = cKey::clear;
@@ -177,6 +178,21 @@ void Controller::handleKeyEvent(KeyEvent event) {
     hooks::postKeyboardReport(event);
     return;
   }
+
+  // Handle Consumer Control key events
+  if (ConsumerKey::verifyType(event.key)) {
+    hid::consumer::Report consumer_report;
+
+    for (KeymapEntry entry : active_keys_) {
+      if (entry.key == cKey::clear) continue;
+      if (ConsumerKey::verifyType(entry.key)) {
+        ConsumerKey consumer_key{entry.key};
+        consumer_report.addKeycode(consumer_key.keycode());
+      }
+    }
+    hid_consumer_dispatcher_.sendReport(consumer_report);
+    return;
+  }
 }
 
 // I think I need to pass the event as a parameter so that I can correctly deal with
@@ -230,11 +246,11 @@ void Controller::sendKeyboardReport(const KeyEvent& event) {
   }
 
   if (send_break_report) {
-    dispatcher_.sendBreakReport(event_keycode);
+    hid_keyboard_dispatcher_.sendBreakReport(event_keycode);
   }
 
   if (hooks::preKeyboardReport(keyboard_report))
-    dispatcher_.sendReport(keyboard_report);
+    hid_keyboard_dispatcher_.sendReport(keyboard_report);
   //kaleidoglyph::hid::sendKeyboardReport();
 
   // If we call the post-report hooks here, we can also let plugins check what was sent:

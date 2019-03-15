@@ -22,8 +22,9 @@
 #include "kaleidoglyph/Layer.h"
 #include "kaleidoglyph/cKey.h"
 #include "kaleidoglyph/Plugin.h"
-#include "kaleidoglyph/hid/keyboard.h"
 #include "kaleidoglyph/KeyArray.h"
+#include "kaleidoglyph/hid/keyboard.h"
+#include "kaleidoglyph/hid/consumer.h"
 
 
 namespace kaleidoglyph {
@@ -39,7 +40,7 @@ class Controller {
              hid::keyboard::Dispatcher& dispatcher)
       : keymap_(keymap),
         keyboard_(keyboard),
-        dispatcher_(dispatcher) {}
+        hid_keyboard_dispatcher_(dispatcher) {}
   
   void init(); // setup();
   void run();  // loop();
@@ -82,7 +83,10 @@ class Controller {
   hardware::Keyboard& keyboard_;
   // I want to make report_ a full member, not a pointer, but maybe not until I
   // replace KeyboardioHID entirely
-  hid::keyboard::Dispatcher& dispatcher_;
+  hid::keyboard::Dispatcher& hid_keyboard_dispatcher_;
+
+  // Dispatcher for Consumer Control key events
+  hid::consumer::Dispatcher hid_consumer_dispatcher_;
 
   // cache of modifier flags on non-modifier, non-blank keys
   byte mod_flags_allowed_{0};
