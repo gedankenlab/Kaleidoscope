@@ -52,6 +52,13 @@ class Controller {
   Key lookup(KeyAddr key_addr) const; // probably pointless
   byte getModifierFlags() const; // return mod flags from non-blank, non-modifier keys
 
+  void detachFromHost() {
+    keyboard_.detachFromHost();
+  }
+  void attachToHost() {
+    keyboard_.attachToHost();
+  }
+
   static uint32_t scanStartTime() {
     return scan_start_time_;
   }
