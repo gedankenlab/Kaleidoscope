@@ -49,8 +49,8 @@ struct KeyArray {
     bool operator!=(const Iterator& other) const {
       return k_ != other.k_;
     }
-    Key& operator*() {
-      return array_[k_];
+    KeymapEntry operator*() {
+      return {k_, array_[k_]};
     }
     Iterator& operator++() {
       ++k_;

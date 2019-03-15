@@ -47,7 +47,7 @@ class Controller {
   void handleKeyEvent(KeyEvent event);
   void pressKeyswitch(KeyAddr k, byte caller = 0); // should use `pluginid::controller`
   void releaseKeyswitch(KeyAddr k, byte caller = 0);
-  void sendKeyboardReport();
+  void sendKeyboardReport(const KeyEvent& event);
 
   Key lookup(KeyAddr key_addr) const; // probably pointless
   byte getModifierFlags() const; // return mod flags from non-blank, non-modifier keys

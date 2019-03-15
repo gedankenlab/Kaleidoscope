@@ -28,8 +28,8 @@ void Controller::init() {
   keyboard_.setup();
   dispatcher_.init();
 
-  for (Key& key : active_keys_) {
-    key = cKey::clear;
+  for (KeymapEntry entry : active_keys_) {
+    active_keys_[entry.addr] = cKey::clear;
   }
 }
 
@@ -173,26 +173,36 @@ void Controller::handleKeyEvent(KeyEvent event) {
     } else {
       mod_flags_allowed_ = 0xFF;
     }
-    sendKeyboardReport();
+    sendKeyboardReport(event);
     hooks::postKeyboardReport(event);
     return;
   }
 }
 
-// Hooks need to be added here to make it fully-functional
-void Controller::sendKeyboardReport() {
+// I think I need to pass the event as a parameter so that I can correctly deal with
+// rollover from one `Key_E` to another `Key_E`, sending an extra report without that
+// keycode. In order to do that, I think I'll need to change the iterator for KeyArray to
+// return a `Key`/`KeyAddr` pair, instead of just the `Key`. That way, we can compare and
+// if hmm... maybe not. If `event.key`'s code is already in the report, and it's a
+// keypress event... No, that's no good.
+void Controller::sendKeyboardReport(const KeyEvent& event) {
   hid::keyboard::Report keyboard_report;
   //report_.clear();
   //kaleidoglyph::hid::releaseAllKeys();
+  byte event_keycode{0};
+  if (KeyboardKey::verifyType(event.key)) {
+    event_keycode = KeyboardKey(event.key).keycode();
+  }
+  bool send_break_report{false};
   // Add all active keycodes to the report
-  for (Key key : active_keys_) {
+  for (KeymapEntry entry : active_keys_) {
 
     // Most keys are going to be a no-op:
-    if (key == cKey::clear) continue;
+    if (entry.key == cKey::clear) continue;
 
     // Next most common should be KeyboardKeys:
-    if (KeyboardKey::verifyType(key)) {
-      KeyboardKey keyboard_key{key};
+    if (KeyboardKey::verifyType(entry.key)) {
+      KeyboardKey keyboard_key{entry.key};
 
       byte modifiers = keyboard_key.keycodeModifier();
       byte mod_flags = keyboard_key.modifierFlags();
@@ -205,6 +215,22 @@ void Controller::sendKeyboardReport() {
       }
       keyboard_report.addModifiers(modifiers);
     }
+
+    // the event was a keypress
+    if (event.state.toggledOn()) {
+      // the pressed key has the same keycode as this key (should test something different)
+      if (event_keycode != 0 && KeyboardKey(entry.key).keycode() == event_keycode) {
+        // this key was held, but has the same keycode as the newly-pressed key
+        if (entry.addr != event.addr) {
+          // send an extra report without event.key
+          send_break_report = true;
+        }
+      }
+    }
+  }
+
+  if (send_break_report) {
+    dispatcher_.sendBreakReport(event_keycode);
   }
 
   if (hooks::preKeyboardReport(keyboard_report))
