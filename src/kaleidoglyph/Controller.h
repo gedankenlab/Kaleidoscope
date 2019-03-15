@@ -36,11 +36,9 @@ class Controller {
  public:
 
   Controller(Keymap & keymap,
-             hardware::Keyboard& keyboard,
-             hid::keyboard::Dispatcher& dispatcher)
+             hardware::Keyboard& keyboard)
       : keymap_(keymap),
-        keyboard_(keyboard),
-        hid_keyboard_dispatcher_(dispatcher) {}
+        keyboard_(keyboard) {}
   
   void init(); // setup();
   void run();  // loop();
@@ -58,6 +56,9 @@ class Controller {
   }
   void attachToHost() {
     keyboard_.attachToHost();
+  }
+  void toggleHidProtocol() {
+    hid_keyboard_dispatcher_.toggleProtocol();
   }
 
   static uint32_t scanStartTime() {
@@ -83,7 +84,7 @@ class Controller {
   hardware::Keyboard& keyboard_;
   // I want to make report_ a full member, not a pointer, but maybe not until I
   // replace KeyboardioHID entirely
-  hid::keyboard::Dispatcher& hid_keyboard_dispatcher_;
+  hid::keyboard::Dispatcher hid_keyboard_dispatcher_;
 
   // Dispatcher for Consumer Control key events
   hid::consumer::Dispatcher hid_consumer_dispatcher_;
