@@ -193,6 +193,19 @@ void Controller::handleKeyEvent(KeyEvent event) {
     hid_consumer_dispatcher_.sendReport(consumer_report);
     return;
   }
+
+  // Handle System Control key events
+
+  // Kaleidoscope always sends a press, immediately followed by a release when a system
+  // control key toggles on. This should be very easy for Kaleidoglyph to handle.
+  if (SystemKey::verifyType(event.key)) {
+    SystemKey system_key{event.key};
+    if (event.state.toggledOn()) {
+      hid_system_dispatcher_.sendReport(system_key.keycode());
+    } else {
+      hid_system_dispatcher_.sendReport(0);
+    }
+  }
 }
 
 // I think I need to pass the event as a parameter so that I can correctly deal with

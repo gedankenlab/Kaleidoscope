@@ -25,6 +25,7 @@
 #include "kaleidoglyph/KeyArray.h"
 #include "kaleidoglyph/hid/keyboard.h"
 #include "kaleidoglyph/hid/consumer.h"
+#include "kaleidoglyph/hid/system.h"
 
 
 namespace kaleidoglyph {
@@ -88,6 +89,9 @@ class Controller {
 
   // Dispatcher for Consumer Control key events
   hid::consumer::Dispatcher hid_consumer_dispatcher_;
+
+  // Dispatcher for System Control key events
+  hid::system::Dispatcher hid_system_dispatcher_;
 
   // cache of modifier flags on non-modifier, non-blank keys
   byte mod_flags_allowed_{0};
