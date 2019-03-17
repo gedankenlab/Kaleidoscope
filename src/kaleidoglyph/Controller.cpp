@@ -28,6 +28,7 @@ void Controller::init() {
   keyboard_.setup();
   hid_keyboard_dispatcher_.init();
   hid_consumer_dispatcher_.init();
+  hid_system_dispatcher_.init();
 
   for (KeymapEntry entry : active_keys_) {
     active_keys_[entry.addr] = cKey::clear;
@@ -194,10 +195,9 @@ void Controller::handleKeyEvent(KeyEvent event) {
     return;
   }
 
-  // Handle System Control key events
-
-  // Kaleidoscope always sends a press, immediately followed by a release when a system
-  // control key toggles on. This should be very easy for Kaleidoglyph to handle.
+  // Handle System Control key events. There is no Report class here, because the
+  // descriptor only allows a single keycode to be sent at once. We send the keycode from
+  // the event when a key toggles on, and a zero byte when it toggles off.
   if (SystemKey::verifyType(event.key)) {
     SystemKey system_key{event.key};
     if (event.state.toggledOn()) {
