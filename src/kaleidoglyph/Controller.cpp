@@ -176,7 +176,6 @@ void Controller::handleKeyEvent(KeyEvent event) {
       mod_flags_allowed_ = 0xFF;
     }
     sendKeyboardReport(event);
-    hooks::postKeyboardReport(event);
     return;
   }
 
@@ -267,6 +266,7 @@ void Controller::sendKeyboardReport(const KeyEvent& event) {
   //kaleidoglyph::hid::sendKeyboardReport();
 
   // If we call the post-report hooks here, we can also let plugins check what was sent:
+  hooks::postKeyboardReport(event);
   //hooks::postKeyboardReport(event, report_);
 }
 
