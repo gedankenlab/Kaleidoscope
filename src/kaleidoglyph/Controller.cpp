@@ -68,6 +68,17 @@ void Controller::handleKeyEvent(KeyEvent event) {
     return;
   }
 
+  // One thing I might want to add here is a check for if we get a key press, and there's
+  // already an entry in active_keys_[event.addr]. If so, maybe we should first send a
+  // release (recursively calling this function...) before continuing to process the
+  // current press. This might stop certain bugs from creeping in before then get
+  // started. For example, Unshifter tracks the number of shift keys held; if one of them
+  // gets released, but that doesn't get counted because there was no release event, it
+  // could get out of sync, and think shift is held all the time.
+  if (state.toggledOn() && !(active_keys_[k].isEmpty())) {
+    releaseKeyswitch(k);
+  }
+
   if (event.key.isEmpty()) {
     // TODO: deal with invalid KeyAddrs & injected keys
     if (state.toggledOff()) {
