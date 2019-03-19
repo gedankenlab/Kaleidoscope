@@ -15,7 +15,7 @@
 
 namespace kaleidoglyph {
 
-Keymap::Keymap(Layer** layers, byte count) : layers_{layers}, layer_count_{count} {
+Keymap::Keymap(Layer* const *layers, byte count) : layers_{layers}, layer_count_{count} {
   clearLayerStates_();
 }
 

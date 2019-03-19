@@ -30,7 +30,7 @@ class Keymap {
  public:
   // Note: `layers` is a pointer to an array of `Layer` pointers. I'm doing this so that
   // new (EEPROM) layers can be added after compile-time
-  Keymap(Layer** layers, byte layer_count);
+  Keymap(Layer* const *layers, byte layer_count);
 
   Key lookup(KeyAddr key_addr, byte layer_index) const;
 
@@ -55,11 +55,11 @@ class Keymap {
 
  private:
   // An array of pointers to the Layer objects that make up the keymap
-  Layer** layers_;
+  Layer* const *layers_;
   // The total number of layers; should be equal to MAX_LAYERS if we're just using PROGMEM
   // layers, but could be less if we use EEPROM as well, since it's possible to add layers
   // there at run-time.
-  byte layer_count_;
+  const byte layer_count_;
 
   // Bitfield storing the state of each layer (1 = on, 0 = off). The alternative to this
   // is having each layer store its own state in a boolean (or a bitfield, if it has other
