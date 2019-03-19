@@ -4,9 +4,6 @@
 
 #include <Arduino.h>
 
-// Is it possible to make this a constexpr function instead of a macro?
-#define ELEMENTS(array) (sizeof(array)/sizeof(array[0]))
-
 namespace kaleidoglyph {
 
 // Return the number of `UnitType` units required to store `n` bits. Both `UnitType` &
@@ -27,8 +24,8 @@ constexpr byte bitfieldByteSize(int bits) {
 
 
 /// This replaces the `ELEMENTS(array)` macro:
-template<size_t _size, class T>
-constexpr size_t arraySize(T (&/*array*/)[_size]) {
+template<size_t _size, typename _Type>
+constexpr size_t arraySize(_Type (&/*array*/)[_size]) {
   return _size;
 }
 
