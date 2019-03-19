@@ -19,7 +19,7 @@ template <unsigned _size,
 class Bitfield {
 
   // This makes things easier for the iterator below:
-  typedef Bitfield<_size, _IndexType, _UnitType, _SizeType> BitfieldType;
+  typedef Bitfield<_size, _IndexType, _UnitType, _SizeType> _BitfieldType;
 
  public:
 
@@ -73,7 +73,7 @@ class Bitfield {
 
   class Iterator {
    public:
-    Iterator(BitfieldType& bitfield, _SizeType x)
+    Iterator(_BitfieldType& bitfield, _SizeType x)
         : bitfield_(bitfield), block_index_(x) {}
 
     bool operator!=(const Iterator& other) {
@@ -92,7 +92,7 @@ class Bitfield {
           // If the low (remaining) bit is set, generate an `_IndexType` object from the
           // bitfield coordinates and store it for the dereference operator to return:
           if (block_ & 1) {
-            index_ = BitfieldType::index(block_index_, bit_index_);
+            index_ = _BitfieldType::index(block_index_, bit_index_);
             return true;
           }
           // The low bit wasn't set, so we shift the data block by one and track that
@@ -118,7 +118,7 @@ class Bitfield {
     }
 
    private:
-    BitfieldType& bitfield_;
+    _BitfieldType& bitfield_;
     _SizeType block_index_;    // index of the block
     _SizeType bit_index_{0}; // bit index in the block
     _UnitType block_;
