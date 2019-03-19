@@ -27,7 +27,7 @@ class LedController {
 
   LedController(Controller& controller,
                 hardware::Keyboard& keyboard,
-                LedBackgroundMode** modes = nullptr,
+                LedBackgroundMode* const *modes = nullptr,
                 byte modes_count = 0)
       : controller_(controller),
         keyboard_(keyboard),
@@ -67,8 +67,8 @@ class LedController {
   Controller& controller_;
   hardware::Keyboard& keyboard_;
 
-  LedBackgroundMode** modes_;
-  byte                modes_count_;
+  LedBackgroundMode* const *modes_;
+  byte               const  modes_count_;
 
   byte curr_mode_index_{invalid_index_};
   byte next_mode_index_{invalid_index_};
