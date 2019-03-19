@@ -49,12 +49,23 @@ class KeyboardKey {
     byte keycode_mod_num = keycode_ - mod_keycode_offset;
     return keycode_mod_num;
   }
+  constexpr
   bool isRealShift() const;
+  constexpr
   void setModifiers(byte mods, bool mod_ralt = false);
   //void setModifiers(bool control, bool shift, bool alt, bool gui, bool ralt = false);
+  constexpr
   void addModifiers(byte mods, bool mod_ralt = false);
   void clearModifiers() {
     setModifiers(0);
+  }
+  constexpr
+  void addShift() {
+    addModifiers(mod_flag_shift);
+  }
+  constexpr
+  void setKeycode(byte keycode) {
+    keycode_ = keycode;
   }
 
   // Run-time constructor; generates an empty Key (equal to cKey::blank)
@@ -118,7 +129,7 @@ byte KeyboardKey::keycodeModifier() const {
 
 // This function is really just here to serve a single plugin, but it is more efficient
 // than having it in Unshifter, so I'm ambivalent about it being here.
-inline
+constexpr
 bool KeyboardKey::isRealShift() const {
   //return { isModifier() && (modifiers() & mod_shift_flags) };
 
@@ -148,13 +159,13 @@ byte KeyboardKey::modifiers() const {
   return modifiers;
 }
 
-inline
+constexpr
 void KeyboardKey::setModifiers(byte mods, bool ralt) {
   mods_left_ = mods;
   mod_ralt_  = ralt;
 }
 
-inline
+constexpr
 void KeyboardKey::addModifiers(byte mods, bool ralt) {
   mods_left_ |= mods;
   mod_ralt_  |= ralt;
