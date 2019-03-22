@@ -68,7 +68,7 @@ class PluginKey {
     return ((uint16_t(key) >> _data_bits) == _type_id);
   }
 
-};
+}__attribute__((packed));
 
 // Examples:
 #if 0

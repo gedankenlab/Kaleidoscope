@@ -40,7 +40,7 @@ class ConsumerKey {
   bool verifyType(Key key) {
     return ((uint16_t(key) >> 10) == Key::consumer_type_id);
   }
-};
+}__attribute__((packed));
 
 constexpr
 bool isConsumerKey(const Key key) {

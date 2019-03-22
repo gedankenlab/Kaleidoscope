@@ -55,7 +55,7 @@ class LayerKey {
     return ((uint16_t(key) >> (6 + 1 + 1 + 2)) == Key::layer_type_id);
   }
 
-};
+}__attribute__((packed));
 
 constexpr
 bool isLayerKey(const Key key) {

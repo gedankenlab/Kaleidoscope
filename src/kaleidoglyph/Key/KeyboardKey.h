@@ -105,7 +105,7 @@ class KeyboardKey {
     return ((uint16_t(key) >> (8 + 4 + 1)) == Key::keyboard_type_id);
   }
 
-};
+}__attribute__((packed));
 
 inline
 byte KeyboardKey::modifierFlags() const {

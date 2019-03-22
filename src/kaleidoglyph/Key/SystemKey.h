@@ -41,7 +41,7 @@ class SystemKey {
   bool verifyType(Key key) {
     return ((uint16_t(key) >> 8) == Key::system_type_id);
   }
-};
+}__attribute__((packed));
 
 constexpr
 bool isSystemKey(const Key key) {

@@ -41,7 +41,7 @@ class MouseKey {
     return ((uint16_t(key) >> 8) == Key::mouse_type_id);
   }
 
-};
+}__attribute__((packed));
 
 constexpr
 bool isMouseKey(const Key key) {
