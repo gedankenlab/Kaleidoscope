@@ -23,6 +23,7 @@ class LedBreatheMode : public LedBackgroundMode {
 
   void update(LedController& led_controller) override;
 
+  void setHue(byte hue) { hue_ = hue; }
 
  private:
 
