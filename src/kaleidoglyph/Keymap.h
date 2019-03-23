@@ -28,6 +28,10 @@ struct LayerKeyPair {
 class Keymap {
 
  public:
+  template<byte _layer_count>
+  Keymap(Layer* const (&layers)[_layer_count])
+      : layers_(layers), layer_count_(_layer_count) {}
+
   // Note: `layers` is a pointer to an array of `Layer` pointers. I'm doing this so that
   // new (EEPROM) layers can be added after compile-time
   Keymap(Layer* const *layers, byte layer_count);
