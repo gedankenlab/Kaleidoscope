@@ -16,15 +16,15 @@ namespace kaleidoglyph {
 // the way.
 struct KeyEvent {
 
-  Key       key;
   KeyAddr   addr;
   KeyState  state;
+  Key       key;
   byte      caller;
 
   KeyEvent() {}
 
   KeyEvent(KeyAddr _addr, KeyState _state, Key _key = cKey::clear, byte _caller = 0)
-      : key(_key), addr(_addr), state(_state), caller(_caller) {}
+      : addr(_addr), state(_state), key(_key), caller(_caller) {}
 
 };
 
