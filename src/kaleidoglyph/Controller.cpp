@@ -166,7 +166,7 @@ void Controller::handleKeyEvent(KeyEvent event) {
   // Handle layer shifts and toggles. Maybe this should happen before updating
   // active_keys_, but if we do that, the keymap will need access to active_keys_ to do
   // the update.
-  if (LayerKey::verifyType(event.key)) {
+  if (isLayerKey(event.key)) {
     keymap_.handleLayerChange(event, active_keys_);
     return;
   }
@@ -177,7 +177,7 @@ void Controller::handleKeyEvent(KeyEvent event) {
 
   // Handle keyboard keys. Maybe this should come before the LayerKey test, because this
   // type is expected to be the most common?
-  if (KeyboardKey::verifyType(event.key)) {
+  if (isKeyboardKey(event.key)) {
     KeyboardKey keyboard_key{event.key};
     if (event.state.toggledOn() && !keyboard_key.isModifier()) {
       // If a printable keycode was just pressed, we need to override any modifier
@@ -191,12 +191,12 @@ void Controller::handleKeyEvent(KeyEvent event) {
   }
 
   // Handle Consumer Control key events
-  if (ConsumerKey::verifyType(event.key)) {
+  if (isConsumerKey(event.key)) {
     hid::consumer::Report consumer_report;
 
     for (KeymapEntry entry : active_keys_) {
       if (entry.key == cKey::clear) continue;
-      if (ConsumerKey::verifyType(entry.key)) {
+      if (isConsumerKey(entry.key)) {
         ConsumerKey consumer_key{entry.key};
         consumer_report.addKeycode(consumer_key.keycode());
       }
@@ -208,7 +208,7 @@ void Controller::handleKeyEvent(KeyEvent event) {
   // Handle System Control key events. There is no Report class here, because the
   // descriptor only allows a single keycode to be sent at once. We send the keycode from
   // the event when a key toggles on, and a zero byte when it toggles off.
-  if (SystemKey::verifyType(event.key)) {
+  if (isSystemKey(event.key)) {
     SystemKey system_key{event.key};
     if (event.state.toggledOn()) {
       hid_system_dispatcher_.sendReport(system_key.keycode());
@@ -229,7 +229,7 @@ void Controller::sendKeyboardReport(const KeyEvent& event) {
   //report_.clear();
   //kaleidoglyph::hid::releaseAllKeys();
   byte event_keycode{0};
-  if (KeyboardKey::verifyType(event.key)) {
+  if (isKeyboardKey(event.key)) {
     event_keycode = KeyboardKey(event.key).keycode();
   }
   bool send_break_report{false};
@@ -240,7 +240,7 @@ void Controller::sendKeyboardReport(const KeyEvent& event) {
     if (entry.key == cKey::clear) continue;
 
     // Next most common should be KeyboardKeys:
-    if (KeyboardKey::verifyType(entry.key)) {
+    if (isKeyboardKey(entry.key)) {
       KeyboardKey keyboard_key{entry.key};
 
       byte modifiers = keyboard_key.keycodeModifier();
