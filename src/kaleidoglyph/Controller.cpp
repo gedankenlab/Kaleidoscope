@@ -157,7 +157,7 @@ void Controller::handleKeyEvent(KeyEvent event) {
     // them gets released, but that doesn't get counted because there was no release
     // event, it could get out of sync, and think shift is held all the time.
     if (!(active_keys_[k].isEmpty())) {
-      releaseKeyswitch(k);
+      handleKeyEvent({k, cKeyState::injected_release});
     }
 
     active_keys_[k] = event.key;
