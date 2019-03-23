@@ -41,21 +41,15 @@ LayerKeyPair Keymap::lookupActiveLayerAndKey(KeyAddr key_addr) const {
   // First, unconditionally check the top layer
   byte layer_index{top_active_layer_index_};
   Key key = lookup(key_addr, layer_index);
-  if (! key.isClear())
-    return {layer_index, key};
 
   // Then search the layer stack, stopping at the default layer
-  for (--layer_index; layer_index > default_layer_index_; --layer_index) {
+  while ((layer_index > default_layer_index_) && key.isClear()) {
+    --layer_index;
     if (isLayerActive(layer_index)) {
       key = lookup(key_addr, layer_index);
-      if (! key.isClear())
-        return {layer_index, key};
     }
   }
-
-  // If we still haven't found a non-transparent key, return whatever's in the default
-  // layer (even if it's transparent)
-  return {default_layer_index_, lookup(key_addr, default_layer_index_)};
+  return {layer_index, key};
 }
 
 
