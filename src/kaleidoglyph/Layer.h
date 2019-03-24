@@ -17,8 +17,9 @@ class Layer {
 
  public:
   Layer() = default;
-  constexpr Layer(const Key* const keys, const byte count)
-    : keys_{keys}, key_count_{count} {}
+  template<byte _count>
+  constexpr Layer(const Key (&keys)[_count])
+      : keys_(keys), key_count_(_count) {}
 
   Key operator[](KeyAddr k) const {
     return getProgmemKey(keys_[byte(k)]);
