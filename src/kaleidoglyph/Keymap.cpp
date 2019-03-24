@@ -15,10 +15,6 @@
 
 namespace kaleidoglyph {
 
-Keymap::Keymap(Layer* const *layers, byte count) : layers_{layers}, layer_count_{count} {
-  clearLayerStates_();
-}
-
 
 Key Keymap::lookup(KeyAddr key_addr, byte layer_index) const {
   return (*layers_[layer_index])[key_addr];
@@ -43,7 +39,7 @@ LayerKeyPair Keymap::lookupActiveLayerAndKey(KeyAddr key_addr) const {
   Key key = lookup(key_addr, layer_index);
 
   // Then search the layer stack, stopping at the default layer
-  while ((layer_index > default_layer_index_) && key.isClear()) {
+  while ((layer_index > 0) && key.isClear()) {
     --layer_index;
     if (isLayerActive(layer_index)) {
       key = lookup(key_addr, layer_index);
@@ -119,7 +115,7 @@ void Keymap::handleLayerChange(KeyEvent event, KeyArray<total_keys>& active_keys
 
 
 void Keymap::updateTopActiveLayer_() {
-  for (byte i(layer_count_ - 1); i > default_layer_index_; --i) {
+  for (byte i = layer_count_ - 1; i > default_layer_index_; --i) {
     if (getLayerState_(i)) {
       top_active_layer_index_ = i;
       return;
@@ -131,22 +127,14 @@ void Keymap::updateTopActiveLayer_() {
 
 inline
 bool Keymap::getLayerState_(byte layer_index) const {
-  return bitRead(layer_states_[layer_index / 8], layer_index % 8);
+  if (layer_index == 0) return true;
+  return layer_states_.read(layer_index);
 }
 
 
 inline
 void Keymap::setLayerState_(byte layer_index, bool state) {
-  bitWrite(layer_states_[layer_index / 8], layer_index % 8, state);
-}
-
-
-inline
-void Keymap::clearLayerStates_() {
-  for (byte i(0); i < sizeof(layer_states_); ++i) {
-    layer_states_[i] = 0;
-  }
-  setLayerState_(default_layer_index_, true);
+  layer_states_.write(layer_index, state);
 }
 
 } // namespace kaleidoglyph {

@@ -12,7 +12,7 @@
 #include "kaleidoglyph/Layer.h"
 #include "kaleidoglyph/cKeyAddr.h"
 #include "kaleidoglyph/utils.h"
-
+#include "kaleidoglyph/Bitfield.h"
 
 namespace kaleidoglyph {
 
@@ -31,10 +31,6 @@ class Keymap {
   template<byte _layer_count>
   Keymap(Layer* const (&layers)[_layer_count])
       : layers_(layers), layer_count_(_layer_count) {}
-
-  // Note: `layers` is a pointer to an array of `Layer` pointers. I'm doing this so that
-  // new (EEPROM) layers can be added after compile-time
-  Keymap(Layer* const *layers, byte layer_count);
 
   Key lookup(KeyAddr key_addr, byte layer_index) const;
 
@@ -68,7 +64,7 @@ class Keymap {
   // Bitfield storing the state of each layer (1 = on, 0 = off). The alternative to this
   // is having each layer store its own state in a boolean (or a bitfield, if it has other
   // state info to store)
-  byte layer_states_[bitfieldByteSize(MAX_LAYERS)];
+  Bitfield<MAX_LAYERS, byte> layer_states_;
 
   // The index of the highest active layer
   byte default_layer_index_ {0};
@@ -88,7 +84,6 @@ class Keymap {
   void setLayerState_(byte layer_index, bool state);
 
   // I think my new caching system makes these obsolete
-  void clearLayerStates_();
   void updateTopActiveLayer_();
 
   // void setLayerActive_(byte layer, bool state);
