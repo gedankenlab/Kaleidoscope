@@ -53,6 +53,11 @@ class Bitfield {
     bitWrite(data_[blockIndex(i)], bitIndex(i), value);
   }
 
+  _UnitType& block(_SizeType block_index) {
+    assert(block_index < total_blocks);
+    return data_[block_index];
+  }
+
  private:
 
   _UnitType data_[total_blocks] = {};
