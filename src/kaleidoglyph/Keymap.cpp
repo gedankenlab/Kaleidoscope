@@ -54,10 +54,10 @@ void Keymap::activateLayer(byte layer_index) {
   if (layer_index >= layer_count_)
     return;
 
-  if (getLayerState_(layer_index))
+  if (isLayerActive(layer_index))
     return;
 
-  setLayerState_(layer_index, true);
+  layer_states_.set(layer_index);
 
   if (layer_index > top_active_layer_index_)
     top_active_layer_index_ = layer_index;
@@ -69,17 +69,17 @@ void Keymap::deactivateLayer(byte layer_index) {
   if (layer_index >= layer_count_)
     return;
 
-  if (! getLayerState_(layer_index))
+  if (! isLayerActive(layer_index))
     return;
 
-  setLayerState_(layer_index, false);
+  layer_states_.clear(layer_index);
 
   if (layer_index == top_active_layer_index_)
     updateTopActiveLayer_();
 }
 
 void Keymap::toggleLayer(byte layer_index) {
-  if (getLayerState_(layer_index)) {
+  if (isLayerActive(layer_index)) {
     deactivateLayer(layer_index);
   } else {
     activateLayer(layer_index);
@@ -116,25 +116,12 @@ void Keymap::handleLayerChange(KeyEvent event, KeyArray<total_keys>& active_keys
 
 void Keymap::updateTopActiveLayer_() {
   for (byte i = layer_count_ - 1; i > default_layer_index_; --i) {
-    if (getLayerState_(i)) {
+    if (isLayerActive(i)) {
       top_active_layer_index_ = i;
       return;
     }
   }
   top_active_layer_index_ = default_layer_index_;
-}
-
-
-inline
-bool Keymap::getLayerState_(byte layer_index) const {
-  if (layer_index == 0) return true;
-  return layer_states_.read(layer_index);
-}
-
-
-inline
-void Keymap::setLayerState_(byte layer_index, bool state) {
-  layer_states_.write(layer_index, state);
 }
 
 } // namespace kaleidoglyph {

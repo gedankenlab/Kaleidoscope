@@ -40,7 +40,8 @@ class Keymap {
   const Layer& layer(byte layer_index) const;
 
   bool isLayerActive(byte layer_index) const {
-    return getLayerState_(layer_index);
+    if (layer_index == 0) return true;
+    return layer_states_.read(layer_index);
   }
 
   void activateLayer(byte layer_index);
@@ -79,9 +80,6 @@ class Keymap {
 
   // Also, maybe this is where we store the active_keys_ object (reference?)
   //Layer& active_keys_;
-
-  bool getLayerState_(byte layer_index) const;
-  void setLayerState_(byte layer_index, bool state);
 
   // I think my new caching system makes these obsolete
   void updateTopActiveLayer_();
