@@ -45,13 +45,13 @@ _PointerType readPointerFromProgmemArray(_PointerType (&pgm_ptr_array)[_array_si
   // single step, so that we never access the content of `pgm_ptr_array[index]`,
   // which would read a value from RAM. To make this as clear as possible, we
   // use pointer arithmetic instead of the subscript operator.
-  _PointerType* pgm_entry_p = pgm_ptr_array + index;
+  _PointerType* pgm_ptr_p = pgm_ptr_array + index;
 
   // Now that we've got the address (in PROGMEM) of the pointer data we want, we
   // can read it directly. As long as a pointer is just two bytes, this works
   // just fine. On a system that usese four-byte pointers, we'd have to use
   // `pgm_read_word_far()` instead.
-  uint16_t ptr_data = pgm_read_word(pgm_entry_p);
+  uint16_t ptr_data = pgm_read_word(pgm_ptr_p);
 
   // Now we have the value of the pointer, but it's represented as an integer,
   // so we need to use `reinterpret_cast` again in order to return it as a
