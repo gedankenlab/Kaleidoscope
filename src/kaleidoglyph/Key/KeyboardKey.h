@@ -16,6 +16,7 @@ class KeyboardKey {
  private:
   byte keycode_ : 8, mods_left_ : 4, mod_ralt_ : 1, type_id_ : 3;
 
+ public:
   // These mod bits are in the same order as the mod bits in the HID keyboard report for
   // efficiency in passing them on. If they get rearranged, that will mess things up.
   static constexpr byte mod_flag_control { 0b0001 };  // (1 << 0)
@@ -23,8 +24,6 @@ class KeyboardKey {
   static constexpr byte mod_flag_alt     { 0b0100 };  // (1 << 2)
   static constexpr byte mod_flag_gui     { 0b1000 };  // (1 << 3)
   static constexpr byte mod_flag_ralt { mod_flag_alt << 4 };
-
- public:
 
   static constexpr byte mod_keycode_offset { HID_KEYBOARD_LEFT_CONTROL };
 
@@ -60,8 +59,24 @@ class KeyboardKey {
     setModifiers(0);
   }
   constexpr
-  void addShift() {
+  void addLeftControl() {
+    addModifiers(mod_flag_control);
+  }
+  constexpr
+  void addLeftShift() {
     addModifiers(mod_flag_shift);
+  }
+  constexpr
+  void addLeftAlt() {
+    addModifiers(mod_flag_alt);
+  }
+  constexpr
+  void addLeftGui() {
+    addModifiers(mod_flag_gui);
+  }
+  constexpr
+  void addRightAlt() {
+    addModifiers(0, true);
   }
   constexpr
   void setKeycode(byte keycode) {
@@ -185,5 +200,64 @@ constexpr
 KeyboardKey modifierKey(byte n) {
   return KeyboardKey(KeyboardKey::mod_keycode_offset + n);
 }
+
+constexpr
+KeyboardKey withLeftControl(KeyboardKey key) {
+  KeyboardKey result_key = key;
+  result_key.addLeftControl();
+  return result_key;
+}
+
+constexpr
+KeyboardKey withLeftShift(KeyboardKey key) {
+  KeyboardKey result_key = key;
+  result_key.addLeftShift();
+  return result_key;
+}
+
+constexpr
+KeyboardKey withLeftAlt(KeyboardKey key) {
+  KeyboardKey result_key = key;
+  result_key.addLeftAlt();
+  return result_key;
+}
+
+constexpr
+KeyboardKey withLeftGui(KeyboardKey key) {
+  KeyboardKey result_key = key;
+  result_key.addLeftGui();
+  return result_key;
+}
+
+constexpr
+KeyboardKey withRightAlt(KeyboardKey key) {
+  KeyboardKey result_key = key;
+  result_key.addRightAlt();
+  return result_key;
+}
+
+constexpr KeyboardKey withControl(KeyboardKey key) { return withLeftControl(key); }
+constexpr KeyboardKey withShift(KeyboardKey key) { return withLeftShift(key); }
+constexpr KeyboardKey withAlt(KeyboardKey key) { return withLeftAlt(key); }
+constexpr KeyboardKey withOption(KeyboardKey key) { return withLeftAlt(key); }
+constexpr KeyboardKey withGui(KeyboardKey key) { return withLeftGui(key); }
+constexpr KeyboardKey withCommand(KeyboardKey key) { return withLeftGui(key); }
+constexpr KeyboardKey withCmd(KeyboardKey key) { return withLeftGui(key); }
+constexpr KeyboardKey withAltGr(KeyboardKey key) { return withRightAlt(key); }
+
+constexpr KeyboardKey control(KeyboardKey key) { return withLeftControl(key); }
+constexpr KeyboardKey ctrl(KeyboardKey key) { return withLeftControl(key); }
+constexpr KeyboardKey shift(KeyboardKey key) { return withLeftShift(key); }
+constexpr KeyboardKey option(KeyboardKey key) { return withLeftAlt(key); }
+constexpr KeyboardKey command(KeyboardKey key) { return withLeftGui(key); }
+constexpr KeyboardKey ralt(KeyboardKey key) { return withRightAlt(key); }
+constexpr KeyboardKey altgr(KeyboardKey key) { return withRightAlt(key); }
+
+constexpr KeyboardKey ctl(KeyboardKey key) { return withLeftControl(key); }
+constexpr KeyboardKey sft(KeyboardKey key) { return withLeftShift(key); }
+constexpr KeyboardKey alt(KeyboardKey key) { return withLeftAlt(key); }
+constexpr KeyboardKey opt(KeyboardKey key) { return withLeftAlt(key); }
+constexpr KeyboardKey gui(KeyboardKey key) { return withLeftGui(key); }
+constexpr KeyboardKey cmd(KeyboardKey key) { return withLeftGui(key); }
 
 } // namespace kaleidoglyph {
