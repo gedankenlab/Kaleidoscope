@@ -1,6 +1,6 @@
 <!-- -*- mode: markdown; fill-column: 8192 -*- -->
 
-# Kaleidoglyph C++ Coding Style
+# Kaleidoscope C++ Coding Style
 
 ## Important warning
 
@@ -137,7 +137,7 @@ Our style guide is based on the [Google C++ style guide][goog:c++-guide] which w
 
 <!-- TODO: Review this section, the Google-specifc wording was replaced with something more appropriate -->
 
-C++ is the language of Arduino libraries, and as a consequence, in which Kaleidoglyph was written in. As every C++ programmer knows, the language has many powerful features, but this power brings with it complexity, which in turn can make code more bug-prone and harder to read and maintain.
+C++ is the language of Arduino libraries, and as a consequence, in which Kaleidoscope was written in. As every C++ programmer knows, the language has many powerful features, but this power brings with it complexity, which in turn can make code more bug-prone and harder to read and maintain.
 
 The goal of this guide is to manage this complexity by describing in detail the dos and don'ts of writing C++ code. These rules exist to keep the code base manageable while still allowing coders to use C++ language features productively.
 
@@ -160,7 +160,7 @@ The goals of the style guide as we currently see them are as follows:
 The benefit of a style rule must be large enough to justify asking all of our engineers to remember it. The benefit is measured relative to the codebase we would get without the rule, so a rule against a very harmful practice may still have a small benefit if people are unlikely to do it anyway. This principle mostly explains the rules we don't have, rather than the rules we do: for example, `goto` contravenes many of the following principles, but is already vanishingly rare, so the Style Guide doesn't discuss it.
 </dd>
 
-<!-- TODO: Review the Kaleidoglyph/Arduino bits -->
+<!-- TODO: Review the Kaleidoscope/Arduino bits -->
 <dt>Optimize for the reader, not the writer</dt>
 <dd>
 Our codebase (and most individual components submitted to it) is expected to continue for quite some time. As a result, more time will be spent reading most of our code than writing it. We explicitly choose to optimize for the experience of our average software engineer reading, maintaining, and debugging code in our codebase rather than ease when writing said code. <em>"Leave a trace for the reader"</em> is a particularly common sub-point of this principle: When something surprising or unusual is happening in a snippet of code (for example, transfer of pointer ownership), leaving textual hints for the reader at the point of use is valuable (<code>std::unique_ptr</code> demonstrates the ownership transfer unambiguously at the call site). This is doubly true for libraries meant to be used by end-users, where the target audience is not software engineers, but novice users of the Arduino ecosystem. People for whom their Sketch may be the first program they ever write.
@@ -171,7 +171,7 @@ Our codebase (and most individual components submitted to it) is expected to con
 Using one style consistently through our codebase lets us focus on other (more important) issues. Consistency also allows for automation: tools that format your code or adjust your <code>#include</code>s only work properly when your code is consistent with the expectations of the tooling. In many cases, rules that are attributed to <em>"Be Consistent"</em> boil down to <em>"Just pick one and stop worrying about it"</em>; the potential value of allowing flexibility on these points is outweighed by the cost of having people argue over them.
 </dd>
 
-<!-- TODO: Review the Kaleidoglyph/Arduino bits -->
+<!-- TODO: Review the Kaleidoscope/Arduino bits -->
 <dt>Be consistent with the broader Arduino community when appropriate</dt>
 <dd>
 Consistency with the way other Arduino libraries use C++ has value for the same reasons as consistency within our code base. Our libraries do not function in isolation, and they may very well be used together with libraries by the broader Arduino community. However, sometimes the idioms, or style used in other libraries do not fit the needs of our codebase. In those cases, it is appropriate to apply our own rules. Similarly, if a feature in the C++ standard solves a problem, or if some idiom is widely known and accepted, that's an argument for using it. However, sometimes standard features and idioms are flawed, or were just designed without our codebase's needs in mind. In those cases (as described below) it's appropriate to constrain or ban standard features.
@@ -200,12 +200,12 @@ Performance optimizations can sometimes be necessary and appropriate, even when 
 
 </dl>
 
-The intent of this document is to provide maximal guidance with reasonable restriction. As always, common sense and good taste should prevail. By this we specifically refer to the established conventions of the entire community (both Kaleidoglyph and Arduino communities), not just your personal preferences or those of your team. Be skeptical about and reluctant to use clever or unusual constructs: the absence of a prohibition is not the same as a license to proceed. Use your judgment, and if you are unsure, please don't hesitate to ask, to get additional input.
+The intent of this document is to provide maximal guidance with reasonable restriction. As always, common sense and good taste should prevail. By this we specifically refer to the established conventions of the entire community (both Kaleidoscope and Arduino communities), not just your personal preferences or those of your team. Be skeptical about and reluctant to use clever or unusual constructs: the absence of a prohibition is not the same as a license to proceed. Use your judgment, and if you are unsure, please don't hesitate to ask, to get additional input.
 
 ## Library Guidelines
 <!-- TODO: This is a whole new section! -->
 
-Before looking at the coding style guidelines, we must first talk about libraries. Every Kaleidoglyph plugin is also an Arduino library. The core firmware is an Arduino library too. As such, libraries should follow the [Arduino library specification][arduino:library-spec] (revision 2.1 or later), with a few additional recommendations:
+Before looking at the coding style guidelines, we must first talk about libraries. Every Kaleidoscope plugin is also an Arduino library. The core firmware is an Arduino library too. As such, libraries should follow the [Arduino library specification][arduino:library-spec] (revision 2.1 or later), with a few additional recommendations:
 
  [arduino:library-spec]: https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5:-Library-specification
 
@@ -225,9 +225,9 @@ It does not matter much what hardware the example is for, as long as there is on
 Documenting the interfaces of the library, how to use it, its dependencies, in a way that is meaningful for a novice user is a very strong recommendation. The `README.md` in a library should target a novice audience. Would one want or need to document parts of the code that is only meaningful for more advanced programmers, do so in the code.
 </dd>
 
-<dt>Use the tools provided in Kaleidoglyph-Plugin</dt>
+<dt>Use the tools provided in Kaleidoscope-Plugin</dt>
 <dd>
-The <a href="https://github.com/keyboardio/Kaleidoglyph-Plugin">Kaleidoglyph-Plugin</a> repository is there to aid plugin and library developers. Use the tools it provides. They make everyone's life easier, and help maintain consistency across the board.
+The <a href="https://github.com/keyboardio/Kaleidoscope-Plugin">Kaleidoscope-Plugin</a> repository is there to aid plugin and library developers. Use the tools it provides. They make everyone's life easier, and help maintain consistency across the board.
 </dd>
 
 </dl>
@@ -317,13 +317,13 @@ It is important to know that functions are not always inlined even if they are d
 
 All libraries must have at least one header in their top-level `src/` directory, to be included without any path components. This is the way Arduino finds libraries, and a limitation we must adhere to. These headers should - in general - include any other headers they may need, so that the consumer of the library only has to include one header. The name of this header must be the same as the name of the library.
 
-The recommended naming is to prefix the library name with `Kaleidoglyph-`.
+The recommended naming is to prefix the library name with `Kaleidoscope-`.
 
-If there is more than one header, they should be listed as descendants of the project's source directory without use of UNIX directory shortcuts `.` (the current directory) or `..` (the parent directory), and live in a `Kaleidoglyph` subdirectory. For example, if we have a plugin named `Kaleidoglyph-Something`, which has an additional header file other than `Kaleidoglyph-Something.h`, it should be in `src/Kaleidoglyph/Something-Other.h`, and be included as:
+If there is more than one header, they should be listed as descendants of the project's source directory without use of UNIX directory shortcuts `.` (the current directory) or `..` (the parent directory), and live in a `Kaleidoscope` subdirectory. For example, if we have a plugin named `Kaleidoscope-Something`, which has an additional header file other than `Kaleidoscope-Something.h`, it should be in `src/Kaleidoscope/Something-Other.h`, and be included as:
 
 ```c++
-#include "Kaleidoglyph-Something.h"
-#include "Kaleidoglyph/Something-Other.h"
+#include "Kaleidoscope-Something.h"
+#include "Kaleidoscope/Something-Other.h"
 ```
 
 Having more than one level of subdirectories is not recommended.
@@ -337,21 +337,21 @@ In `dir/foo.cpp` or `dir/foo_test.cc`, whose main purpose is to implement or tes
 
 With the preferred ordering, if `dir2/foo2.h` omits any necessary includes, the build of `dir/foo.cpp` or `dir/foo_test.cpp` will break. Thus, this rule ensures that build breaks show up first for the people working on these files, not for innocent people in other packages.
 
-`dir/foo.cc` and `dir2/foo2.h` are usually in the same directory (e.g. `Kaleidoglyph/Something_test.cpp` and `Kaleidoglyph/Something.h`), but may sometimes be in different directories too.
+`dir/foo.cc` and `dir2/foo2.h` are usually in the same directory (e.g. `Kaleidoscope/Something_test.cpp` and `Kaleidoscope/Something.h`), but may sometimes be in different directories too.
 
 Within each section the includes should be ordered alphabetically.
 
 You should include all the headers that define the symbols you rely upon, except in the unusual case of [forward declarations](#forward-declarations) . If you rely on symbols from `bar.h`, don't count on the fact that you included `foo.h` which (currently) includes `bar.h`: include `bar.h` yourself, unless `foo.h` explicitly demonstrates its intent to provide you the symbols of `bar.h`. However, any includes present in the related header do not need to be included again in the related `cc` (i.e., `foo.cc` can rely on `foo.h`'s includes).
 
-For example, the includes in `Kaleidoglyph-Something/src/Kaleidoglyph/Something.cpp` might look like this:
+For example, the includes in `Kaleidoscope-Something/src/Kaleidoscope/Something.cpp` might look like this:
 
 ```c++
-#include "Kaleidoglyph/Something.h"
+#include "Kaleidoscope/Something.h"
 
 #include "Arduino.h"
 
-#include "Kaleidoglyph-LEDControl.h"
-#include "Kaleidoglyph-Focus.h"
+#include "Kaleidoscope-LEDControl.h"
+#include "Kaleidoscope-Focus.h"
 ```
 
 **Exception**
@@ -359,14 +359,14 @@ For example, the includes in `Kaleidoglyph-Something/src/Kaleidoglyph/Something.
 Sometimes, system-specific code needs conditional includes. Such code can put conditional includes after other includes. Of course, keep your system-specific code small and localized. Example:
 
 ```c++
-#include "Kaleidoglyph.h"
+#include "Kaleidoscope.h"
 
 #if defined(ARDUINO_AVR_MODEL01)
-#include "Kaleidoglyph/Something-Model01.h"
+#include "Kaleidoscope/Something-Model01.h"
 #endif
 
 #if defined(ARDUINO_AVR_SHORTCUT)
-#include "Kaleidoglyph/Something-Shortcut.h"
+#include "Kaleidoscope/Something-Shortcut.h"
 #endif
 ```
 
@@ -377,7 +377,7 @@ Sometimes, system-specific code needs conditional includes. Such code can put co
 <!-- TODO: Rethink this section within the context of Arduino.
 
 Suggested changes:
-- plugins should put their stuff in the `kaleidoglyph` namespace.
+- plugins should put their stuff in the `kaleidoscope` namespace.
 - plugins do not neccessarily need their own namespaces.
 - plugins should declare an extern, non-namespaced object.
 - remove google-specific stuff, like gflags.
@@ -2022,7 +2022,7 @@ All such variables with static storage duration (i.e. statics and globals, see [
 
 ### Function Names
 
-> Regular functions have mixed case; accessors and mutators may be named like variables.
+> Regular functions have mixed case
 
 Ordinarily, functions should start with a lower-case letter and have a capital letter for each new word (a.k.a. "[Camel Case][wikipedia:camel-case]" or "Pascal case"). Such names should not have underscores. Prefer to capitalize acronyms as single words (i.e. `startRpc()`, not `startRPC()`).
 
@@ -2035,8 +2035,6 @@ openFileOrDie()
 ```
 
 (The same naming rule applies to class- and namespace-scope constants that are exposed as part of an API and that are intended to look like functions, because the fact that they're objects rather than functions is an unimportant implementation detail.)
-
-Accessors and mutators (get and set functions) may be named like variables. These often correspond to actual member variables, but this is not required. For example, `int count()` and `void set_count(int count)`.
 
 ### Namespace Names
 
@@ -2380,7 +2378,7 @@ New code should not contain calls to deprecated interface points. Use the new in
 
 Coding style and formatting are pretty arbitrary, but a project is much easier to follow if everyone uses the same style. Individuals may not agree with every aspect of the formatting rules, and some of the rules may take some getting used to, but it is important that all project contributors follow the style rules so that they can all read and understand everyone's code easily.
 
-To help you format code correctly, we use "Artistic Style" 3.0. The `make astyle` target is available in the Kaleidoglyph and plugin Makefiles. Our CI infrastructure enforces `astyle`'s decisions.
+To help you format code correctly, we use "Artistic Style" 3.0. The `make astyle` target is available in the Kaleidoscope and plugin Makefiles. Our CI infrastructure enforces `astyle`'s decisions.
 
 ### Line Length
 
@@ -3155,7 +3153,7 @@ From @algernon:
 
 One of the selling points of this guide is that we use the formatting anyway, and it is a thorough guide, covering pretty much all aspects of the code. However, it has a number of issues too, which prevents us from using it as-is.
 
-First of all, it is written with traditional x86-64 libraries and applications in mind, where you control the build system, and so on. This can be easily seen when it talks about [names and order of includes](https://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes). We can't name our things like that, because of limitation of the Arduino build system: we can't use `#include <Kaleidoglyph/LED/Theme/Something.h>`, or `#include <Kaleidoglyph/OneShot.h>`, because Arduino won't find the libraries then. We may be able to build a tool on top of it that would, but then we'd lose the ability to use the Arduino IDE.
+First of all, it is written with traditional x86-64 libraries and applications in mind, where you control the build system, and so on. This can be easily seen when it talks about [names and order of includes](https://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes). We can't name our things like that, because of limitation of the Arduino build system: we can't use `#include <Kaleidoscope/LED/Theme/Something.h>`, or `#include <Kaleidoscope/OneShot.h>`, because Arduino won't find the libraries then. We may be able to build a tool on top of it that would, but then we'd lose the ability to use the Arduino IDE.
 
 The guide discourages static members too (though allows them), along with globals - while we build heavily on those to conserve space, to be friendlier to the end-user, among other things.
 
@@ -3186,7 +3184,7 @@ I looked at a few other guides, but a lot of them are old, or far less comprehen
 
 * We are targeting modern Arduino, and as such, libraries should follow the [rev2.1](https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5:-Library-specification) layout and library specification.
 * The main include header must have the same name as the library, and must be in the `src/` directory, as required by Arduino.
-  + As we can't namespace public headers, their names should be prefixed with `Kaleidoglyph-`.
+  + As we can't namespace public headers, their names should be prefixed with `Kaleidoscope-`.
   + Following Arduino conventions, library names are `CamelCase` - with the first letter being a capital letter too. Dashes may be used to denote namespaceing.
 
 ### Headers
@@ -3208,7 +3206,7 @@ I looked at a few other guides, but a lot of them are old, or far less comprehen
   + Function members should have their verb part first, so `addHook` instead of `hookAdd`. Group with namespaces, if need be, otherwise arrange functions that belong together, together, separate from the rest (in source code).
   + Do not repeat the class or namespace in the member names.
 * Variables are `snake_case`, like data members, unless they are global instances of various classes, in which case they are `CamelCase`.
-* It is recommended to put the class in a namespace, and when declaring the global, use the same name, but outside of the namespace. For example: `extern Kaleidoglyph::Plugin::OneShot OneShot`.
+* It is recommended to put the class in a namespace, and when declaring the global, use the same name, but outside of the namespace. For example: `extern Kaleidoscope::Plugin::OneShot OneShot`.
 
 ### Indentation and visual style
 
@@ -3222,17 +3220,17 @@ For context, some of the reasoning behind my proposal:
 
 ### Naming things
 
-I think lower-case namespace names make sense, as a way to differentiate classes, global objects, and namespaces. At the moment, `Kaleidoglyph` is a global object, `KaleidoglyphPlugins` is a namespace, and this is confusing. `kaledioscope::Keyboard`, or `kaleidoglyph::Kaleidoglyph` as the class is clearer than `Kaleidoglyph_`, and we can still have a global `Kaleidoglyph` object, because the namespace would be `kaleidoglyph`.
+I think lower-case namespace names make sense, as a way to differentiate classes, global objects, and namespaces. At the moment, `Kaleidoscope` is a global object, `KaleidoscopePlugins` is a namespace, and this is confusing. `kaledioscope::Keyboard`, or `kaleidoscope::Kaleidoscope` as the class is clearer than `Kaleidoscope_`, and we can still have a global `Kaleidoscope` object, because the namespace would be `kaleidoscope`.
 
 Thus:
 
 ```c++
-namespace kaleidoglyph {
-  class Kaleidoglyph {
+namespace kaleidoscope {
+  class Kaleidoscope {
   public:
     uint16_t some_variable;
 
-    Kaleidoglyph ();
+    Kaleidoscope ();
 
     void addSomething (...);
     void removeSomething (...);
@@ -3245,10 +3243,10 @@ namespace kaleidoglyph {
   };
 };
 
-extern kaleidoglyph::Kaleidoglyph Kaleidoglyph;
+extern kaleidoscope::Kaleidoscope Kaleidoscope;
 ```
 
-This would allow us to get rid of the ugly `KaleidoglyphPlugin` namespace. Using namespaces in general would make a lot of code look much nicer. They are not a big thing in the Arduino world, as far as I see, but they are great tools for clarity.
+This would allow us to get rid of the ugly `KaleidoscopePlugin` namespace. Using namespaces in general would make a lot of code look much nicer. They are not a big thing in the Arduino world, as far as I see, but they are great tools for clarity.
 
 The above code demonstrates all the various ways to name things, and how they make it clearer what is what:
 
