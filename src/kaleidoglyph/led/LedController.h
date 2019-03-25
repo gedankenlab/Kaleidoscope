@@ -54,6 +54,7 @@ class LedController {
     next_mode_index_ = 0xFF;
   }
 
+  LedBackgroundMode& getCurrentMode() const;
   void setActiveMode(byte index);
 
   // We need a hook somewhere for layer changes (see LED-ActiveLayerColor.cpp)
@@ -84,7 +85,7 @@ class LedController {
   void clearBackgroundColors();
 
   bool isValidMode(byte index) {
-    return (index < modes_count_ && modes_[index] != nullptr);
+    return (index < modes_count_);
   }
 
 };
@@ -113,6 +114,11 @@ void LedController::setKeyColor(Color color) {
   }
 }
 
+inline
+LedBackgroundMode& LedController::getCurrentMode() const {
+  return *(readPointerFromProgmemArrayPtr(modes_, curr_mode_index_));
+}
+
 // When LED modes change, all we do is set this index; the actual mode change takes place
 // in sync with the LED update cycle.
 inline
@@ -132,7 +138,7 @@ inline
 void LedController::restoreBackgroundColor(KeyAddr k) {
   foreground_mask_.clear(k);
   if (isValidMode(curr_mode_index_)) {
-    Color color = modes_[curr_mode_index_]->getKeyColor(k);
+    Color color = getCurrentMode().getKeyColor(k);
     setKeyColor(k, color);
   } else {
     setKeyColor(k, Color{0, 0, 0});
@@ -150,14 +156,14 @@ inline
 void LedController::activateBackgroundMode() {
   clearBackgroundColors();
   if (isValidMode(curr_mode_index_)) {
-    modes_[curr_mode_index_]->activate(*this);
+    getCurrentMode().activate(*this);
   }
 }
 
 inline
 void LedController::updateBackgroundColors() {
   if (isValidMode(curr_mode_index_)) {
-    modes_[curr_mode_index_]->update(*this);
+    getCurrentMode().update(*this);
   }
 }
 

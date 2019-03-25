@@ -17,7 +17,7 @@ namespace kaleidoglyph {
 
 
 Key Keymap::lookup(KeyAddr key_addr, byte layer_index) const {
-  return (*layers_[layer_index])[key_addr];
+  return (getLayer(layer_index))[key_addr];
 }
 
 

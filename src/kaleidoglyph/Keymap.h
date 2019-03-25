@@ -54,6 +54,10 @@ class Keymap {
 
   Key operator[](KeyAddr key_addr) const;
 
+  Layer& getLayer(byte layer_index) const {
+    return *(readPointerFromProgmemArrayPtr(layers_, layer_index));
+  }
+
  private:
   // An array of pointers to the Layer objects that make up the keymap
   Layer* const *layers_;
@@ -115,7 +119,7 @@ class Keymap {
     }
 
     Layer & operator*() const {
-      return *(keymap_.layers_[layer_index_]);
+      return keymap_.getLayer(layer_index_);
     }
 
     // operator++ used by the iterator doesn't need to return a value in this case. Also
