@@ -24,15 +24,14 @@ constexpr byte led_sync_interval{32};
 class LedController {
 
  public:
-
-  LedController(Controller& controller,
-                hardware::Keyboard& keyboard,
-                LedBackgroundMode* const *modes = nullptr,
-                byte modes_count = 0)
+  template<byte _modes_count>
+  LedController(LedBackgroundMode* const (&modes)[_modes_count],
+                Controller& controller,
+                hardware::Keyboard& keyboard)
       : controller_(controller),
         keyboard_(keyboard),
         modes_(modes),
-        modes_count_(modes_count) {}
+        modes_count_(_modes_count) {}
 
   // Note we don't provied LedAddr versions of these, because that makes the overrides
   // overly complex.
