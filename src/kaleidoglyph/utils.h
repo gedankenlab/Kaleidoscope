@@ -36,6 +36,10 @@ constexpr size_t arraySize(_Type (&/*array*/)[_size]) {
 template<typename _PointerType, byte _array_size>
 _PointerType readPointerFromProgmemArray(_PointerType (&pgm_ptr_array)[_array_size],
                                          byte  index) {
+  // We don't actually do bounds checking unless we're in debug mode, but this
+  // is better than nothing.
+  assert(index < _array_size);
+
   // First, we get the (PROGMEM) pointer to the specific entry in the array by
   // computing its address (`&(pgm_ptr_array[index])`). This must be done in a
   // single step, so that we never access the content of `pgm_ptr_array[index]`,
