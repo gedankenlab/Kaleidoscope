@@ -1928,20 +1928,20 @@ Template parameters should follow the naming style for their category: type temp
 
 ### File Names
 
-> Filenames should be all lowercase and can include underscores (`_`) or dashes (`-`). Follow the convention that your project uses. If there is no consistent local pattern to follow, prefer "_".
+> Filenames not named for types defined therein should be all lowercase and can include underscores (`_`) or dashes (`-`). Files may also be named for a class (or other type) defined in the file, with the appropriate extension (`.h`/`.cpp`).
 
 Examples of acceptable file names:
 
-* `my_useful_class.cpp`
-* `my-useful-class.cpp`
-* `myusefullclass.cpp`
-* `myusefulclass_test.cpp`
+* `MyUsefulClass.cpp`
+* `my-useful-functions.cpp`
+* `my_usefull_functions.cpp`
+* `MyUsefulClass_test.cpp`
 
 C++ files should end in `.cpp` and header files should end in `.h`. Files that rely on being textually included at specific points should end in `.inc` (see also the section on [self-contained headers](#self-contained-headers)).
 
 Do not use filenames that already exist in `/usr/include`, such as `db.h`.
 
-In general, make your filenames very specific. For example, use `http_server_logs.h` rather than `logs.h`. A very common case is to have a pair of files called, e.g., `foo_bar.h` and `foo_bar.cpp`, defining a class called `FooBar`.
+In general, make your filenames very specific. For example, use `http_server_logs.h` rather than `logs.h`. A very common case is to have a pair of files called, e.g., `FooBar.h` and `FooBar.cpp`, defining a class called `FooBar`.
 
 Inline functions must be in a `.h` file. If your inline functions are very short, they should go directly into your `.h` file.
 
@@ -1970,7 +1970,7 @@ enum UrlTableErrors { ...
 
 ### Variable Names
 
-> The names of variables (including function parameters) and data members are all lowercase, with underscores between words. Data members of classes (but not structs) additionally have trailing underscores. For instance: `a_local_variable`, `a_struct_data_member`, `a_class_data_member_`.
+> The names of variables (including function parameters) and data members are all lowercase, with underscores between words. Private data members of classes additionally have trailing underscores. For instance: `a_local_variable`, `a_public_data_member`, `a_private_data_member_`.
 
 #### Common Variable Names
 
@@ -1984,7 +1984,7 @@ string tableName;   // Bad - mixed case.
 
 #### Class Data Members
 
-Data members of classes, both static and non-static, are named like ordinary nonmember variables, but with a trailing underscore.
+Private data members of classes, both static and non-static, are named like ordinary nonmember variables, but with a trailing underscore.
 
 ```c++
 class TableInfo {
@@ -2010,12 +2010,28 @@ struct UrlTableProperties {
 
 See [Structs vs. Classes](#structs-vs-classes) for a discussion of when to use a struct versus a class.
 
-### Constant Names
+#### PROGMEM Variable Names
 
-> Variables declared constexpr or const, and whose value is fixed for the duration of the program, are named with a leading "k" followed by mixed case. For example:
+> Names of variables and arrays stored in PROGMEM (instead of RAM) should begin with `pgm_` to clearly indicate that their data must be read from PROGMEM before being used.
 
 ```c++
-const int kDaysInAWeek = 7;
+const PROGMEM
+int pgm_array[] = {
+  0, 1, 2, 3, 4, 5,
+};
+```
+
+### Constant Names
+
+> Variables declared constexpr or const, and whose value is fixed for the duration of the program, do not have special naming rules. However, collections of constants of a given type should all be placed in the same namespace, named like the type, but with a lower-case `c` as a prefix:
+
+```c++
+namespace cKey {
+const Key a{0x04};
+const Key b{0x05};
+}
+
+Key key = cKey::a;
 ```
 
 All such variables with static storage duration (i.e. statics and globals, see [Storage Duration][cppref:storage-duration] for details) should be named this way. This convention is optional for variables of other storage classes, e.g. automatic variables, otherwise the usual variable naming rules apply.
@@ -2038,7 +2054,7 @@ openFileOrDie()
 
 ### Namespace Names
 
-> Namespace names are all lower-case. Top-level namespace names are based on the project name . Avoid collisions between nested namespaces and well-known top-level namespaces.
+> Namespace names are all lower-case. Top-level namespace names are based on the project name . Avoid collisions between nested namespaces and well-known top-level namespaces. Exception: namespaces for constants of a given type are named with the type name prefixed with a `c`, and preserve the capitalization of the type name.
 
 The name of a top-level namespace should usually be the name of the project or team whose code is contained in that namespace. The code in that namespace should usually be in a directory whose basename matches the namespace name (or subdirectories thereof).
 
@@ -2056,14 +2072,23 @@ Preferably, the individual enumerators should be named like [constants](#constan
 
 ```c++
 enum UrlTableErrors {
-  kOK = 0,
-  kErrorOutOfMemory,
-  kErrorMalformedInput,
+  ok = 0,
+  error_out_of_memory,
+  error_malformed_input,
 };
-enum AlternateUrlTableErrors {
-  OK = 0,
-  OUT_OF_MEMORY = 1,
-  MALFORMED_INPUT = 2,
+```
+
+### Template Parameter Names
+
+> Template parameters, and names derived from template parameters, should be named with a leading underscore.
+
+This clearly distinguishes template parameters from other things, making template classes and functions easier to understand.
+
+```c++
+template<typename _MyType, int _index>
+class MyTemplateClass {
+  // Useful shorthand; continue to use leading underscore
+  typedef MyTemplateClass<_MyType, _index> _ThisClass;
 };
 ```
 
@@ -2071,7 +2096,7 @@ enum AlternateUrlTableErrors {
 
 > You're not really going to [define a macro](#preprocessor-macros, are you? If you do, they're like this: `MY_MACRO_THAT_SCARES_SMALL_CHILDREN`.
 
-Please see the [description of macros](#preprocessor-macros); in general macros should *not* be used. However, if they are absolutely needed, then they should be named with all capitals and underscores.
+Please see the [description of macros](#preprocessor-macros); in general macros should *not* be used. However, if they are absolutely needed, then they should be named with all capitals and underscores. Preprocessor macros are the *only* things that should be named with ALL CAPS.
 
 ```c++
 #define ROUND(x) ...
