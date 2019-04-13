@@ -29,6 +29,11 @@ constexpr size_t arraySize(_Type (&/*array*/)[_size]) {
   return _size;
 }
 
+template<size_t _length, typename _Type>
+constexpr size_t arrayLength(_Type (&/*array*/)[_length]) {
+  return _length;
+}
+
 // This function is particulary useful for reading from an array of pointers
 // stored in PROGMEM, where `_PointerType` would be something like `Layer*`. The
 // `reinterpret_cast` is mainly useful for converting a two-byte value to the
@@ -50,12 +55,12 @@ _PointerType readPointerFromProgmemArray(_PointerType (&pgm_ptr_array)[_array_si
   // Now that we've got the address (in PROGMEM) of the pointer data we want, we
   // can read it directly. As long as a pointer is just two bytes, this works
   // just fine. On a system that usese four-byte pointers, we'd have to use
-  // `pgm_read_word_far()` instead.
+  // `pgm_read_word_far()` instead. Better yet, `memcpy_P()`.
   uint16_t ptr_data = pgm_read_word(pgm_ptr_p);
 
   // Now we have the value of the pointer, but it's represented as an integer,
-  // so we need to use `reinterpret_cast` again in order to return it as a
-  // pointer of the correct type.
+  // so we need to use `reinterpret_cast` in order to return it as a pointer of
+  // the correct type.
   _PointerType ptr = reinterpret_cast<_PointerType>(ptr_data);
 
   // Finally, we have a pointer in RAM of the correct type, so we return it.
@@ -77,16 +82,30 @@ _PointerType readPointerFromProgmemArrayPtr(_PointerType* pgm_ptr_array,
   // Now that we've got the address (in PROGMEM) of the pointer data we want, we
   // can read it directly. As long as a pointer is just two bytes, this works
   // just fine. On a system that usese four-byte pointers, we'd have to use
-  // `pgm_read_word_far()` instead.
+  // `pgm_read_word_far()` instead. Better yet, `memcpy_P()`.
   uint16_t ptr_data = pgm_read_word(pgm_ptr_p);
 
   // Now we have the value of the pointer, but it's represented as an integer,
-  // so we need to use `reinterpret_cast` again in order to return it as a
-  // pointer of the correct type.
+  // so we need to use `reinterpret_cast` in order to return it as a pointer of
+  // the correct type.
   _PointerType ptr = reinterpret_cast<_PointerType>(ptr_data);
 
   // Finally, we have a pointer in RAM of the correct type, so we return it.
   return ptr;
+}
+
+template<typename _Type>
+void loadFromProgmem(_Type& pgm_object, _Type& object) {
+  memcpy_P(&object, &pgm_object, sizeof(object));
+}
+
+// This should work because we're using a reference parameter; I do not think it
+// would work if we pass the parameter by value.
+template<typename _Type>
+_Type readFromProgmem(_Type const & pgm_object) {
+  _Type object;
+  memcpy_P(&object, &pgm_object, sizeof(object));
+  return object;
 }
 
 } // namespace kaleidoglyph {
