@@ -6,6 +6,7 @@
 #include "kaleidoglyph/KeyAddr.h"
 #include "kaleidoglyph/KeyState.h"
 #include "kaleidoglyph/cKey.h"
+#include "kaleidoglyph/cKeyAddr.h"
 #include "kaleidoglyph/EventHandlerId.h"
 
 
@@ -17,10 +18,10 @@ namespace kaleidoglyph {
 // the way.
 struct KeyEvent {
 
-  KeyAddr   addr;
-  KeyState  state;
-  Key       key;
-  EventHandlerId caller;
+  KeyAddr   addr{cKeyAddr::invalid};
+  KeyState  state{cKeyState::idle};
+  Key       key{cKey::clear};
+  EventHandlerId caller{EventHandlerId::controller};
 
   KeyEvent() {}
 
