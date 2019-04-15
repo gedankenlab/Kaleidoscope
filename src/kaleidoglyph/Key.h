@@ -135,6 +135,11 @@ class Key {
     return Key(this->raw_ - other.raw_);
   }
 
+  explicit constexpr
+  operator int16_t() {
+    return raw_;
+  }
+
 };
 
 constexpr Key operator+(uint16_t x, Key key) {

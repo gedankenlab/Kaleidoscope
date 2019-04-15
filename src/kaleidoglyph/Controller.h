@@ -45,8 +45,8 @@ class Controller {
   void run();  // loop();
 
   void handleKeyEvent(KeyEvent event);
-  void pressKeyswitch(KeyAddr k, byte caller = 0); // should use `pluginid::controller`
-  void releaseKeyswitch(KeyAddr k, byte caller = 0);
+  void pressKeyswitch(KeyAddr k, EventHandlerId caller = EventHandlerId::controller);
+  void releaseKeyswitch(KeyAddr k, EventHandlerId caller = EventHandlerId::controller);
   void sendKeyboardReport(const KeyEvent& event);
 
   Key lookup(KeyAddr key_addr) const; // probably pointless
@@ -120,14 +120,14 @@ Key Controller::lookup(KeyAddr k) const {
 }
 
 inline
-void Controller::pressKeyswitch(KeyAddr k, byte caller) {
+void Controller::pressKeyswitch(KeyAddr k, EventHandlerId caller) {
   KeyEvent event{k, cKeyState::press};
   event.caller = caller;
   handleKeyEvent(event);
 }
 
 inline
-void Controller::releaseKeyswitch(KeyAddr k, byte caller) {
+void Controller::releaseKeyswitch(KeyAddr k, EventHandlerId caller) {
   KeyEvent event{k, cKeyState::release};
   event.caller = caller;
   handleKeyEvent(event);
