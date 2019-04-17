@@ -41,9 +41,7 @@ void LedManager::setForeground(KeyAddr k) {
 }
 
 void LedManager::clearBackgroundColors() {
-  for (KeyAddr k : KeyAddr::Iterator{}) {
-    setKeyColor(k, Color{0, 0, 0});
-  }
+  setKeyColor(Color{0, 0, 0});
 }
 
 void LedManager::activateBackgroundMode() {
@@ -62,6 +60,8 @@ void LedManager::activateBackgroundMode() {
     loader.loadUpdater(curr_mode_p_, updater_p_);
     // activate current led mode
     updater_p_->activate();
+  } else {
+    clearBackgroundColors();
   }
 }
 
