@@ -30,7 +30,7 @@ void preKeyswitchScan();
 void setLedForeground(KeyAddr k);
 
 /// Restore foreground LED colors
-bool setForegroundColor(KeyAddr k, LedController& led_controller);
+bool setForegroundColor(KeyAddr k);
 
 /// Call keyswitch event handler hooks (run when a key press or release is detected)
 EventHandlerResult onKeyswitchEvent(KeyEvent& event);

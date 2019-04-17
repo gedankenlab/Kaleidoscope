@@ -27,38 +27,38 @@
 
 namespace kaleidoglyph {
 
-void LedRainbowMode::update(LedController& led_controller) {
+void LedRainbowMode::Updater::update() {
 
   uint16_t current_time = Controller::scanStartTime();
   uint16_t elapsed_time = current_time - last_update_time_;
-  if (elapsed_time < update_interval_) {
+  if (elapsed_time < mode_.update_interval_) {
     return;
   }
-  last_update_time_ += update_interval_;
+  last_update_time_ += mode_.update_interval_;
   ++current_hue_;
 
-  Color current_color = hsvToRgb(current_hue_, saturation_, value_);
-  led_controller.setKeyColor(current_color);
+  Color current_color = hsvToRgb(current_hue_, mode_.saturation_, mode_.value_);
+  manager().setKeyColor(current_color);
 }
 
 
 // ---------
 
-void LedRainbowWaveMode::update(LedController& led_controller) {
+void LedRainbowWaveMode::Updater::update() {
 
   uint16_t current_time = Controller::scanStartTime();
   uint16_t elapsed_time = current_time - last_update_time_;
-  if (elapsed_time < update_interval_) {
+  if (elapsed_time < mode_.update_interval_) {
     return;
   }
-  last_update_time_ += update_interval_;
+  last_update_time_ += mode_.update_interval_;
   ++current_base_hue_;
 
   for (LedAddr led{cLedAddr::start}; led < cLedAddr::end; ++led) {
     byte key_hue_offset = 16 * (byte(led) / 4);
     byte key_hue = current_base_hue_ + key_hue_offset;
-    Color key_color = hsvToRgb(key_hue, saturation_, value_);
-    led_controller.setLedColor(led, key_color);
+    Color key_color = hsvToRgb(key_hue, mode_.saturation_, mode_.value_);
+    manager().setLedColor(led, key_color);
   }
 }
 
