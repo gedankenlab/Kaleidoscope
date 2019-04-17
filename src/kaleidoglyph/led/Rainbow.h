@@ -25,7 +25,7 @@
 #include <kaleidoglyph/KeyAddr.h>
 #include <kaleidoglyph/Color.h>
 #include <kaleidoglyph/led/utils.h>
-#include "kaleidoglyph/led/LedBackgroundMode.h"
+#include "kaleidoglyph/led/LedMode.h"
 
 
 namespace kaleidoglyph {
@@ -34,42 +34,40 @@ namespace kaleidoglyph {
 // Forward declaration; we can't include the header
 class LedController;
 
-class LedRainbowMode : public LedBackgroundMode {
+class LedRainbowMode : public LedMode {
 
  public:
-
   LedRainbowMode() {}
 
-  void update(LedController& led_controller) override;
-
   void setBrightness(byte value) {
     value_ = value;
   }
-  void setInterval(byte ms) {
-    update_interval_ = ms;
+  void setUpdateInterval(byte interval) {
+    update_interval_ = interval;
   }
 
+  class Updater : public LedModeUpdater {
+   private:
+    LedRainbowMode& mode_;
+   public:
+    Updater(LedRainbowMode& mode) : mode_(mode) {}
+    void update() override;
+   private:
+    byte current_hue_{0};
+    uint16_t last_update_time_{0};
+  };
+  friend class LedRainbowMode::Updater;
 
  private:
-
-  byte current_hue_{0}; // stores 0 to 614
-
-  //byte rainbow_steps_{1};  //  number of hues we skip in a 360 range per update
-  uint16_t last_update_time_{0};
-  uint16_t update_interval_{64}; // delay between updates (ms)
-
   byte saturation_{255};
   byte value_{150};
-
+  uint16_t update_interval_{64}; // delay between updates (ms)
 };
 
-class LedRainbowWaveMode : public LedBackgroundMode {
+class LedRainbowWaveMode : public LedMode {
 
  public:
-
   LedRainbowWaveMode() {}
-
-  void update(LedController& led_controller) override;
 
   void setBrightness(byte value) {
     value_ = value;
@@ -78,18 +76,22 @@ class LedRainbowWaveMode : public LedBackgroundMode {
     update_interval_ = ms;
   }
 
+  class Updater : public LedModeUpdater {
+   private:
+    LedRainbowWaveMode& mode_;
+   public:
+    Updater(LedRainbowWaveMode& mode) : mode_(mode) {}
+    void update() override;
+   private:
+    uint16_t current_base_hue_{0};  //  stores 0 to 614
+    uint16_t last_update_time_{0};
+  };
+  friend class LedRainbowWaveMode::Updater;
 
  private:
-
-  uint16_t current_base_hue_{0};  //  stores 0 to 614
-
-  //uint8_t wave_steps_{1};  //  number of hues we skip in a 360 range per update
-  uint16_t last_update_time_{0};
-  uint16_t update_interval_{64}; // delay between updates (ms)
-
   byte saturation_{255};
   byte value_{150};
-
+  uint16_t update_interval_{64}; // delay between updates (ms)
 };
 
 //} // namespace led {

@@ -4,6 +4,8 @@
 
 #include <Arduino.h>
 
+#include <assert.h>
+
 namespace kaleidoglyph {
 
 // Return the number of `UnitType` units required to store `n` bits. Both `UnitType` &
@@ -106,6 +108,41 @@ _Type readFromProgmem(_Type const & pgm_object) {
   _Type object;
   memcpy_P(&object, &pgm_object, sizeof(object));
   return object;
+}
+
+// This might not be as useful as I want if I can't figure out how to make the
+// event handlers be a template class whose member's array size is determined by
+// the constructor.
+template <typename _Type, byte _array_length>
+void loadFromProgmemArray(_Type& dest,
+                          _Type (&pgm_array)[_array_length],
+                          byte index) {
+  assert(index < _array_length);
+
+  memcpy_P(&dest, &(pgm_array[index]), sizeof(dest));
+}
+
+template <typename _Type, byte _array_length>
+_Type readFromProgmemArray(_Type const (&pgm_array)[_array_length],
+                           byte index) {
+  assert(index < _array_length);
+  _Type object;
+  memcpy_P(&object, &(pgm_array[index]), sizeof(object));
+  return object;
+}
+
+template <typename _Type, byte _array_length>
+void loadFromProgmemArray(_Type& dest,
+                          _Type* pgm_array,
+                          byte index) {
+  assert(index < _array_length);
+
+  // To emphasize the point that we're not accessing `pgm_array[index]` (which
+  // would get us something in RAM instead of PROGMEM), we do pointer arithmetic
+  // instead.
+  _Type* pgm_entry_p = pgm_array + index;
+
+  memcpy_P(&dest, pgm_entry_p, sizeof(dest));
 }
 
 } // namespace kaleidoglyph {

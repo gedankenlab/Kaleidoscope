@@ -7,34 +7,40 @@
 #include <kaleidoglyph/KeyAddr.h>
 #include <kaleidoglyph/Color.h>
 #include <kaleidoglyph/led/utils.h>
+#include "kaleidoglyph/led/LedMode.h"
 
 
 namespace kaleidoglyph {
-//namespace led {
 
-// Forward declaration; we can't include the header
-class LedController;
-
-class LedBreatheMode : public LedBackgroundMode {
+class LedBreatheMode : public LedMode {
 
  public:
-
   LedBreatheMode(byte hue = 170) : hue_(hue) {}
 
-  void update(LedController& led_controller) override;
-
+  byte getHue() const { return hue_; }
   void setHue(byte hue) { hue_ = hue; }
 
- private:
+  // The itinerant Updater class is what does the actual work
+  class Updater : public LedModeUpdater {
+   private:
+    LedBreatheMode& mode_;
 
+   public:
+    Updater(LedBreatheMode& mode) : mode_(mode) {}
+    void update() override;
+   private:
+    byte getHue() const { return mode_.getHue(); }
+  };
+
+ private:
   byte hue_;
 
 };
 
 inline
-void LedBreatheMode::update(LedController& led_controller) {
-  Color color = breathCompute(hue_);
-  led_controller.setKeyColor(color);
+void LedBreatheMode::Updater::update() {
+  Color color = breathCompute(mode_.getHue());
+  LedMode::manager().setKeyColor(color);
 }
 
 //} // namespace led {
