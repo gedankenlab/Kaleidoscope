@@ -52,32 +52,54 @@ constexpr KeyboardKey Z { HID_KEYBOARD_Z_AND_Z };
 // clearer with the namespace for constants named after the type name (since C++ won't let
 // me have `Key::A`)
 constexpr KeyboardKey _1 { HID_KEYBOARD_1_AND_EXCLAMATION_POINT };
+constexpr KeyboardKey ExclamationPoint = sft(_1);
 constexpr KeyboardKey _2 { HID_KEYBOARD_2_AND_AT };
+constexpr KeyboardKey At = sft(_2);
 constexpr KeyboardKey _3 { HID_KEYBOARD_3_AND_POUND };
+constexpr KeyboardKey Pound = sft(_3);
 constexpr KeyboardKey _4 { HID_KEYBOARD_4_AND_DOLLAR };
+constexpr KeyboardKey Dollar = sft(_4);
 constexpr KeyboardKey _5 { HID_KEYBOARD_5_AND_PERCENT };
+constexpr KeyboardKey Percent = sft(_5);
 constexpr KeyboardKey _6 { HID_KEYBOARD_6_AND_CARAT };
+constexpr KeyboardKey Caret = sft(_6);
 constexpr KeyboardKey _7 { HID_KEYBOARD_7_AND_AMPERSAND };
+constexpr KeyboardKey Ampersand = sft(_7);
 constexpr KeyboardKey _8 { HID_KEYBOARD_8_AND_ASTERISK };
+constexpr KeyboardKey Asterisk = sft(_8);
 constexpr KeyboardKey _9 { HID_KEYBOARD_9_AND_LEFT_PAREN };
+constexpr KeyboardKey LeftParen = sft(_9);
 constexpr KeyboardKey _0 { HID_KEYBOARD_0_AND_RIGHT_PAREN };
+constexpr KeyboardKey RightParen = sft(_0);
 constexpr KeyboardKey Enter { HID_KEYBOARD_ENTER };		 // (MARKED AS ENTER_SLASH_RETURN)
 constexpr KeyboardKey Escape { HID_KEYBOARD_ESCAPE };
 constexpr KeyboardKey Backspace { HID_KEYBOARD_DELETE };		// (BACKSPACE)
 constexpr KeyboardKey Tab { HID_KEYBOARD_TAB };
 constexpr KeyboardKey Spacebar { HID_KEYBOARD_SPACEBAR };
-constexpr KeyboardKey Minus { HID_KEYBOARD_MINUS_AND_UNDERSCORE }; // (UNDERSCORE)
+constexpr KeyboardKey Minus { HID_KEYBOARD_MINUS_AND_UNDERSCORE };
+constexpr KeyboardKey Underscore = sft(Minus);
 constexpr KeyboardKey Equals { HID_KEYBOARD_EQUALS_AND_PLUS };
+constexpr KeyboardKey Plus = sft(Equals);
 constexpr KeyboardKey LeftBracket { HID_KEYBOARD_LEFT_BRACKET_AND_LEFT_CURLY_BRACE };
+constexpr KeyboardKey LeftCurlyBrace = sft(LeftBracket);
 constexpr KeyboardKey RightBracket { HID_KEYBOARD_RIGHT_BRACKET_AND_RIGHT_CURLY_BRACE };
+constexpr KeyboardKey RightCurlyBrace = sft(RightBracket);
 constexpr KeyboardKey Backslash { HID_KEYBOARD_BACKSLASH_AND_PIPE };
+constexpr KeyboardKey Pipe = sft(Backslash);
 constexpr KeyboardKey NonUsPound { HID_KEYBOARD_NON_US_POUND_AND_TILDE };
+constexpr KeyboardKey NonUsTilde = sft(NonUsPound);
 constexpr KeyboardKey Semicolon { HID_KEYBOARD_SEMICOLON_AND_COLON };
+constexpr KeyboardKey Colon = sft(Semicolon);
 constexpr KeyboardKey Quote { HID_KEYBOARD_QUOTE_AND_DOUBLEQUOTE };
+constexpr KeyboardKey DoubleQuote = sft(Quote);
 constexpr KeyboardKey Backtick { HID_KEYBOARD_GRAVE_ACCENT_AND_TILDE };
+constexpr KeyboardKey Tilde = sft(Backtick);
 constexpr KeyboardKey Comma { HID_KEYBOARD_COMMA_AND_LESS_THAN };
+constexpr KeyboardKey LessThan = sft(Comma);
 constexpr KeyboardKey Period { HID_KEYBOARD_PERIOD_AND_GREATER_THAN };
+constexpr KeyboardKey GreaterThan = sft(Period);
 constexpr KeyboardKey Slash { HID_KEYBOARD_SLASH_AND_QUESTION_MARK };
+constexpr KeyboardKey QuestionMark = sft(Slash);
 constexpr KeyboardKey CapsLock { HID_KEYBOARD_CAPS_LOCK };
 constexpr KeyboardKey F1 { HID_KEYBOARD_F1 };
 constexpr KeyboardKey F2 { HID_KEYBOARD_F2 };
