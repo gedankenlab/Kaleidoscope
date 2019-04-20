@@ -36,7 +36,7 @@ class KeyState {
   }
 
   bool toggledOn() const {
-    return (raw_ & 0b001) == 1; // 0b01 (previous = 0; current = 1;)
+    return (raw_ & 0b011) == 1; // 0b01 (previous = 0; current = 1;)
   }
 
   bool toggledOff() const {
