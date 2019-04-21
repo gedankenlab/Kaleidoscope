@@ -35,6 +35,7 @@ class Keymap {
   Key lookup(KeyAddr key_addr, byte layer_index) const;
 
   LayerKeyPair lookupActiveLayerAndKey(KeyAddr key_addr) const;
+  LayerKeyPair lookupActiveLayerAndKey(KeyAddr k, int8_t layer_index) const;
   byte lookupActiveLayer(KeyAddr key_addr) const;
   byte lookupLayer(KeyAddr key_addr) const; // alternative to lookupActiveLayer()
   const Layer& layer(byte layer_index) const;

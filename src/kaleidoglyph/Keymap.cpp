@@ -48,6 +48,19 @@ LayerKeyPair Keymap::lookupActiveLayerAndKey(KeyAddr key_addr) const {
   return {layer_index, key};
 }
 
+// This version starts looking at the specified `layer_index` (instead of
+// `top_active_layer_index_`), and checks active layers until if finds a
+// non-transparent `Key`.
+LayerKeyPair Keymap::lookupActiveLayerAndKey(KeyAddr k, int8_t layer_index) const {
+  Key key = cKey::clear;
+  while(layer_index >= 0 && key.isClear()) {
+    if (isLayerActive(layer_index)) {
+      key = lookup(k, layer_index);
+    }
+  }
+  return {byte(layer_index), key};
+}
+
 
 /// Activate the specified layer
 void Keymap::activateLayer(byte layer_index) {
