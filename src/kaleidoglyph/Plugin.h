@@ -11,7 +11,7 @@
 
 namespace kaleidoglyph {
 
-class Plugin {
+class EventHandler {
 
  public:
   // Note: The following functions would ideally be virtual, but aren't because the

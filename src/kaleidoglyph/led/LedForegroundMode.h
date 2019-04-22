@@ -10,7 +10,7 @@
 
 namespace kaleidoglyph {
 
-class LedForegroundMode : public Plugin {
+class LedForegroundMode {
 
  public:
   bool setForegroundColor(KeyAddr /*k*/, LedController& /*led_controller*/) {
