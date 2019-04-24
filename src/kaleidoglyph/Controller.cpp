@@ -29,6 +29,7 @@ void Controller::init() {
   hid_keyboard_dispatcher_.init();
   hid_consumer_dispatcher_.init();
   hid_system_dispatcher_.init();
+  hid_mouse_dispatcher_.init();
 
   for (KeymapEntry entry : active_keys_) {
     active_keys_[entry.addr] = cKey::clear;

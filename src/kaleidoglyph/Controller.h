@@ -26,6 +26,7 @@
 #include "kaleidoglyph/hid/keyboard.h"
 #include "kaleidoglyph/hid/consumer.h"
 #include "kaleidoglyph/hid/system.h"
+#include "kaleidoglyph/hid/mouse.h"
 
 
 namespace kaleidoglyph {
@@ -62,6 +63,10 @@ class Controller {
     hid_keyboard_dispatcher_.toggleProtocol();
   }
 
+  void sendMouseReport(hid::mouse::Report const & mouse_report) {
+    hid_mouse_dispatcher_.sendReport(mouse_report);
+  }
+
   static uint32_t scanStartTime() {
     return scan_start_time_;
   }
@@ -92,6 +97,9 @@ class Controller {
 
   // Dispatcher for System Control key events
   hid::system::Dispatcher hid_system_dispatcher_;
+
+  // Dispatcher for Mouse events
+  hid::mouse::Dispatcher hid_mouse_dispatcher_;
 
   // cache of modifier flags on non-modifier, non-blank keys
   byte mod_flags_allowed_{0};
