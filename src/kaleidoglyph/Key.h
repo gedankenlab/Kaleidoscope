@@ -27,8 +27,7 @@ class Key {
   static constexpr byte keyboard_type_id { 0b000      };
   static constexpr byte consumer_type_id { 0b001000   };
   static constexpr byte   system_type_id { 0b00100100 };
-  static constexpr byte    mouse_type_id { 0b00100101 };
-  static constexpr byte      led_type_id { 0b00100110 };
+  static constexpr byte      led_type_id { 0b00100101 };
   static constexpr byte    layer_type_id { 0b001010   };
   static constexpr byte   plugin_type_id { 0b1        };
 
@@ -186,4 +185,3 @@ inline Key getShallowEepromKey(uint16_t eeprom_addr) {
 #include "kaleidoglyph/Key/SystemKey.h"
 #include "kaleidoglyph/Key/LayerKey.h"
 #include "kaleidoglyph/Key/PluginKey.h"
-#include "kaleidoglyph/Key/MouseKey.h"
