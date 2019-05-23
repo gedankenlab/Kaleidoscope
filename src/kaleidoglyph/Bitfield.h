@@ -53,6 +53,25 @@ class Bitfield {
     bitWrite(data_[blockIndex(i)], bitIndex(i), value);
   }
 
+  // This function returns the number of set bits in the bitfield up to and
+  // including the bit at index `i`. Two important things to note: it doesn't
+  // verify that the bit for index `i` is set (the caller must do so first,
+  // using `read()`), and what is returned is 1-indexed, so the caller will need
+  // to subtract 1 before using it as an array index (e.g. when doing a `Key`
+  // lookup for a sparse keymap layer).
+  _SizeType ordinal(_IndexType i) const {
+    assert(_SizeType(i) < _size);
+    _SizeType block_index = blockIndex(i);
+    _SizeType count{0};
+    for (_SizeType b{0}; b < block_index; ++b) {
+      count += __builtin_popcount(data_[b]);
+    }
+    _UnitType last_data_unit = data_[block_index];
+    last_data_unit &= ~(0xFF << bitIndex(i));
+    count += __builtin_popcount(last_data_unit);
+    return count;
+  }
+
   _UnitType& block(_SizeType block_index) {
     assert(block_index < total_blocks);
     return data_[block_index];
