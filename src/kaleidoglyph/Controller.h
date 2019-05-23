@@ -66,6 +66,9 @@ class Controller {
   void sendMouseReport(hid::mouse::Report const & mouse_report) {
     hid_mouse_dispatcher_.sendReport(mouse_report);
   }
+  void sendMouseReport(hid::mouse::absolute::Report const & mouse_report) {
+    hid_absolute_mouse_dispatcher_.sendReport(mouse_report);
+  }
 
   static uint32_t scanStartTime() {
     return scan_start_time_;
@@ -100,6 +103,7 @@ class Controller {
 
   // Dispatcher for Mouse events
   hid::mouse::Dispatcher hid_mouse_dispatcher_;
+  hid::mouse::absolute::Dispatcher hid_absolute_mouse_dispatcher_;
 
   // cache of modifier flags on non-modifier, non-blank keys
   byte mod_flags_allowed_{0};
