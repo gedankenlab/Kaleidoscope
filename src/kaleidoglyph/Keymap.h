@@ -78,10 +78,10 @@ class Keymap {
   // Maybe: a cache of the current value for each key. This could be updated entirely
   // whenever a layer change happens, or it could be cleared (set all values to
   // Key_Transparent), and each key gets updated when lookup() is called on that key_addr.
-  mutable KeyArray<total_keys> keymap_cache_;
+  //mutable KeyArray<total_keys> keymap_cache_;
   // We could also have a very aggressive cache which stores the layer that each key is
   // mapped from (updated on lookup, cleared when necessary)
-  mutable byte active_layers_[total_keys];
+  //mutable byte active_layers_[total_keys];
 
   // Also, maybe this is where we store the active_keys_ object (reference?)
   //Layer& active_keys_;
