@@ -12,7 +12,7 @@
 namespace kaleidoglyph {
 
 // Forward declaration; we can't include the header
-class LedController;
+//class LedManager;
 
 class LedSolidColorMode : public LedMode {
 
