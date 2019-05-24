@@ -84,21 +84,30 @@ Color hsvToRgb(uint16_t h, uint16_t s, uint16_t v) {
   q = (v * (255 - ((s * fpart) >> 8))) >> 8;
   t = (v * (255 - ((s * (255 - fpart)) >> 8))) >> 8;
 
+  byte r, g, b;
+
   /* assign temp vars based on color cone region */
   switch (region) {
   case 0:
-    return Color(v, t, p);
+    r = v; g = t; b = p;
+    break;
   case 1:
-    return Color(q, v, p);
+    r = q; g = v; b = p;
+    break;
   case 2:
-    return Color(p, v, t);
+    r = p; g = v; b = t;
+    break;
   case 3:
-    return Color(p, q, v);
+    r = p; g = q; b = v;
+    break;
   case 4:
-    return Color(t, p, v);
+    r = t; g = p; b = v;
+    break;
   default:
-    return Color(v, p, q);
+    r = v; g = p; b = q;
+    break;
   }
+  return Color(r, g, b);
 }
 
 } // namespace kaleidoglyph {
